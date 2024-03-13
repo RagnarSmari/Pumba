@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS timestamps (
+    id BIGSERIAL PRIMARY KEY,
+    total_hours BIGINT NOT NULL
+);

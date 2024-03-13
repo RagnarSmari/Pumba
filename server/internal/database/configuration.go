@@ -1,43 +1,45 @@
 package database
 
 import (
-	"context"
+	"database/sql"
 	"fmt"
-
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"os"
+	_ "github.com/lib/pq"
 )
 
-
-
-
-func Configuration(){
+func Configuration() {
 
 	connectToDatabase()
 }
 
-func connectToDatabase(){
+func connectToDatabase() {
+	
+	
+	connectionString := getDatabaseConnectionString();
+	db, err := sql.Open("postgres", connectionString)
+	
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
 
-		// Use the SetServerAPIOptions() method to set the Stable API version to 1
-		serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-		opts := options.Client().ApplyURI("mongodb+srv://admin:VFgO7ixC8RLTIC0g@cluster0.3puset7.mongodb.net/?retryWrites=true&w=majority").SetServerAPIOptions(serverAPI)
+	err = db.Ping()
+	if err != nil {
+		panic(err)
+	}
 	
-		// Create a new client and connect to the server
-		client, err := mongo.Connect(context.TODO(), opts)
-		if err != nil {
-			panic(err)
-		}
-	
-		defer func() {
-			if err = client.Disconnect(context.TODO()); err != nil {
-				panic(err)
-			}
-		}()
-	
-		// Send a ping to confirm a successful connection
-		if err := client.Database("admin").RunCommand(context.TODO(), bson.D{{"ping", 1}}).Err(); err != nil {
-			panic(err)
-		}
-		fmt.Println("Pinged your deployment. You successfully connected to MongoDB!")
+	fmt.Println("Successfully connected!")
+}
+
+func getDatabaseConnectionString() string{
+
+	host := os.Getenv("DATABASE_HOST");
+	port := os.Getenv("DATABASE_PORT");
+	user := os.Getenv("DATABASE_USER");
+	user_passw := os.Getenv("DATABASE_USER_PASSW");
+	db_name := os.Getenv("DATABASE_NAME");
+
+	return fmt.Sprintf("host=%s port=%s user=%s "+
+	"password=%s dbname=%s sslmode=disable",
+	host, port, user, user_passw, db_name);
 }
