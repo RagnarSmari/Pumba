@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS jobs (
+    id BIGSERIAL PRIMARY KEY,
+    job_name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS timestamps (
+    id BIGSERIAL PRIMARY KEY,
+    job_id BIGINT,
+    total_hours BIGINT NOT NULL,
+    FOREIGN KEY (job_id) REFERENCES jobs(id)
+);

@@ -28,4 +28,3 @@ func main() {
 	// Start the server
 	router.Run()
 }
-w

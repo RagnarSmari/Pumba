@@ -28,7 +28,7 @@ func getAllJobs(c *gin.Context) {
 	var jobs []entities.Job
 	for rows.Next() {
         var job entities.Job
-        err := rows.Scan(&job.Id, &job., &job.Description)
+        err := rows.Scan(&job.Id, &job.JobName, &job.TotalHours)
         if err != nil {
             log.Fatal(err)
         }
