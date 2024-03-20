@@ -1,21 +1,31 @@
 package main
 
 import (
-	"github.com/RagnarSmari/Pumba/internal/database"
 	"log"
-    "github.com/joho/godotenv"
+
+	"github.com/RagnarSmari/Pumba/internal/api"
+	"github.com/RagnarSmari/Pumba/internal/database"
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
-
-
 
 func main() {
 
-	
 	err := godotenv.Load() // This will look for a .env file in the current directory
-    if err != nil {
-        log.Fatalf("Error loading .env file: %v", err)
-    }
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
+
+	router := gin.Default()
+	
 
 	// Configure the database
 	database.Configuration()
+
+	// Configure all the api routes
+	api.ConfigureApiRoutes(router)
+
+	// Start the server
+	router.Run()
 }
+w

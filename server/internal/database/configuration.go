@@ -7,6 +7,8 @@ import (
 	_ "github.com/lib/pq"
 )
 
+var db *sql.DB
+
 func Configuration() {
 
 	connectToDatabase()
@@ -14,14 +16,13 @@ func Configuration() {
 
 func connectToDatabase() {
 	
-	
+	var err error
 	connectionString := getDatabaseConnectionString();
-	db, err := sql.Open("postgres", connectionString)
+	db, err = sql.Open("postgres", connectionString)
 	
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
 
 	err = db.Ping()
 	if err != nil {
@@ -42,4 +43,8 @@ func getDatabaseConnectionString() string{
 	return fmt.Sprintf("host=%s port=%s user=%s "+
 	"password=%s dbname=%s sslmode=disable",
 	host, port, user, user_passw, db_name);
+}
+
+func GetDB() *sql.DB {
+	return db
 }

@@ -2,6 +2,6 @@ package entities
 
 type Job struct {
 	Id int64
-	Username string
-	Email string
+	Name string
+	TotalHours int64
 }
