@@ -84,13 +84,12 @@ func runMigrations() {
 	fmt.Println("Successfully ran migrations!")
 }
 
-
 func buildMigrationConnectionString() string {
-    host := os.Getenv("DATABASE_HOST")
-    port := os.Getenv("DATABASE_PORT")
-    user := os.Getenv("DATABASE_USER")
-    password := os.Getenv("DATABASE_USER_PASSW")
-    dbName := os.Getenv("DATABASE_NAME")
+	host := os.Getenv("DATABASE_HOST")
+	port := os.Getenv("DATABASE_PORT")
+	user := os.Getenv("DATABASE_USER")
+	password := os.Getenv("DATABASE_USER_PASSW")
+	dbName := os.Getenv("DATABASE_NAME")
 
-    return fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", user, password, host, port, dbName)
+	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", user, password, host, port, dbName)
 }
