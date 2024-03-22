@@ -10,11 +10,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 var db *sql.DB
 
 func getAllJobs(c *gin.Context) {
-    // Implementation of listing all jobs
+	// Implementation of listing all jobs
 	db = database.GetDB()
 	if db == nil {
 		log.Fatal("Database connection not established")
@@ -27,26 +26,27 @@ func getAllJobs(c *gin.Context) {
 		GROUP BY j.id, j.job_name
 	`)
 
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer rows.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
 
 	var jobs = make([]entities.Job, 0)
 
 	for rows.Next() {
-        var job entities.Job
-        err := rows.Scan(&job.Id, &job.JobName, &job.TotalHours)
-        if err != nil {
-            log.Fatal(err)
-        }
-        jobs = append(jobs, job)
-    }
+		var job entities.Job
+		err := rows.Scan(&job.Id, &job.JobName, &job.TotalHours)
+		if err != nil {
+			log.Fatal(err)
+		}
+		jobs = append(jobs, job)
+	}
 	c.JSON(200, jobs)
 }
 
 func createNewJob(c *gin.Context) {
 	db = database.GetDB()
+
 	if db == nil {
 		log.Fatal("Database connection not established")
 	}
@@ -55,22 +55,24 @@ func createNewJob(c *gin.Context) {
 		JobName string `json:"jobName"`
 	}
 
+	log.Printf(newJob.JobName)
+
 	if err := c.ShouldBindJSON(&newJob); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	res, err := db.Exec(`
+	var id int64
+	err := db.QueryRow(`
 		INSERT INTO jobs (job_name) 
-		VALUES (?)
-	`, newJob.JobName)
+		VALUES ($1) RETURNING Id
+	`, newJob.JobName).Scan(&id)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	id, err := res.LastInsertId()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

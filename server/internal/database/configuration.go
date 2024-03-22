@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -19,7 +20,7 @@ func Configuration() {
 }
 
 func connectToDatabase() {
-
+	log.Printf("Connecting to database...")
 	var err error
 	connectionString := getDatabaseConnectionString()
 	db, err = sql.Open("postgres", connectionString)
@@ -33,7 +34,7 @@ func connectToDatabase() {
 		panic(err)
 	}
 
-	fmt.Println("Successfully connected!")
+	log.Printf("Successfully connected to database")
 }
 
 func getDatabaseConnectionString() string {
@@ -55,15 +56,11 @@ func GetDB() *sql.DB {
 
 func runMigrations() {
 
-	fmt.Println("Running migrations...")
-	// Get the current working directory
-	wd, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
+	log.Printf("Running migrations...")
+	// Get the current working direct
 
 	// Create an absolute path to the migrations directory
-	migrationsDir := fmt.Sprintf("file://%s/internal/database/migrations", wd)
+	migrationsDir := "file://internal/database/migrations"
 
 	connectionString := buildMigrationConnectionString()
 

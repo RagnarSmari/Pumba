@@ -11,13 +11,13 @@ import (
 
 func main() {
 
+	log.Printf("Starting server...")
 	err := godotenv.Load() // This will look for a .env file in the current directory
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 
 	router := gin.Default()
-	
 
 	// Configure the database
 	database.Configuration()
@@ -27,4 +27,6 @@ func main() {
 
 	// Start the server
 	router.Run()
+
+	log.Printf("Server started...")
 }
