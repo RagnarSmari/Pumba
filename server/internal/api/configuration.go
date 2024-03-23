@@ -12,5 +12,6 @@ func ConfigureApiRoutes(router *gin.Engine) {
 
 	// This comes as /api/job:
 	routes.AddJobRoutes(apiGroup.Group(ApiRoutesConfig.JobsPrefix.Base))
+	routes.AddTimestampRoutes(apiGroup.Group(ApiRoutesConfig.TimestampsPrefix.Base))
 
 }
