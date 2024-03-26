@@ -1,4 +1,4 @@
-# Pumba
+# Pumba 🐷 🕰️
 Simple time management software
 
 Enables users to manage their own billable hours for certain jobs.  
