@@ -1,6 +1,7 @@
 # Pumba server side
 Stack:  
 * [Gin](https://gin-gonic.com/) - for web framework
+* [Zap](https://github.com/uber-go/zap) - for logging
 
 ## Env file structure
 
