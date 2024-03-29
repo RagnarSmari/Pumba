@@ -108,7 +108,6 @@ func getAllTimestampsForJob(c *gin.Context) {
 
 }
 
-
 func getJobById(c *gin.Context) {
 	db = database.GetDB()
 	if db == nil {
@@ -138,9 +137,6 @@ func getJobById(c *gin.Context) {
 	}
 	c.JSON(200, job)
 }
-
-
-
 
 func AddJobRoutes(router *gin.RouterGroup) {
 

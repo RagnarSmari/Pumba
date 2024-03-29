@@ -35,4 +35,5 @@ var ApiRoutesConfig = ApiRoutes{
 	ApiPrefix:        "/api",
 	JobsPrefix:       JobApiRoutes,
 	TimestampsPrefix: TimestampApiRoutes,
+	AuthRoutes:       AuthRouts,
 }
