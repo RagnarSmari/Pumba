@@ -1,15 +1,15 @@
-import signUp from '@/services/auth/signup';
 import { useState } from 'react';
 import { Link, redirect } from 'react-router-dom';
+import { SignUp } from '@/services/auth/auth';
 
 
-function SignUp() {
+function SignUpPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
 
 const handleSubmit = async () => {
-    await signUp(email, password).then(() => {
+    await SignUp(email, password).then(() => {
         redirect('/dashboard');
     }).catch((error) => {
         console.error(error);
@@ -41,4 +41,4 @@ const handleSubmit = async () => {
   );
 }
 
-export default SignUp;
+export default SignUpPage;

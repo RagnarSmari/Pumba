@@ -1,6 +1,6 @@
 
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 
 
 
@@ -16,7 +16,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+firebase.initializeApp(firebaseConfig);
+
+// Initialize Firebase Authentication and get a reference to the service
+const auth = firebase.auth();
 
 export { auth };
