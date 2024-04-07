@@ -3,11 +3,7 @@ package auth
 import (
 
     "firebase.google.com/go/v4/auth"
-
-    "github.com/jinzhu/gorm"
-
-
-
+    "gorm.io/gorm"
 )
 
 type AuthService struct {

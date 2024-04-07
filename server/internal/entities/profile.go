@@ -1,6 +1,6 @@
 package entities
 
-import "github.com/jinzhu/gorm"
+import "gorm.io/gorm"
 
 type Profile struct {
 	gorm.Model

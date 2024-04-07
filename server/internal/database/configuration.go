@@ -1,7 +1,6 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
 	"os"
 
@@ -12,12 +11,9 @@ import (
 	"gorm.io/gorm"
 )
 
-var db *sql.DB
 var DB *gorm.DB
 
 func Configuration() {
-	// runMigrations()
-	// connectToDatabase()
 	connectToDatabaseGorm()
 	migrate()
 }
@@ -31,7 +27,7 @@ func connectToDatabaseGorm() {
 
 	DB, err = gorm.Open(dialector, &gorm.Config{})
 	if err != nil {
-		logger.S().DPanicf("Failed to connect to database", err)
+		logger.S().Fatalf("Failed to connect to database", err)
 	}
 }
 
@@ -45,24 +41,6 @@ func migrate() {
 	logger.S().Info("Migrations ran successfully")
 }
 
-// func connectToDatabase() {
-// 	logger.S().Info("Connecting to database...")
-
-// 	var err error
-// 	connectionString := getDatabaseConnectionString()
-// 	db, err = sql.Open("postgres", connectionString)
-
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	err = db.Ping()
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	logger.S().Info("Successfully connected to database")
-// }
 
 func getDatabaseConnectionString() string {
 
@@ -77,42 +55,6 @@ func getDatabaseConnectionString() string {
 		host, port, user, user_passw, db_name)
 }
 
-func GetDB() *sql.DB {
-	return db
+func GetDB() *gorm.DB {
+	return DB
 }
-
-// func runMigrations() {
-
-// 	logger.S().Info("Running migrations...")
-
-// 	// Create an absolute path to the migrations directory
-// 	migrationsDir := "file://internal/database/migrations"
-
-// 	connectionString := buildMigrationConnectionString()
-
-// 	m, err := migrate.New(
-// 		migrationsDir,
-// 		connectionString,
-// 	)
-
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	err = m.Up()
-// 	if err != nil && err != migrate.ErrNoChange {
-// 		panic(err)
-// 	}
-
-// 	logger.S().Info("Migrations ran successfully")
-// }
-
-// func buildMigrationConnectionString() string {
-// 	host := os.Getenv("DATABASE_HOST")
-// 	port := os.Getenv("DATABASE_PORT")
-// 	user := os.Getenv("DATABASE_USER")
-// 	password := os.Getenv("DATABASE_USER_PASSW")
-// 	dbName := os.Getenv("DATABASE_NAME")
-
-// 	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", user, password, host, port, dbName)
-// }

@@ -2,7 +2,7 @@ package entities
 
 import (
 	"time"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type Session struct {

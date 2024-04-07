@@ -1,15 +1,9 @@
 package entities
 
-import "github.com/jinzhu/gorm"
-
-// type Job struct {
-// 	Id int64
-// 	JobName string
-// 	TotalHours int64
-// }
+import "gorm.io/gorm"
 
 type Job struct {
 	gorm.Model
-	Name 		string
-	Timestamps 	[]*Timestamp
+	Name       string "json:\"name\"" //`gorm:\"unique;not null\""
+	Timestamps []*Timestamp `gorm:"foreignkey:JobId"`	
 }

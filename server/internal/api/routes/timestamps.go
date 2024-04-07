@@ -1,78 +1,49 @@
 package routes
 
 import (
+	"errors"
+	"net/http"
+
+	"github.com/RagnarSmari/Pumba/internal/database"
+	"github.com/RagnarSmari/Pumba/internal/entities"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-// func getAllTimeStamps(c *gin.Context) {
-// 	db = database.GetDB()
-// 	if db == nil {
-// 		log.Fatal("Database connection not established")
-// 	}
 
-// 	rows, err := db.Query(`
-// 		SELECT t.*, j.job_name
-// 		FROM timestamps t
-// 		INNER JOIN jobs j ON t.job_id = j.id
-// 	`)
+func getAllTimeStamps(c *gin.Context) {
+	var timestamps []entities.Timestamp
+	db := database.GetDB()
 
-// 	if err != nil {
-// 		log.Printf("Could not process query. Error: %v", err)
-// 	}
-// 	defer rows.Close()
+	result := db.Find(&timestamps)
 
-// 	var timestamps = make([]entities.Timestamp, 0)
+	if result.Error == gorm.ErrRecordNotFound {
+		c.JSON(404, gin.H{"error": errors.New("no timestamps found")})
+	}
 
-// 	for rows.Next() {
-// 		var timestamp entities.Timestamp
-// 		err := rows.Scan(&timestamp.Id, &timestamp.JobId, &timestamp.TotalHours, &timestamp.JobName)
-// 		if err != nil {
-// 			log.Fatal(err)
-// 		}
-// 		timestamps = append(timestamps, timestamp)
-// 	}
-// 	c.JSON(200, timestamps)
+	if result.Error != nil {
+		c.JSON(500, gin.H{"error": result.Error.Error()})
+		return
+	}
 
-// }
+	c.JSON(http.StatusOK, timestamps)
+}
 
-// func createNewTimeStamp(c *gin.Context) {
-// 	db = database.GetDB()
 
-// 	if db == nil {
-// 		log.Fatal("Database connection not established")
-// 	}
+func createNewTimeStamp(c *gin.Context) {
+	var timestamp entities.Timestamp
+	db := database.GetDB()
 
-// 	var newTimeStamp struct {
-// 		TotalHours int64 `json:"totalHours"`
-// 		JobId      int64 `json:"jobId"`
-// 	}
+	c.BindJSON(&timestamp)
+	db.Create(&timestamp)
 
-// 	if err := c.ShouldBindJSON(&newTimeStamp); err != nil {
-// 		c.JSON(400, gin.H{
-// 			"error": "Invalid input",
-// 		})
-// 		return
-// 	}
+	c.JSON(http.StatusCreated, timestamp)
+}
 
-// 	var id int64
-// 	err := db.QueryRow(`
-// 		INSERT INTO timestamps (total_hours, job_id)
-// 		VALUES ($1, $2) RETURNING id
-// 	`, newTimeStamp.TotalHours, newTimeStamp.JobId).Scan(&id)
 
-// 	if err != nil {
-// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-// 		return
-// 	}
-
-// 	c.JSON(200, gin.H{
-// 		"id":         id,
-// 		"totalHours": newTimeStamp.TotalHours,
-// 	})
-// }
 
 func AddTimestampRoutes(router *gin.RouterGroup) {
 
-	// router.GET("/", getAllTimeStamps)
-	// router.POST("/", createNewTimeStamp)
+	router.GET("/", getAllTimeStamps)
+	router.POST("/", createNewTimeStamp)
 }
