@@ -11,11 +11,12 @@ type ApiRoutes struct {
 }
 
 type AuthRoutes struct {
-	Base        string
-	Login       string
-	Logout      string
-	SignUp      string
-	CurrentUser string
+	Base         string
+	Login        string
+	Logout       string
+	SignUp       string
+	CurrentUser  string
+	CheckSession string
 }
 
 type JobRoutes struct {
@@ -42,11 +43,12 @@ var TimestampApiRoutes = TimestampRoutes{
 }
 
 var AuthApiRoutes = AuthRoutes{
-	Base:        "/auth",
-	Login:       "/login",
-	Logout:      "/logout",
-	SignUp:      "/signup",
-	CurrentUser: "/me",
+	Base:         "/auth",
+	Login:        "/login",
+	Logout:       "/logout",
+	SignUp:       "/signup",
+	CurrentUser:  "/me",
+	CheckSession: "/sessioncheck",
 }
 
 var ApiRoutesConfig = ApiRoutes{

@@ -3,11 +3,6 @@ import { auth } from "@/firebase/firebaseConfig";
 import {GetRequest, PostRequest} from "../apiService";
 
 
-interface EmptyResponse{
-    Status: string;
-}
-
-
 export async function Login(email: string, password: string) {
     // Login with firebase
     // As http cookies are to be used, do not persist any state client side.
@@ -20,23 +15,13 @@ export async function Login(email: string, password: string) {
             // Session login endpoint is queried and the session cookie is set
             // CSRF not set as no proper instructions were set by firebase
             // const csrfToken = getCookie('csrfToken');
-            PostRequest<EmptyResponse>({ path: "auth/login", requestBody: { "id_token": idToken } });
+            PostRequest<Date>({ path: "auth/login", requestBody: { "id_token": idToken } });
         });
     });
 }
 
+interface EmptyResponse {}
 
-interface UserData {
-    UserRole: string;
-}
-
-
-export async function GetCurrentUserInformation(){
-    try {
-        const response = await GetRequest<UserData>({path: "auth/me"});
-        console.log("Logging response")
-        console.log(response);
-    }catch(error){
-        console.error("Error fetching information: ", error)
-    }
+export async function CheckSession(){
+    await GetRequest<EmptyResponse>({path: "auth/sessioncheck"});
 }

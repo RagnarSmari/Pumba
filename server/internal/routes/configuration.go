@@ -24,7 +24,7 @@ func ConfigureApiRoutes(router *gin.Engine) {
 }
 
 func configurePublicApiRoutes(apiGroup *gin.RouterGroup, apiConfig configs.ApiRoutes) {
-	authRoutes.AddPrivateAuthRoutes(apiGroup.Group(apiConfig.AuthRoutes.Base))
+	authRoutes.AddPublicAuthRoutes(apiGroup.Group(apiConfig.AuthRoutes.Base))
 }
 
 func configurePrivateApiRoutes(apiGroup *gin.RouterGroup, apiConfig configs.ApiRoutes) {
@@ -32,6 +32,6 @@ func configurePrivateApiRoutes(apiGroup *gin.RouterGroup, apiConfig configs.ApiR
 	{
 		timestamps.AddTimestampRoutes(apiGroup.Group(apiConfig.TimestampsPrefix.Base))
 		jobs.AddJobRoutes(apiGroup.Group(apiConfig.JobsPrefix.Base))
-		authRoutes.AddPublicAuthRoutes(apiGroup.Group(apiConfig.AuthRoutes.Base))
+		authRoutes.AddPrivateAuthRoutes(apiGroup.Group(apiConfig.AuthRoutes.Base))
 	}
 }

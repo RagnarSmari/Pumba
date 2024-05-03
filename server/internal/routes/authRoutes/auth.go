@@ -94,13 +94,18 @@ func currentUserInformation(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"UserRole": userRole})
 }
 
+func CheckSession(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{})
+}
+
 func AddPrivateAuthRoutes(router *gin.RouterGroup) {
 	apiConfig := configs.ApiRoutesConfig
-	router.POST(apiConfig.AuthRoutes.Login, login)
+	router.POST(apiConfig.AuthRoutes.Logout, logout)
+	router.GET(apiConfig.AuthRoutes.CurrentUser, currentUserInformation)
+	router.GET(apiConfig.AuthRoutes.CheckSession, CheckSession)
 }
 
 func AddPublicAuthRoutes(router *gin.RouterGroup) {
 	apiConfig := configs.ApiRoutesConfig
-	router.POST(apiConfig.AuthRoutes.Logout, logout)
-	router.GET(apiConfig.AuthRoutes.CurrentUser, currentUserInformation)
+	router.POST(apiConfig.AuthRoutes.Login, login)
 }
