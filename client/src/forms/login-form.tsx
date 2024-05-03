@@ -12,9 +12,9 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Login } from "@/services/auth/auth"
-import { useNavigate } from "react-router-dom"
+import { Login } from "@/services/auth/authService.ts"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -27,8 +27,8 @@ const formSchema = z.object({
 
 
 export default function LoginForm() {
-    const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const navigate = useNavigate();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -40,15 +40,9 @@ export default function LoginForm() {
     
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true);
-        try {
-            const res = await Login(values.email, values.password);
-            console.log(res);
-            navigate("/dashboard"); // Redirect on successful login
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsSubmitting(false); // Ensure we reset the submitting state
-        }
+        await Login(values.email, values.password);
+        setIsSubmitting(false); // Ensure we reset the submitting state
+        navigate("/dashboard");
     };
 
 

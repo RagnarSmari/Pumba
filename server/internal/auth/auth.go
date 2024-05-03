@@ -1,83 +1,42 @@
 package auth
 
 import (
-
-    "firebase.google.com/go/v4/auth"
-    "gorm.io/gorm"
+	"context"
+	firebase "firebase.google.com/go/v4"
+	"firebase.google.com/go/v4/auth"
+	"github.com/RagnarSmari/Pumba/internal/logger"
+	"time"
 )
 
-type AuthService struct {
-    DB      *gorm.DB
-    FireAuth *auth.Client
+var firebaseApp *firebase.App
+var firebaseClient *auth.Client
+var ClientToken *auth.Token
+
+func SetUpAuthService(context context.Context) {
+	app, err := firebase.NewApp(context, nil)
+	if err != nil {
+		logger.S().Fatalf("error initializing authentication service: %v\n", err)
+	}
+	firebaseApp = app
+	InitializeAuthService(context)
 }
 
-// Login authenticates a user with the provided credentials and returns a Firebase custom token
-// func (s *AuthService) Login(email, password string) (string, error) {
-//     // Get the user from the database
-//     var user entities.User
-//     err := s.DB.Where("email = ?", email).First(&user).Error
-//     if err != nil {
-//         if err == gorm.ErrRecordNotFound {
-//         return "", errors.New("user with email does not exist")
-//         }
-//         log.Printf("failed to get user by email from database: %v", err)
-//         return "", errors.New("internal server error")
-//     }
-   
-//     // Check if the provided password matches the user's password
-//     if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-//         return "", errors.New("incorrect password")
-//     }
-   
-//     // Generate a Firebase custom token for the user
-//     token, err := s.FireAuth.CustomToken(context.Background(), user.ID)
+func InitializeAuthService(context context.Context) {
+	client, err := firebaseApp.Auth(context)
+	if err != nil {
+		logger.S().Fatalf("error initializing authentication service: %v\n", err)
+	}
+	firebaseClient = client
+}
 
-//     if err != nil {
-//         log.Printf("failed to generate custom token: %v", err)
-//         return "", errors.New("internal server error")
-//     }
-   
-//     return token, nil
-// }
+func CreateSessionCookie(context context.Context, idToken string, expiresIn time.Duration) (string, error) {
+	return firebaseClient.SessionCookie(context, idToken, expiresIn)
+}
 
+func VerifySessionCookieAndCheckRevoked(context context.Context, cookieValue string) (*auth.Token, error) {
+	return firebaseClient.VerifySessionCookieAndCheckRevoked(context, cookieValue)
+}
 
-// Register creates a new user with the provided credentials and returns token
-// func (s *AuthService) Register(email, password string) (string, error) {
-//     // Check if the user with the email already exists
-//     var user entities.User
-//     if err := s.DB.Raw("SELECT id, email, password FROM users WHERE email = ?", email).Scan(&user).Error; err != nil {
-//         if err != gorm.ErrRecordNotFound {
-//             log.Printf("failed to get user by email from database: %v", err)
-//             return "", errors.New("internal server error")
-//         }
-//     }
-   
-//     if user.ID != "" {
-//         return "", errors.New("user with email already exists")
-//     }
-   
-//     // Generate a UUID for the new user
-//     uid := uuid.New().String()
-   
-//     // Generate a hash of the user's password using bcrypt
-//     hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-//     if err != nil {
-//         log.Printf("failed to hash password: %v", err)
-//         return "", errors.New("internal server error")
-//     }
-   
-//     // Create a new user in the database
-//     if err := s.DB.Exec("INSERT INTO users (id, email, password) VALUES (?, ?, ?)", uid, email, hashedPassword).Error; err != nil {
-//         log.Printf("failed to insert user into database: %v", err)
-//         return "", errors.New("internal server error")
-//     }
-   
-//     // Create a custom token for the user using the Firebase Admin SDK
-//     customToken, err := s.FireAuth.CustomToken(context.Background(), uid)
-//     if err != nil {
-//         log.Printf("failed to create custom token for user: %v", err)
-//         return "", errors.New("internal server error")
-//     }
-   
-//     return customToken, nil
-// }
+func RetrieveUserByToken(ctx context.Context, idToken string) (*auth.UserRecord, error) {
+	return firebaseClient.GetUser(ctx, idToken)
+}

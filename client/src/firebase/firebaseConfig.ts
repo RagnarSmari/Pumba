@@ -20,5 +20,5 @@ firebase.initializeApp(firebaseConfig);
 
 // Initialize Firebase Authentication and get a reference to the service
 const auth = firebase.auth();
-
+auth.setPersistence(firebase.auth.Auth.Persistence.NONE)
 export { auth };

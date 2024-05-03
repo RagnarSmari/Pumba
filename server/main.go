@@ -1,13 +1,16 @@
 package main
 
 import (
+	"context"
+	"github.com/gin-contrib/cors"
 	"time"
 
 	"os"
 
-	"github.com/RagnarSmari/Pumba/internal/api"
+	"github.com/RagnarSmari/Pumba/internal/auth"
 	"github.com/RagnarSmari/Pumba/internal/database"
 	"github.com/RagnarSmari/Pumba/internal/logger"
+	"github.com/RagnarSmari/Pumba/internal/routes"
 	ginzap "github.com/akath19/gin-zap"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -19,7 +22,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer logFile.Close()
+	defer func(logFile *os.File) {
+		var err = logFile.Close()
+		if err != nil {
+
+		}
+	}(logFile)
 
 	logger.InitLogger(false, logFile)
 
@@ -30,22 +38,41 @@ func main() {
 
 	// Initialize the router
 	router := gin.New()
+	// Enable CORS
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:8080", "http://localhost:5173"},
+		AllowMethods:     []string{"PUT", "PATCH", "GET", "POST", "OPTIONS"},
+		AllowHeaders:     []string{"Content-Type", "Content-Length", "Authorization", "Cache-Control"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	// Disabling this check
 	// [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 	// Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
-	router.SetTrustedProxies(nil)
+	err = router.SetTrustedProxies(nil)
+	if err != nil {
+		return
+	}
 
 	// Add the logger middleware
 	router.Use(ginzap.Logger(3*time.Second, logger.Zap))
+
 	router.Use(gin.Recovery())
 
 	// Configure the database
 	database.Configuration()
 
+	// Configure authentication service
+	auth.SetUpAuthService(context.Background())
+
 	// Configure all the api routes
-	api.ConfigureApiRoutes(router)
+	routes.ConfigureApiRoutes(router)
 
 	// Start the server
-	router.Run(":" + os.Getenv("SERVER_PORT"))
+	err = router.Run(":" + os.Getenv("SERVER_PORT"))
+	if err != nil {
+		return
+	}
 }

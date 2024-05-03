@@ -7,33 +7,25 @@ import {
 import ErrorPage from './error-page.tsx';
 import Dashboard from './pages/dashbord/dashboard.tsx';
 import LogIn from './pages/auth/login/login.tsx';
-import SignUpPage from './pages/auth/signup/signup.tsx';
 import './index.css';
-import Home from './pages/home/home.tsx';
+import MainLayout from "@/layouts/mainlayout.tsx";
 
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <Home />,
-    errorElement: <ErrorPage />
+    element: <MainLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: '/dashboard',
+        element: <Dashboard />
+      }
+    ]
   },
   {
-    path: '/login',
+    path: '/',
     element: <LogIn />,
     errorElement: <ErrorPage />
-  },
-  {
-    path: '/signup',
-    element: <SignUpPage />
-  },
-  {
-    path: '/error',
-    element: <ErrorPage />
-  },
-  {
-    path: '/dashboard',
-    element: <Dashboard />
   }
 ])
 

@@ -2,9 +2,9 @@ package database
 
 import (
 	"fmt"
+	"github.com/RagnarSmari/Pumba/internal/entities"
 	"os"
 
-	"github.com/RagnarSmari/Pumba/internal/entities"
 	"github.com/RagnarSmari/Pumba/internal/logger"
 	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
@@ -27,20 +27,18 @@ func connectToDatabaseGorm() {
 
 	DB, err = gorm.Open(dialector, &gorm.Config{})
 	if err != nil {
-		logger.S().Fatalf("Failed to connect to database", err)
+		logger.S().Fatal("Failed to connect to database", err)
 	}
 }
 
 func migrate() {
 	logger.S().Info("Running migrations...")
-	DB.AutoMigrate(&entities.User{})
-	DB.AutoMigrate(&entities.Profile{})
-	DB.AutoMigrate(&entities.Job{})
-	DB.AutoMigrate(&entities.Session{})
-	DB.AutoMigrate(&entities.Timestamp{})
+	err := DB.AutoMigrate(&entities.Job{}, &entities.Profile{}, &entities.User{}, &entities.Timestamp{})
+	if err != nil {
+		logger.S().Fatalf("Failed to run migrations")
+	}
 	logger.S().Info("Migrations ran successfully")
 }
-
 
 func getDatabaseConnectionString() string {
 
