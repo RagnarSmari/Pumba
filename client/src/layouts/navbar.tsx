@@ -4,7 +4,7 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 
 export default function NavBar() {
     return (
-        <header className="flex items-center justify-between container px-4 py-2 border-b border-gray-200">
+        <header className="flex items-center justify-between py-2 border-b border-gray-200">
             <div className="w-1/2 text-xl flex justify-start items-center">
                 <Button variant={"ghost"}  size={"icon"}>
                     <HamburgerMenuIcon />

@@ -1,7 +1,9 @@
 package database
 
 import (
+	"context"
 	"fmt"
+	"github.com/RagnarSmari/Pumba/internal/auth"
 	"github.com/RagnarSmari/Pumba/internal/entities"
 	"os"
 
@@ -13,9 +15,10 @@ import (
 
 var DB *gorm.DB
 
-func Configuration() {
+func Configuration(ctx context.Context) {
 	connectToDatabaseGorm()
 	migrate()
+	createInitialUser(ctx)
 }
 
 func connectToDatabaseGorm() {
@@ -33,7 +36,7 @@ func connectToDatabaseGorm() {
 
 func migrate() {
 	logger.S().Info("Running migrations...")
-	err := DB.AutoMigrate(&entities.Job{}, &entities.Profile{}, &entities.User{}, &entities.Timestamp{})
+	err := DB.AutoMigrate(&entities.Job{}, &entities.Profile{}, &entities.Timestamp{})
 	if err != nil {
 		logger.S().Fatalf("Failed to run migrations")
 	}
@@ -41,7 +44,6 @@ func migrate() {
 }
 
 func getDatabaseConnectionString() string {
-
 	host := os.Getenv("DATABASE_HOST")
 	port := os.Getenv("DATABASE_PORT")
 	user := os.Getenv("DATABASE_USER")
@@ -55,4 +57,28 @@ func getDatabaseConnectionString() string {
 
 func GetDB() *gorm.DB {
 	return DB
+}
+
+func createInitialUser(ctx context.Context) {
+	logger.S().Info("Creating initial user...")
+	// First check if he already exists
+	_, err := auth.GetUserByEmail(ctx, "raggism98@gmail.com")
+	if err == nil {
+		// User exists since no error
+		logger.S().Info("User already exists")
+		return
+	}
+
+	c, err := auth.CreateUser(ctx, "raggism98@gmail.com", "LoneWolf5823", "Ragnar")
+	if err != nil {
+		logger.S().Errorf("Failed to create initial user: %v", err)
+	}
+
+	// Add admin privilages
+	err = auth.SetCustomUserClaims(ctx, "admin", c.UID)
+	if err != nil {
+		logger.S().Errorf("Failed to set initial user privilages: %v", err)
+	}
+	logger.S().Info("Initial user created")
+
 }

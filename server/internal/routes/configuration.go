@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/RagnarSmari/Pumba/configs"
-	docs "github.com/RagnarSmari/Pumba/docs"
+	"github.com/RagnarSmari/Pumba/docs"
 	"github.com/RagnarSmari/Pumba/internal/logger"
 	"github.com/RagnarSmari/Pumba/internal/middlewares"
 	"github.com/RagnarSmari/Pumba/internal/routes/authRoutes"
@@ -14,13 +14,17 @@ import (
 func ConfigureApiRoutes(router *gin.Engine) {
 
 	logger.S().Info("Configuring API routes...")
-	docs.SwaggerInfo.BasePath = "/api"
 
 	apiConfig := configs.ApiRoutesConfig
 	apiGroup := router.Group(apiConfig.ApiPrefix)
 
+	docs.SwaggerInfo.BasePath = apiConfig.ApiPrefix
+
 	configurePublicApiRoutes(apiGroup, apiConfig)
-	configurePrivateApiRoutes(apiGroup, apiConfig)
+	apiGroup.Use(middlewares.AddAuthMiddleWare())
+	{
+		configurePrivateApiRoutes(apiGroup, apiConfig)
+	}
 }
 
 func configurePublicApiRoutes(apiGroup *gin.RouterGroup, apiConfig configs.ApiRoutes) {
@@ -28,10 +32,7 @@ func configurePublicApiRoutes(apiGroup *gin.RouterGroup, apiConfig configs.ApiRo
 }
 
 func configurePrivateApiRoutes(apiGroup *gin.RouterGroup, apiConfig configs.ApiRoutes) {
-	apiGroup.Use(middlewares.AddAuthMiddleWare())
-	{
-		timestamps.AddTimestampRoutes(apiGroup.Group(apiConfig.TimestampsPrefix.Base))
-		jobs.AddJobRoutes(apiGroup.Group(apiConfig.JobsPrefix.Base))
-		authRoutes.AddPrivateAuthRoutes(apiGroup.Group(apiConfig.AuthRoutes.Base))
-	}
+	timestamps.AddTimestampRoutes(apiGroup.Group(apiConfig.TimestampsPrefix.Base))
+	jobs.AddJobRoutes(apiGroup.Group(apiConfig.JobsPrefix.Base))
+	authRoutes.AddPrivateAuthRoutes(apiGroup.Group(apiConfig.AuthRoutes.Base))
 }

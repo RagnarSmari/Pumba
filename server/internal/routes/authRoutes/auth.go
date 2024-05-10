@@ -3,37 +3,23 @@ package authRoutes
 import (
 	"github.com/RagnarSmari/Pumba/configs"
 	"github.com/RagnarSmari/Pumba/internal/auth"
-	"github.com/RagnarSmari/Pumba/internal/database"
-	"github.com/RagnarSmari/Pumba/internal/entities"
+	"github.com/RagnarSmari/Pumba/internal/dtos"
 	"github.com/RagnarSmari/Pumba/internal/logger"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
 )
 
-type SignUpRequest struct {
-	FireBaseId string `json:"fireBaseId"`
-	Email      string `json:"email"`
-}
-
-type LoginRequest struct {
-	IdToken string `json:"id_token"`
-}
-
-type LoginResponse struct {
-	UerRole string `json:"user_role"`
-}
-
-type CurrentUserResponse struct {
-	UserRole string `json:"user_role"`
-}
-
-type UserByKTRequest struct {
-	Email string `json:"email"`
-}
-
-func login(c *gin.Context) {
-	var loginRequest LoginRequest
+// @Summary Creates a new session cookie for that user
+// @Description Called after a user has logged in using firebase
+// @Description Creates a secure https only cookie for user to use
+// @Tags Auth
+// @Produce json
+// @Param Job body dtos.NewSessionRequest true "Session"
+// @Success 201
+// @Router /auth/newSession [post]
+func newSession(c *gin.Context) {
+	var loginRequest dtos.NewSessionRequest
 	// Get the token sent by the client
 	if err := c.ShouldBindJSON(&loginRequest); err != nil {
 		c.JSON(400, gin.H{"err": err.Error()})
@@ -65,9 +51,16 @@ func login(c *gin.Context) {
 		true,
 		true)
 
-	c.JSON(http.StatusCreated, gin.H{"status": "success"})
+	c.JSON(http.StatusCreated, nil)
 }
 
+// @Summary Logs out a user
+// @Description Called after a user has logged out using firebase
+// @Description Overwrites the existing cookie
+// @Tags Auth
+// @Produce json
+// @Success 204
+// @Router /auth/logout [post]
 func logout(c *gin.Context) {
 	c.SetCookie(
 		"__session",
@@ -77,35 +70,25 @@ func logout(c *gin.Context) {
 		"",
 		true,
 		true)
-	c.JSON(http.StatusFound, gin.H{"": "success"})
+	c.JSON(http.StatusNoContent, nil)
 }
 
-func currentUserInformation(c *gin.Context) {
-	var user entities.User
-	var db = database.GetDB()
-
-	var err = db.Where("fire_base_id = ?", c.Param("fire_base_id")).First(&user).Error
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"err": err.Error()})
-		return
-	}
-
-	userRole := database.GetUserRoleName(user.UserRole)
-	c.JSON(http.StatusOK, gin.H{"UserRole": userRole})
-}
-
+// @Summary Session check
+// @Description Checks if session already exists, if user is already logged in
+// @Tags Auth
+// @Success 204
+// @Router /auth/sessioncheck [get]
 func CheckSession(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	c.JSON(http.StatusNoContent, nil)
 }
 
 func AddPrivateAuthRoutes(router *gin.RouterGroup) {
 	apiConfig := configs.ApiRoutesConfig
 	router.POST(apiConfig.AuthRoutes.Logout, logout)
-	router.GET(apiConfig.AuthRoutes.CurrentUser, currentUserInformation)
 	router.GET(apiConfig.AuthRoutes.CheckSession, CheckSession)
 }
 
 func AddPublicAuthRoutes(router *gin.RouterGroup) {
 	apiConfig := configs.ApiRoutesConfig
-	router.POST(apiConfig.AuthRoutes.Login, login)
+	router.POST(apiConfig.AuthRoutes.NewSession, newSession)
 }

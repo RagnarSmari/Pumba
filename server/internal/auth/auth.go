@@ -10,7 +10,6 @@ import (
 
 var firebaseApp *firebase.App
 var firebaseClient *auth.Client
-var ClientToken *auth.Token
 
 func SetUpAuthService(context context.Context) {
 	app, err := firebase.NewApp(context, nil)
@@ -37,6 +36,28 @@ func VerifySessionCookieAndCheckRevoked(context context.Context, cookieValue str
 	return firebaseClient.VerifySessionCookieAndCheckRevoked(context, cookieValue)
 }
 
-func RetrieveUserByToken(ctx context.Context, idToken string) (*auth.UserRecord, error) {
-	return firebaseClient.GetUser(ctx, idToken)
+func CreateUser(ctx context.Context, email string, password string, displayName string) (*auth.UserRecord, error) {
+	params := (&auth.UserToCreate{}).
+		Email(email).EmailVerified(false).
+		Password(password).
+		DisplayName(displayName).
+		Disabled(false)
+	return firebaseClient.CreateUser(ctx, params)
+}
+
+func SetCustomUserClaims(ctx context.Context, userRole string, uid string) error {
+	// Check if the user role exists
+	if !RoleExists(userRole) {
+		logger.S().Errorf("user role %s does not exist", userRole)
+	}
+	claims := map[string]interface{}{userRole: true}
+	return firebaseClient.SetCustomUserClaims(ctx, uid, claims)
+}
+
+func GetUserByEmail(ctx context.Context, email string) (*auth.UserRecord, error) {
+	return firebaseClient.GetUserByEmail(ctx, email)
+}
+
+func GetUserByUid(ctx context.Context, uid string) (*auth.UserRecord, error) {
+	return firebaseClient.GetUser(ctx, uid)
 }

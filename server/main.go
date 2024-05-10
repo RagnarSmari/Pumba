@@ -2,12 +2,14 @@ package main
 
 import (
 	"context"
+	"github.com/RagnarSmari/Pumba/internal/auth"
 	"github.com/gin-contrib/cors"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"time"
 
 	"os"
 
-	"github.com/RagnarSmari/Pumba/internal/auth"
 	"github.com/RagnarSmari/Pumba/internal/database"
 	"github.com/RagnarSmari/Pumba/internal/logger"
 	"github.com/RagnarSmari/Pumba/internal/routes"
@@ -16,7 +18,11 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// @title Pumba API doc
+// @version 1.0
 func main() {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	// Create or open the log file
 	logFile, err := os.Create("logs.log") // replace "log.txt" with your desired log file path
 	if err != nil {
@@ -39,7 +45,7 @@ func main() {
 	// Initialize the router
 	router := gin.New()
 	// Enable CORS
-	router.Use(cors.New(cors.Config{
+	router.Use(cors.New(cors.Config{ // TODO make origin not hard-coded
 		AllowOrigins:     []string{"http://localhost:8080", "http://localhost:5173"},
 		AllowMethods:     []string{"PUT", "PATCH", "GET", "POST", "OPTIONS"},
 		AllowHeaders:     []string{"Content-Type", "Content-Length", "Authorization", "Cache-Control"},
@@ -61,14 +67,16 @@ func main() {
 
 	router.Use(gin.Recovery())
 
-	// Configure the database
-	database.Configuration()
-
 	// Configure authentication service
 	auth.SetUpAuthService(context.Background())
 
+	// Configure the database
+	database.Configuration(ctx)
+
 	// Configure all the api routes
 	routes.ConfigureApiRoutes(router)
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Start the server
 	err = router.Run(":" + os.Getenv("SERVER_PORT"))

@@ -12,7 +12,7 @@ type ApiRoutes struct {
 
 type AuthRoutes struct {
 	Base         string
-	Login        string
+	NewSession   string
 	Logout       string
 	SignUp       string
 	CurrentUser  string
@@ -44,7 +44,7 @@ var TimestampApiRoutes = TimestampRoutes{
 
 var AuthApiRoutes = AuthRoutes{
 	Base:         "/auth",
-	Login:        "/login",
+	NewSession:   "/newSession",
 	Logout:       "/logout",
 	SignUp:       "/signup",
 	CurrentUser:  "/me",
