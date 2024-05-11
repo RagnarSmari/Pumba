@@ -1,0 +1,4 @@
+* Set up services
+    * Api calls and a basic service
+    * Set up auth service which will handle the authentication
+* Set up guard for the routes
