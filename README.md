@@ -11,5 +11,5 @@ The group/company owner can then oversee how many hours each user has recorded.
 
 ## Tech stack
 Go - for server side  
-React - for frontend  
+NextJs - for frontend  
 Postgresql - for database  
