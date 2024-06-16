@@ -9,6 +9,7 @@ global {
             NEXT_PUBLIC_FIREBASE_MESSAGINGSENDERID: string;
             NEXT_PUBLIC_FIREBASE_APPID: string;
             NEXT_PUBLIC_FIREBASE_MEASUREMENTID: string;
+            NEXT_PUBLIC_PUMBA_API_URL: string;
         }
     }
 }

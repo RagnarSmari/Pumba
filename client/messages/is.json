@@ -4,5 +4,30 @@
   },
   "About": {
     "title": "Um okkur"
+  },
+  "LoginForm": {
+    "title": "Innskráning",
+    "EnterEmailToLogin": "Sláðu inn netfangið þitt hér að neðan til að skrá þig inn",
+    "Email": "Netfang",
+    "Password": "Lykilorð",
+    "Submit": "Skrá inn",
+    "ForgotPassword": "Gleymdirðu lykilorðinu?",
+    "LoginWithGoogle": "Skrá inn með Google"
+  },
+  "Dashboard": {
+    "title": "Yfirlit"
+  },
+  "Jobs": {
+    "title": "Verk",
+    "CreateJob": "Nýtt verk"
+  },
+  "NavBar": {
+    "Dashboard": "Yfirlit",
+    "Jobs": "Verk",
+    "TimeRegistrations": "Skráningar",
+    "Users": "Notendur",
+    "Settings": "Stillingar",
+    "Logout": "Útskráning",
+    "Profile": "Prófíll"
   }
 }

@@ -10,10 +10,15 @@ export const locales = ['en', 'is'] as const;
 
 export const pathnames = {
     '/': '/',
-    '/about': {
-        en: '/about',
-        is: '/umokkur'
-    }
+    '/dashboard': {
+        en: '/dashboard',
+        is: '/yfirlit'
+    },
+    '/jobs': {
+        en: '/jobs',
+        is: '/verk'
+    },
+
 } satisfies Pathnames<typeof locales>;
 
 export const localePrefix = undefined;

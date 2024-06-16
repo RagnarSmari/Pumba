@@ -1,4 +1,5 @@
 import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 
 const firebaseConfig = {
 
@@ -10,6 +11,10 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APPID,
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENTID
 };
-const app = firebase.initializeApp(firebaseConfig);
 
-export default app;
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+
+// Initialize Firebase Authentication and get a reference to the service
+export const auth = firebase.auth();

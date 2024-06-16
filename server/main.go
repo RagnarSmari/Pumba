@@ -46,7 +46,7 @@ func main() {
 	router := gin.New()
 	// Enable CORS
 	router.Use(cors.New(cors.Config{ // TODO make origin not hard-coded
-		AllowOrigins:     []string{"http://localhost:8080", "http://localhost:5173"},
+		AllowOrigins:     []string{"http://localhost:8080", "http://localhost:3000"},
 		AllowMethods:     []string{"PUT", "PATCH", "GET", "POST", "OPTIONS"},
 		AllowHeaders:     []string{"Content-Type", "Content-Length", "Authorization", "Cache-Control"},
 		ExposeHeaders:    []string{"Content-Length"},

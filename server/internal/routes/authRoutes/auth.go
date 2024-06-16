@@ -25,7 +25,6 @@ func newSession(c *gin.Context) {
 		c.JSON(400, gin.H{"err": err.Error()})
 		return
 	}
-
 	// Set session expiration to 5 days
 	expiresIn := time.Hour * 24 * 5
 
@@ -39,7 +38,6 @@ func newSession(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
 		return
 	}
-
 	// Set cookie policy for session cookie.
 	c.SetSameSite(http.SameSiteNoneMode)
 	c.SetCookie(

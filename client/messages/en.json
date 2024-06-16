@@ -4,5 +4,30 @@
   },
   "About": {
     "title": "About us"
+  },
+  "LoginForm": {
+    "title": "Login",
+    "EnterEmailToLogin": "Enter your email below to login to your account",
+    "Email": "Email",
+    "Password": "Password",
+    "Submit": "Submit",
+    "ForgotPassword": "Forgot password?",
+    "LoginWithGoogle": "Login with Google"
+  },
+  "Dashboard": {
+    "title": "Dashboard"
+  },
+  "Jobs": {
+    "title": "Jobs",
+    "CreateJob": "Create job"
+  },
+  "NavBar": {
+    "Dashboard": "Dashboard",
+    "Jobs": "Jobs",
+    "TimeRegistrations": "Resgistrations",
+    "Users": "Users",
+    "Settings": "Settings",
+    "Logout": "Logout",
+    "Profile": "Profile"
   }
 }
