@@ -2,29 +2,27 @@ package main
 
 import (
 	"context"
-	"github.com/RagnarSmari/Pumba/internal/auth"
 	"github.com/gin-contrib/cors"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
+	"server/auth"
+	"server/internal/database"
+	"server/internal/domain"
+	"server/logger"
+	pkg "server/pkg"
 	"time"
 
 	"os"
 
-	"github.com/RagnarSmari/Pumba/internal/database"
-	"github.com/RagnarSmari/Pumba/internal/logger"
-	"github.com/RagnarSmari/Pumba/internal/routes"
 	ginzap "github.com/akath19/gin-zap"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
-// @title Pumba API doc
-// @version 1.0
 func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
 	// Create or open the log file
-	logFile, err := os.Create("logs.log") // replace "log.txt" with your desired log file path
+	logFile, err := os.Create("logs/logs.log") // replace "log.txt" with your desired log file path
 	if err != nil {
 		panic(err)
 	}
@@ -36,6 +34,7 @@ func main() {
 	}(logFile)
 
 	logger.InitLogger(false, logFile)
+	pkg.InitializeValidator()
 
 	err = godotenv.Load() // This will look for a .env file in the current directory
 	if err != nil {
@@ -74,9 +73,7 @@ func main() {
 	database.Configuration(ctx)
 
 	// Configure all the api routes
-	routes.ConfigureApiRoutes(router)
-
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	domain.ConfigureApiRoutes(router)
 
 	// Start the server
 	err = router.Run(":" + os.Getenv("SERVER_PORT"))

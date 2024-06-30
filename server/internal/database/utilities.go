@@ -1,8 +1,6 @@
 package database
 
-import (
-	"github.com/RagnarSmari/Pumba/internal/auth"
-)
+import "server/auth"
 
 func GetUserRoleName(RoleValue uint) string {
 	var rolename string

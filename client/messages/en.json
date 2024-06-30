@@ -19,7 +19,13 @@
   },
   "Jobs": {
     "title": "Jobs",
-    "CreateJob": "Create job"
+    "Add": "Add",
+    "Name": "Name",
+    "NewJob": "New job",
+    "CreateNewJob": "Create new job",
+    "Submit": "Submit",
+    "Cancel": "Cancel",
+    "NameErrorLength": "Name must be at least 5 characters long"
   },
   "NavBar": {
     "Dashboard": "Dashboard",
@@ -29,5 +35,21 @@
     "Settings": "Settings",
     "Logout": "Logout",
     "Profile": "Profile"
+  },
+  "DataTable": {
+    "NoData": "Engin gögn"
+  },
+  "Columns": {
+    "Id" : "Id",
+    "Name": "Name",
+    "OpenMenu": "Open Menu",
+    "Actions": "Actions",
+    "Edit": "Edit",
+    "Delete": "Delete"
+  },
+  "Pagination": {
+    "RowsPerPage": "Rows per page",
+    "Page": "Page",
+    "Of": "of"
   }
 }

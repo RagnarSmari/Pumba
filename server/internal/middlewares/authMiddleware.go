@@ -1,10 +1,10 @@
 package middlewares
 
 import (
-	"github.com/RagnarSmari/Pumba/internal/auth"
-	"github.com/RagnarSmari/Pumba/internal/logger"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"server/auth"
+	"server/logger"
 )
 
 func AddAuthMiddleWare() gin.HandlerFunc {
@@ -22,13 +22,12 @@ func AddAuthMiddleWare() gin.HandlerFunc {
 			return
 		}
 
-		logger.S().Infof("Cookie value: %s", cookie)
 		// Verify the session cookie. In this case an additional check is added to
 		// if the user's Firebase session was revoked, user deleted/disabled, etc.
 		decoded, err := auth.VerifySessionCookieAndCheckRevoked(c.Request.Context(), cookie)
 		if err != nil {
 			// Session cookie is invalid. Force user to login
-			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Session cookie not valid"})
 			return
 		}
 

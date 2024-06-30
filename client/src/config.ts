@@ -18,6 +18,10 @@ export const pathnames = {
         en: '/jobs',
         is: '/verk'
     },
+    '/jobs/create': {
+        en: '/jobs/create',
+        is: '/verk/nytt'
+    },
 
 } satisfies Pathnames<typeof locales>;
 

@@ -2,15 +2,8 @@
 import {
     CreateSession,
     LoginWithEmail,
-    PingServer
 } from "@/services/auth/auth";
 import {cookies} from "next/headers";
-
-
-
-export async function SessionCheckAction(){
-    return await PingServer();
-}
 
 export async function LoginWithEmailAction(email: string, password: string): Promise<boolean>{
     const cookiestore = cookies();

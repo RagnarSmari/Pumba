@@ -48,4 +48,4 @@ dist-ssr
 *.sw?
 
 # Firebase service account for admin sdk
-authCreds.json
+api/authCreds.json

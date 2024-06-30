@@ -19,7 +19,13 @@
   },
   "Jobs": {
     "title": "Verk",
-    "CreateJob": "Nýtt verk"
+    "Add": "Bæta við",
+    "Name": "Nafn",
+    "NewJob": "Nýtt verk",
+    "CreateNewJob": "Búa til nýtt verk",
+    "Submit": "Vista",
+    "Cancel": "Hætta við",
+    "NameErrorLength": "Nafnið verður að vera a.m.k 5 stafir"
   },
   "NavBar": {
     "Dashboard": "Yfirlit",
@@ -29,5 +35,21 @@
     "Settings": "Stillingar",
     "Logout": "Útskráning",
     "Profile": "Prófíll"
+  },
+  "DataTable": {
+    "NoData": "Engin gögn"
+  },
+  "Columns": {
+    "Id" : "Id",
+    "Name": "Nafn",
+    "OpenMenu": "Opna valmynd",
+    "Actions": "Aðgerðir",
+    "Edit": "Breyta",
+    "Delete": "Eyða"
+  },
+  "Pagination": {
+    "RowsPerPage": "Raðir á síðu",
+    "Page": "Síða",
+    "Of": "af"
   }
 }

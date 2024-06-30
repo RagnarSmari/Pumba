@@ -1,5 +1,0 @@
-Library code that's ok to use by external applications (e.g., /pkg/mypubliclib). Other projects will import these libraries expecting them to work, so think twice before you put something here.
-Note that the '''internal''' directory is a better way to ensure your private packages are not importable because it's enforce by Go
-
-
-Not using this directory in Pumba since the app project is really small and nesting code here doesn't really add much value to the project.
