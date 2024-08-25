@@ -3,12 +3,12 @@ package handlers
 import (
 	"context"
 	"server/internal/database"
-	entities2 "server/internal/database/entities"
+	"server/internal/database/tables"
 	"server/pkg/dtos"
 )
 
 func GetAllJobsHandler(ctx context.Context) (error, []dtos.JobDto) {
-	var jobs []entities2.Job
+	var jobs []tables.Job
 	db := database.Db.WithContext(ctx)
 
 	result := db.Find(&jobs)

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"server/internal/database/entities"
+	"server/internal/database/tables"
 	"server/logger"
 
 	_ "github.com/lib/pq"
@@ -37,7 +37,7 @@ func configureDatabase(ctx context.Context) {
 func migrate(ctx context.Context) {
 
 	logger.S().Info("Running migrations...")
-	err := Db.WithContext(ctx).AutoMigrate(&entities.Job{}, &entities.Profile{}, &entities.Timestamp{})
+	err := Db.WithContext(ctx).AutoMigrate(&tables.Job{}, &tables.User{}, &tables.Timestamp{})
 	if err != nil {
 		logger.S().Fatalf("Failed to run migrations")
 	}

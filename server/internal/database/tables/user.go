@@ -1,11 +1,7 @@
-package entities
+package tables
 
-import (
-	"gorm.io/gorm"
-)
-
-type Profile struct {
-	gorm.Model
+type User struct {
+	BaseTable
 	FirebaseUID     string
 	Kennitala       *uint `gorm:"uniqueIndex"`
 	FirstName       *string

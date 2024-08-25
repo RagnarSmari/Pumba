@@ -2,15 +2,16 @@ package handlers
 
 import (
 	"errors"
+	"server/internal/database"
+	"server/internal/database/tables"
+	"server/pkg/dtos"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"server/internal/database"
-	"server/internal/database/entities"
-	"server/pkg/dtos"
 )
 
 func GetAllTimestampsForJobHandler(c *gin.Context, jobId int) (error, []dtos.TimestampDto) {
-	var timestamps []entities.Timestamp
+	var timestamps []tables.Timestamp
 	var db = database.Db.WithContext(c)
 
 	err := db.Where("job_id = ?", jobId).Find(&timestamps).Error

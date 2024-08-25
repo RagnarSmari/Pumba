@@ -2,16 +2,17 @@ package handlers
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	"server/internal/database"
-	"server/internal/database/entities"
+	"server/internal/database/tables"
 	"server/logger"
 	"server/pkg/dtos"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func GetJobByIdHandler(c *gin.Context, id int) (error, dtos.JobDto) {
-	var job entities.Job
+	var job tables.Job
 	var response dtos.JobDto
 	var db = database.Db.WithContext(c)
 

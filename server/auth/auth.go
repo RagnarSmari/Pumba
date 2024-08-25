@@ -2,17 +2,22 @@ package auth
 
 import (
 	"context"
-	firebase "firebase.google.com/go/v4"
-	"firebase.google.com/go/v4/auth"
+	"os"
 	"server/logger"
 	"time"
+
+	firebase "firebase.google.com/go/v4"
+	"firebase.google.com/go/v4/auth"
+	"google.golang.org/api/option"
 )
 
 var firebaseApp *firebase.App
 var firebaseClient *auth.Client
 
 func SetUpAuthService(context context.Context) {
-	app, err := firebase.NewApp(context, nil)
+	filePath := os.Getenv("FIREBASE_SERVICE_FILE")
+	opt := option.WithCredentialsFile(filePath)
+	app, err := firebase.NewApp(context, nil, opt)
 	if err != nil {
 		logger.S().Fatalf("error initializing authentication service: %v\n", err)
 	}

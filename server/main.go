@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"github.com/gin-contrib/cors"
+	"log"
+	"os"
 	"server/auth"
 	"server/internal/database"
 	"server/internal/domain"
@@ -10,7 +11,7 @@ import (
 	pkg "server/pkg"
 	"time"
 
-	"os"
+	"github.com/gin-contrib/cors"
 
 	ginzap "github.com/akath19/gin-zap"
 	"github.com/gin-gonic/gin"
@@ -18,22 +19,30 @@ import (
 )
 
 func main() {
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	// Create or open the log file
-	logFile, err := os.Create("logs/logs.log") // replace "log.txt" with your desired log file path
+	// Ensure the logs directory exists
+	err := os.MkdirAll("./logs", os.ModePerm)
 	if err != nil {
-		panic(err)
+		log.Fatalf("Failed to create log directory: %v", err)
+	}
+
+	// Create the log file
+	logFile, err := os.Create("./logs/logs.log")
+	if err != nil {
+		log.Fatalf("Failed to create log file: %v", err)
 	}
 	defer func(logFile *os.File) {
-		var err = logFile.Close()
+		err := logFile.Close()
 		if err != nil {
-
+			log.Printf("Failed to close log file: %v", err)
 		}
 	}(logFile)
 
 	logger.InitLogger(false, logFile)
+	logger.S().Info("Initializing server")
 	pkg.InitializeValidator()
 
 	err = godotenv.Load() // This will look for a .env file in the current directory
