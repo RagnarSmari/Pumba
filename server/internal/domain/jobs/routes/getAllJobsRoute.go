@@ -15,7 +15,7 @@ func GetAllJobsRoute(c *gin.Context) {
 	if err != nil {
 		pkg.SendResponse(c, pkg.Response{
 			Status: http.StatusInternalServerError,
-			Error:  []string{err.Error()},
+			Error:  err.Error(),
 		})
 	}
 

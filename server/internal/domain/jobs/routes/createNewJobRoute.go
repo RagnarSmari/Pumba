@@ -15,7 +15,7 @@ func CreateNewJobRoute(c *gin.Context) {
 	if err := c.ShouldBindJSON(&request); err != nil {
 		pkg.SendResponse(c, pkg.Response{
 			Status: http.StatusBadRequest,
-			Error:  []string{"Invalid request"},
+			Error:  err.Error(),
 		})
 	}
 
@@ -25,21 +25,20 @@ func CreateNewJobRoute(c *gin.Context) {
 		// Validation error
 		pkg.SendResponse(c, pkg.Response{
 			Status: http.StatusBadRequest,
-			Error:  []string{err.Error()},
+			Error:  err.Error(),
 		})
 	}
 	// Call the handler
-	err, newJob := handlers.CreateNewJobHandler(c, request)
+	err = handlers.CreateNewJobHandler(c, request)
 	if err != nil {
 		pkg.SendResponse(c, pkg.Response{
 			Status: http.StatusInternalServerError,
-			Error:  []string{err.Error()},
+			Error:  err.Error(),
 		})
 	}
 
 	// Return
 	pkg.SendResponse(c, pkg.Response{
-		Status: http.StatusBadRequest,
-		Data:   newJob,
+		Status: http.StatusCreated,
 	})
 }

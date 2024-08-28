@@ -11,26 +11,18 @@ import (
 )
 
 func GetAllTimestampsForJobHandler(c *gin.Context, jobId int) (error, []dtos.TimestampDto) {
-	var timestamps []tables.Timestamp
+	var timestamps []dtos.TimestampDto
 	var db = database.Db.WithContext(c)
 
-	err := db.Where("job_id = ?", jobId).Find(&timestamps).Error
+	result := db.Model(&tables.Timestamp{}).Where("job_id = ?", jobId).Joins("left join jobs on jobs.id = timestamps.job_id").Scan(&timestamps)
 
-	if errors.Is(err, gorm.ErrRecordNotFound) {
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return errors.New("Job not found"), nil
 	}
 
-	if err != nil {
-		return err, nil
+	if result.Error != nil {
+		return result.Error, nil
 	}
 
-	// Map entities.Timestamp to TimestampDto
-	var timestampDtos []dtos.TimestampDto
-	for _, timestamp := range timestamps {
-		timestampDto := dtos.TimestampDto{
-			TotalHours: timestamp.TotalHours,
-		}
-		timestampDtos = append(timestampDtos, timestampDto)
-	}
-
-	return nil, timestampDtos
+	return nil, timestamps
 }

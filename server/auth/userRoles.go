@@ -1,41 +1,30 @@
 package auth
 
-import (
-	"fmt"
-)
+import "errors"
 
-type Role struct {
-	Name  string
-	Value uint
-}
+type UserRole int
 
 const (
-	UserRoleValue    = 1
-	AdminRoleValue   = 2
-	ManagerRoleValue = 3
+	Admin UserRole = iota
+	Owner
+	Worker
 )
 
-var (
-	UserRole    = Role{Name: "user", Value: UserRoleValue}
-	AdminRole   = Role{Name: "admin", Value: AdminRoleValue}
-	ManagerRole = Role{Name: "manager", Value: ManagerRoleValue}
-)
-
-var UserRoles = []Role{UserRole, AdminRole, ManagerRole}
-
-func RoleExists(role string) bool {
-	for _, r := range UserRoles {
-		if r.Name == role {
-			return true
-		}
-	}
-	return false
+// Convert role to string
+func (r UserRole) String() string {
+	return [...]string{"Admin", "Owner", "Worker"}[r]
 }
 
-func NewUserRole(role string) (string, error) {
-	if !RoleExists(role) {
-		// TODO Use logger instead
-		return "", fmt.Errorf("Invalid role: %s", role)
+// Convert string to role
+func ConvertToRole(role string) (UserRole, error) {
+	switch role {
+	case "Admin":
+		return Admin, nil
+	case "Owner":
+		return Owner, nil
+	case "Worker":
+		return Worker, nil
+	default:
+		return -1, errors.New("Error converting role: " + role + "role does not exist")
 	}
-	return role, nil
 }

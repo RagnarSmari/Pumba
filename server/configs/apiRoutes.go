@@ -7,16 +7,11 @@ type ApiRoutes struct {
 	JobsPrefix       JobRoutes
 	TimestampsPrefix TimestampRoutes
 	SessionRoutes    SessionRoutes
-	AuthRoutes       AuthRoutes
+	UserRoutes       UserRoutes
 }
 
-type AuthRoutes struct {
-	Base         string
-	NewSession   string
-	Logout       string
-	SignUp       string
-	CurrentUser  string
-	CheckSession string
+type UserRoutes struct {
+	Base string
 }
 
 type JobRoutes struct {
@@ -42,18 +37,13 @@ var TimestampApiRoutes = TimestampRoutes{
 	Base: "/timestamp",
 }
 
-var AuthApiRoutes = AuthRoutes{
-	Base:         "/auth",
-	NewSession:   "/newSession",
-	Logout:       "/logout",
-	SignUp:       "/signup",
-	CurrentUser:  "/me",
-	CheckSession: "/sessioncheck",
+var UserApiRoutes = UserRoutes{
+	Base: "/user",
 }
 
 var ApiRoutesConfig = ApiRoutes{
 	ApiPrefix:        "/api",
 	JobsPrefix:       JobApiRoutes,
 	TimestampsPrefix: TimestampApiRoutes,
-	AuthRoutes:       AuthApiRoutes,
+	UserRoutes:       UserApiRoutes,
 }

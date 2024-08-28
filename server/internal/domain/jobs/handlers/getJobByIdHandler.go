@@ -30,6 +30,7 @@ func GetJobByIdHandler(c *gin.Context, id int) (error, dtos.JobDto) {
 	// Map entities.Job to JobDto
 	response.Id = job.ID
 	response.Name = job.Name
+	response.JobNr = job.JobNr
 
 	return nil, response
 

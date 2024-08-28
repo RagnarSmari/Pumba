@@ -8,6 +8,7 @@ import (
 	"server/pkg/dtos"
 )
 
+// Creates new timestamp for currently logged in user
 func CreateNewTimestampRoute(c *gin.Context) {
 	var request dtos.TimestampRequest
 
@@ -15,7 +16,7 @@ func CreateNewTimestampRoute(c *gin.Context) {
 	if err := c.ShouldBindJSON(&request); err != nil {
 		pkg.SendResponse(c, pkg.Response{
 			Status: http.StatusBadRequest,
-			Error:  []string{"Invalid request"},
+			Error:  err.Error(),
 		})
 	}
 
@@ -25,16 +26,21 @@ func CreateNewTimestampRoute(c *gin.Context) {
 		// Validation error
 		pkg.SendResponse(c, pkg.Response{
 			Status: http.StatusBadRequest,
-			Error:  []string{err.Error()},
+			Error:  err.Error(),
 		})
 	}
 
-	newTimestamp, err := handlers.CreateNewTimestampHandler(c, request)
+	err = handlers.CreateNewTimestampHandler(c, request)
+
+	if err != nil {
+		pkg.SendResponse(c, pkg.Response{
+			Status: http.StatusBadRequest,
+			Error:  err.Error(),
+		})
+	}
 
 	// Return
 	pkg.SendResponse(c, pkg.Response{
-		Status: http.StatusBadRequest,
-		Data:   newTimestamp,
+		Status: http.StatusCreated,
 	})
-
 }

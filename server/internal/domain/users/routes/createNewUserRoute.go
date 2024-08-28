@@ -3,42 +3,45 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"server/internal/domain/auth/handlers"
+	"server/internal/domain/users/handlers"
 	"server/pkg"
 	"server/pkg/dtos"
 )
 
-func NewSessionRoute(c *gin.Context) {
-	var request dtos.NewSessionRequest
+func CreateNewUserRoute(c *gin.Context) {
+	var request dtos.NewUserRequest
 
-	// Validate
 	if err := c.ShouldBindJSON(&request); err != nil {
 		pkg.SendResponse(c, pkg.Response{
 			Status: http.StatusBadRequest,
-			Error:  []string{"Invalid request"},
+			Error:  err.Error(),
 		})
+		return
 	}
 
 	// Validate
 	err := pkg.Validate.Struct(request)
 	if err != nil {
-		// Validation error
 		pkg.SendResponse(c, pkg.Response{
 			Status: http.StatusBadRequest,
-			Error:  []string{"Validation error:\n" + err.Error()},
+			Error:  err.Error(),
 		})
+		return
 	}
 
-	err, cookie := handlers.CreateNewSessionHandler(c, request.IdToken)
+	err, newUser := handlers.CreateUserHandler(c, request)
 	if err != nil {
 		pkg.SendResponse(c, pkg.Response{
 			Status: http.StatusInternalServerError,
-			Error:  []string{"Failed to create new session\n" + err.Error()},
+			Error:  err.Error(),
 		})
+		return
 	}
 
+	// Return
 	pkg.SendResponse(c, pkg.Response{
 		Status: http.StatusCreated,
-		Data:   cookie,
+		Data:   newUser,
 	})
+
 }

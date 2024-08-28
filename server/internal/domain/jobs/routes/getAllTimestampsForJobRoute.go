@@ -15,7 +15,7 @@ func GetAllTimestampsForJobRoute(c *gin.Context) {
 	if err != nil {
 		pkg.SendResponse(c, pkg.Response{
 			Status: http.StatusBadRequest,
-			Error:  []string{err.Error()},
+			Error:  err.Error(),
 		})
 	}
 
@@ -23,7 +23,7 @@ func GetAllTimestampsForJobRoute(c *gin.Context) {
 	if err != nil {
 		pkg.SendResponse(c, pkg.Response{
 			Status: http.StatusNotFound,
-			Error:  []string{err.Error()},
+			Error:  err.Error(),
 		})
 	}
 

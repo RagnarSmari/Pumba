@@ -3,6 +3,7 @@ package dtos
 type TimestampDto struct {
 	Id         uint
 	TotalHours int
+	JobName    string
 }
 
 type TimestampRequest struct {

@@ -3,9 +3,9 @@ package domain
 import (
 	"github.com/gin-gonic/gin"
 	"server/configs"
-	"server/internal/domain/auth"
 	"server/internal/domain/jobs"
 	"server/internal/domain/timestamps"
+	"server/internal/domain/users"
 	"server/internal/middlewares"
 	"server/logger"
 )
@@ -25,11 +25,10 @@ func ConfigureApiRoutes(router *gin.Engine) {
 }
 
 func configurePublicApiRoutes(apiGroup *gin.RouterGroup, apiConfig configs.ApiRoutes) {
-	auth.AddPublicAuthRoutes(apiGroup.Group(apiConfig.AuthRoutes.Base))
 }
 
 func configurePrivateApiRoutes(apiGroup *gin.RouterGroup, apiConfig configs.ApiRoutes) {
 	timestamps.AddTimestampRoutes(apiGroup.Group(apiConfig.TimestampsPrefix.Base))
 	jobs.AddJobRoutes(apiGroup.Group(apiConfig.JobsPrefix.Base))
-	auth.AddPrivateAuthRoutes(apiGroup.Group(apiConfig.AuthRoutes.Base))
+	users.AddUserRoutes(apiGroup.Group(apiConfig.UserRoutes.Base))
 }

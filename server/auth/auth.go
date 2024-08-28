@@ -41,6 +41,11 @@ func VerifySessionCookieAndCheckRevoked(context context.Context, cookieValue str
 	return firebaseClient.VerifySessionCookieAndCheckRevoked(context, cookieValue)
 }
 
+func VerifyIdToken(context context.Context, idToken string) (*auth.Token, error) {
+	return firebaseClient.VerifyIDToken(context, idToken)
+
+}
+
 func CreateUser(ctx context.Context, email string, password string, displayName string) (*auth.UserRecord, error) {
 	params := (&auth.UserToCreate{}).
 		Email(email).EmailVerified(false).
@@ -50,12 +55,9 @@ func CreateUser(ctx context.Context, email string, password string, displayName 
 	return firebaseClient.CreateUser(ctx, params)
 }
 
-func SetCustomUserClaims(ctx context.Context, userRole string, uid string) error {
+func SetCustomUserClaims(ctx context.Context, role UserRole, uid string) error {
 	// Check if the user role exists
-	if !RoleExists(userRole) {
-		logger.S().Errorf("user role %s does not exist", userRole)
-	}
-	claims := map[string]interface{}{userRole: true}
+	claims := map[string]interface{}{role.String(): true}
 	return firebaseClient.SetCustomUserClaims(ctx, uid, claims)
 }
 
