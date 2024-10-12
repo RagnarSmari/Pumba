@@ -1,7 +1,6 @@
 import createMiddleware from 'next-intl/middleware';
 import {pathnames, locales, localePrefix, defaultLocale} from './config';
 import {NextRequest, NextResponse} from "next/server";
-import {PingServer} from "@/services/auth/auth";
 
 const intlMiddleware = createMiddleware({
     defaultLocale,
@@ -43,11 +42,6 @@ export default async function middleware(req : NextRequest) {
     if(isPublicPage) {
         return intlMiddleware(req);
     } else {
-        let res = await PingServer();
-        if(res.status === 401){
-            console.error("Unauthorized");
-            return NextResponse.redirect(new URL('/login', req.nextUrl.href).toString());
-        }
         return intlMiddleware(req);
     }
 }

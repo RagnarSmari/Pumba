@@ -36,6 +36,7 @@ export default function LoginForm(){
         try {
             let res = await LoginWithEmailAction(data.email, data.password);
             if (!res) return; // TODO show error message
+            console.log("rerouting")
             router.push("/dashboard")
         } catch (error) {
             console.error(error)

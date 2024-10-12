@@ -6,7 +6,3 @@ export interface LoginRoutePostRequestProprs{
     email: string;
     password: string;
 }
-
-export interface NewSessionResponse{
-    cookie: string
-}
