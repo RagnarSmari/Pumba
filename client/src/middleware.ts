@@ -38,10 +38,28 @@ export default async function middleware(req : NextRequest) {
         'i'
     );
     const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
+    const sessionCookie = req.cookies.get('__session');
+    const isLoggedIn = sessionCookie !== undefined;
 
-    if(isPublicPage) {
-        return intlMiddleware(req);
-    } else {
+    if (isPublicPage) {
         return intlMiddleware(req);
     }
+
+    if (!isLoggedIn) {
+        // Extract the locale from the URL pathname
+        const pathnameParts = req.nextUrl.pathname.split('/');
+        let localeFromPath: 'en' | 'is';
+        if (pathnameParts[1] === 'en' || pathnameParts[1] === 'is') {
+            localeFromPath = pathnameParts[1] as 'en' | 'is';
+        } else {
+            localeFromPath = 'en'; // Default to 'en' or use defaultLocale
+        }        // Build the redirect URL using the origin
+        
+        const redirectUrl = new URL(`/${localeFromPath}/login`, req.nextUrl.origin);
+        console.log('Redirect URL:', redirectUrl.toString());
+
+        return NextResponse.redirect(redirectUrl);
+    }
+    // User is logged in, proceed with the request
+    return intlMiddleware(req);
 }

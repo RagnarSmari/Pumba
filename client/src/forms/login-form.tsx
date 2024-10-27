@@ -35,6 +35,7 @@ export default function LoginForm(){
     async function onSubmit(data: z.infer<typeof formSchema>){
         try {
             let res = await LoginWithEmailAction(data.email, data.password);
+            console.log(res);
             if (!res) return; // TODO show error message
             console.log("rerouting")
             router.push("/dashboard")
