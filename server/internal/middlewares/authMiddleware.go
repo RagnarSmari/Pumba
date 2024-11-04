@@ -4,51 +4,32 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"server/auth"
-	"server/internal/domain/users/handlers"
 	"server/logger"
-	"server/pkg"
 )
 
 func AddAuthMiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		authHeader := c.GetHeader("Authorization")
-		if authHeader == "" {
-			logger.S().Error("No Authorization header")
-			pkg.SendResponse(c, pkg.Response{
-				Status: http.StatusUnauthorized,
-				Error:  "no Authorization header",
-			})
-			c.Abort()
-			return
-		}
-
-		idToken := authHeader[len("Bearer "):]
-		token, err := auth.VerifyIdToken(c.Request.Context(), idToken)
+		cookie, err := c.Cookie("pumbaSession")
 		if err != nil {
-			logger.S().Errorf("Error verifying ID token: %v", err)
-			pkg.SendResponse(c, pkg.Response{
-				Status: http.StatusUnauthorized,
-				Error:  "invalid id token",
-			})
+			// Session cookie is unavailable. Force user to login
+			logger.S().Errorf("Cookie not available: %v", err)
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Cookie not available"})
 			c.Abort()
 			return
 		}
 
-		uid := token.UID
-
-		// Check if the user exists within our database
-		err, doesExist := handlers.CheckIfUserExistsHandler(c.Request.Context(), uid)
-		if err != nil || !doesExist {
-			pkg.SendResponse(c, pkg.Response{
-				Status: http.StatusUnauthorized,
-				Error:  "user does not exist",
-			})
+		// Verify the session cookie. In this case an additional check is added to
+		// if the user's Firebase session was revoked, user deleted/disabled, etc.
+		decoded, err := auth.VerifySessionCookieAndCheckRevoked(c.Request.Context(), cookie)
+		if err != nil {
+			// Session cookie is invalid. Force user to login
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Session cookie not valid"})
 			return
 		}
 
-		c.Set("user_role", token.Claims)
-		c.Set("user_uid", uid)
+		c.Set("user_role", decoded.Claims)
+		c.Set("user_uid", decoded.UID)
 		c.Next()
 	}
 }

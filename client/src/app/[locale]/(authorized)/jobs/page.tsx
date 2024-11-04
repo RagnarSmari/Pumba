@@ -1,16 +1,14 @@
 import {GetAllJobs} from "@/services/jobs/jobsService";
 import {getTranslations} from "next-intl/server";
-import {DataTable} from "@/components/data-table/data-table";
-import {columns} from "@/app/[locale]/(authorized)/jobs/columns";
 import AddJobDialog from "@/components/dialogs/addJob-dialog";
 import {Button} from "@/components/ui/button";
 import React from "react";
+import JobsDataTable from "@/app/[locale]/(authorized)/jobs/jobsDataTable";
 
 
 
 export default async function Jobs() {
     const t = await getTranslations('Jobs');
-    let jobs = await GetAllJobs();
     return (
         <div>
             <div>
@@ -24,7 +22,7 @@ export default async function Jobs() {
                         <Button variant="default">{t('Add')}</Button>
                     )}/>
                 </div>
-                <DataTable columns={columns} data={jobs}/>
+                <JobsDataTable/>
             </div>
         </div>
     );

@@ -25,7 +25,9 @@
     "CreateNewJob": "Create new job",
     "Submit": "Submit",
     "Cancel": "Cancel",
-    "NameErrorLength": "Name must be at least 5 characters long"
+    "NameErrorLength": "Name must be at least 5 characters long",
+    "JobNumberLength": "Job number must be more than 1",
+    "JobNr": "Job number"
   },
   "NavBar": {
     "Dashboard": "Dashboard",

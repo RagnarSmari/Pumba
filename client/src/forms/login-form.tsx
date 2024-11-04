@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import {useRouter} from "next/navigation";
 import {LoginWithEmailAction} from "@/actions/auth-actions";
+import {apiRequest} from "@/services/apiService";
 
 export default function LoginForm(){
     const t = useTranslations('LoginForm');
@@ -33,15 +34,14 @@ export default function LoginForm(){
     })
 
     async function onSubmit(data: z.infer<typeof formSchema>){
-        try {
-            let res = await LoginWithEmailAction(data.email, data.password);
-            console.log(res);
-            if (!res) return; // TODO show error message
-            console.log("rerouting")
-            router.push("/dashboard")
-        } catch (error) {
-            console.error(error)
-        }
+        var res = await LoginWithEmailAction(data.email, data.password);
+        if (!res) return;
+        var sessionRes = await apiRequest("POST", "/session/new", {
+            IdToken: res,
+            CsrfToken: res
+        });
+        if (sessionRes.status != 200) return;
+        router.push("/dashboard");
     }
 
     return (

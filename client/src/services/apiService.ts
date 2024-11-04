@@ -1,56 +1,52 @@
-import {cookies} from "next/headers";
-import {all} from "axios";
-
 const apiURL = process.env.NEXT_PUBLIC_PUMBA_API_URL;
 
-function CreateUrl(url: string){
-    return `${apiURL}/${url}`;
-}
 
-export async function GET(url: string){
-    const obj = {
-        url: CreateUrl(url),
-        method: "GET",
-    }
-    return await REQUEST(obj);
-}
 
-interface POSTProps {
-    url: string;
-    body: object;
-}
-export async function POST(props: POSTProps){
-    const obj = {
-        url: CreateUrl(props.url),
-        method: "POST",
-        body: props.body
-    }
-    return await REQUEST(obj);
-}
-
-interface REQUESTProps {
-    url: string;
-    method: string;
-    body?: object;
-}
-async function REQUEST(props: REQUESTProps){
-    console.log("Making request")
-    let cookieStore = cookies();
-    let allcookies = cookieStore.get("__session");
-    let sessionCookie = "";
-    if (allcookies){
-        sessionCookie = "__session=" + allcookies.value;
-    }
-
-    return await fetch(props.url, {
-        method: props.method,
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "include",
+export async function apiRequestT<T>(
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+    url: string,
+    body?: any
+): Promise<ApiResponse<T>> {
+    let options: RequestInit = {
+        method,
         headers: {
-            "Content-Type": "application/json",
-            "Cookie": sessionCookie
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify(props.body)
-    })
+        credentials: 'include',
+        body: body ? JSON.stringify(body) : undefined,
+    };
+    
+    const wholeUrl = apiURL + url;
+    const response = await fetch(wholeUrl, options);
+    const data = await response.json();
+    return {
+        status: response.status,
+        data: data as (T | null),
+        error: ""
+    }
+}
+
+export async function apiRequest(
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+    url: string,
+    body?: any
+): Promise<ApiResponse<null>> {
+    var somebody = body ? JSON.stringify(body) : undefined;
+    console.log(somebody)
+    let options: RequestInit = {
+        method,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: somebody
+    };
+
+    const wholeUrl = apiURL + url;
+    const response = await fetch(wholeUrl, options);
+    return {
+        status: response.status,
+        data: null,
+        error: ""
+    }
 }

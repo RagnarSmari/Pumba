@@ -41,9 +41,15 @@ var UserApiRoutes = UserRoutes{
 	Base: "/user",
 }
 
+var SessionApiRoutes = SessionRoutes{
+	Base:    "/session",
+	Refresh: "/refresh",
+}
+
 var ApiRoutesConfig = ApiRoutes{
 	ApiPrefix:        "/api",
 	JobsPrefix:       JobApiRoutes,
 	TimestampsPrefix: TimestampApiRoutes,
 	UserRoutes:       UserApiRoutes,
+	SessionRoutes:    SessionApiRoutes,
 }

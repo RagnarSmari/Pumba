@@ -15,8 +15,8 @@ import {
 } from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
-import {CreateJobAction} from "@/actions/job-actions";
 import ToastAlert from "@/components/basic/toast-alert";
+import {apiRequest} from "@/services/apiService";
 
 export interface JobFormProps {
     AfterSubmit?: () => void;
@@ -27,30 +27,35 @@ export default function JobForm({AfterSubmit, OnCancel}: JobFormProps ){
     const t = useTranslations('Jobs');
     const router = useRouter();
     const formSchema = z.object({
-        name: z.string().min(5, {message: t('NameErrorLength')})
+        name: z.string().min(5, {message: t('NameErrorLength')}),
+        jobNr: z.coerce.number().min(1, {message: t('JobNumberErrorLength')})
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: ""
+            name: "",
+            jobNr: 0
         },
     })
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
         try {
-            let res = await CreateJobAction(data.name);
-            if (!res){
-                ToastAlert({Title: t('Error'), Message: t('ErrorCreatingJob')})
-                return;
-            }
+            await apiRequest('POST', '/job', { name: data.name, jobNr: data.jobNr });            
+            // if (!res){
+            //     ToastAlert({Title: t('Error'), Message: t('ErrorCreatingJob')})
+            //     return;
+            // }
         } catch (error) {
             console.error(error)
+            ToastAlert({ Title: t('Error'), Message: 'Error'});
         }
     }
 
     async function onCancel(){
-        OnCancel && OnCancel();
+        if(OnCancel != undefined) {
+            OnCancel();
+        }
     }
 
     return (
@@ -61,15 +66,27 @@ export default function JobForm({AfterSubmit, OnCancel}: JobFormProps ){
                     name="name"
                     render={({ field }) => (
                         <FormItem className="grid gap-0">
-                            {/*<FormLabel htmlFor="name">{t('Name')}</FormLabel>*/}
+                            <FormLabel htmlFor="name">{t('Name')}</FormLabel>
                             <FormControl>
                                 <Input placeholder={t('Name')} {...field}/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>
+                    )}/>               
+                <FormField
+                    control={form.control}
+                    name="jobNr"
+                       render={({ field }) => (
+                        <FormItem className="grid gap-0">
+                            <FormLabel htmlFor="jobNr">{t('JobNr')}</FormLabel>
+                            <FormControl>
+                                <Input placeholder={t('JobNr')} {...field}/>
+                            </FormControl>
+                            <FormMessage/>
+                        </FormItem>
                     )}/>
                 <div className="flex justify-between py-3">
-                    <Button variant="outline" onClick={onCancel}>{t('Cancel')}</Button>
+                    {/*<Button variant="outline" onClick={onCancel}>{t('Cancel')}</Button>*/}
                     <Button type="submit">{t('Submit')}</Button>
                 </div>
             </form>

@@ -27,6 +27,7 @@ func CreateNewJobHandler(ctx context.Context, jobRequest dtos.PostJobRequest) er
 	db.Create(&job)
 	jobResponse.Id = job.ID
 	jobResponse.Name = job.Name
+	jobResponse.JobNr = job.JobNr
 
 	return nil
 }

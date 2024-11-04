@@ -38,7 +38,7 @@ export default async function middleware(req : NextRequest) {
         'i'
     );
     const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
-    const sessionCookie = req.cookies.get('__session');
+    const sessionCookie = req.cookies.get('pumbaSession');
     const isLoggedIn = sessionCookie !== undefined;
 
     if (isPublicPage) {

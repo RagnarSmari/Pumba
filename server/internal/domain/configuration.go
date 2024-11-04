@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"server/configs"
 	"server/internal/domain/jobs"
+	"server/internal/domain/sessions"
 	"server/internal/domain/timestamps"
 	"server/internal/domain/users"
 	"server/internal/middlewares"
@@ -25,6 +26,7 @@ func ConfigureApiRoutes(router *gin.Engine) {
 }
 
 func configurePublicApiRoutes(apiGroup *gin.RouterGroup, apiConfig configs.ApiRoutes) {
+	sessions.AddSessionRoutes(apiGroup.Group(apiConfig.SessionRoutes.Base))
 }
 
 func configurePrivateApiRoutes(apiGroup *gin.RouterGroup, apiConfig configs.ApiRoutes) {

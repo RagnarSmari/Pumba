@@ -20,8 +20,9 @@ func GetAllJobsHandler(ctx context.Context) (error, []dtos.JobDto) {
 	var jobDtos []dtos.JobDto
 	for _, job := range jobs {
 		jobDto := dtos.JobDto{
-			Id:   job.ID,
-			Name: job.Name,
+			Id:    job.ID,
+			Name:  job.Name,
+			JobNr: job.JobNr,
 		}
 		jobDtos = append(jobDtos, jobDto)
 	}
