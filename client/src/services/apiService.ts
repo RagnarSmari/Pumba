@@ -1,16 +1,21 @@
 const apiURL = process.env.NEXT_PUBLIC_PUMBA_API_URL;
 
-
+const fetcher = (
+    input: RequestInfo | URL,
+    init?: RequestInit | Promise<Response>
+) => fetch(input).then(res => res.json())
 
 export async function apiRequestT<T>(
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
     url: string,
-    body?: any
+    body?: any,
+    cookie?: string
 ): Promise<ApiResponse<T>> {
     let options: RequestInit = {
         method,
         headers: {
             'Content-Type': 'application/json',
+            Cookie : `pumbaSession=${cookie}`
         },
         credentials: 'include',
         body: body ? JSON.stringify(body) : undefined,
@@ -29,17 +34,17 @@ export async function apiRequestT<T>(
 export async function apiRequest(
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
     url: string,
-    body?: any
+    body?: any,
+    cookie?: string
 ): Promise<ApiResponse<null>> {
-    var somebody = body ? JSON.stringify(body) : undefined;
-    console.log(somebody)
     let options: RequestInit = {
         method,
         headers: {
             'Content-Type': 'application/json',
+            Cookie : `pumbaSession=${cookie}`
         },
         credentials: 'include',
-        body: somebody
+        body: body ? JSON.stringify(body) : undefined,
     };
 
     const wholeUrl = apiURL + url;

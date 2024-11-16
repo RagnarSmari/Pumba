@@ -1,13 +1,9 @@
 import createMiddleware from 'next-intl/middleware';
-import {pathnames, locales, localePrefix, defaultLocale} from './config';
+import {routing} from './i18n/routing';
 import {NextRequest, NextResponse} from "next/server";
 
-const intlMiddleware = createMiddleware({
-    defaultLocale,
-    locales,
-    localePrefix,
-    pathnames
-});
+const intlMiddleware = createMiddleware(routing)
+
 
 const publicRoutes = [
     '/login',
@@ -31,8 +27,17 @@ export const config = {
 };
 
 export default async function middleware(req : NextRequest) {
+    const defaultLocale = await req.headers.get('en') || 'is';
+    const handleI18nRouting = createMiddleware({
+        locales: [ 'en', 'is'],
+        defaultLocale
+    });
+    const response = handleI18nRouting(req);
+    
+    response.headers.set('en', defaultLocale);
+    
     const publicPathnameRegex = RegExp(
-        `^(/(${locales.join('|')}))?(${publicRoutes
+        `^(/(${routing.locales.join('|')}))?(${publicRoutes
             .flatMap((p) => (p === '/' ? ['', '/'] : p))
             .join('|')})/?$`,
         'i'
@@ -42,21 +47,13 @@ export default async function middleware(req : NextRequest) {
     const isLoggedIn = sessionCookie !== undefined;
 
     if (isPublicPage) {
-        return intlMiddleware(req);
+        return response;
     }
 
     if (!isLoggedIn) {
         // Extract the locale from the URL pathname
-        const pathnameParts = req.nextUrl.pathname.split('/');
-        let localeFromPath: 'en' | 'is';
-        if (pathnameParts[1] === 'en' || pathnameParts[1] === 'is') {
-            localeFromPath = pathnameParts[1] as 'en' | 'is';
-        } else {
-            localeFromPath = 'en'; // Default to 'en' or use defaultLocale
-        }        // Build the redirect URL using the origin
         
-        const redirectUrl = new URL(`/${localeFromPath}/login`, req.nextUrl.origin);
-        console.log('Redirect URL:', redirectUrl.toString());
+        const redirectUrl = new URL(`/login`, req.nextUrl.origin);
 
         return NextResponse.redirect(redirectUrl);
     }

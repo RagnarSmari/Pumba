@@ -1,11 +1,11 @@
 import {Job, JobRequest} from "@/types/jobs";
-import {apiRequest} from "@/services/apiService";
+import { apiRequestT} from "@/services/apiService";
 
 
 export async function GetAllJobs(): Promise<ApiResponse<Job[]>>{
-    return await apiRequest<Job[]>('GET', '/job/');
+    return await apiRequestT<Job[]>('GET', '/job/');
 }
 
 export async function CreateJob(request : JobRequest): Promise<ApiResponse<Job>>{
-    return await apiRequest<Job>('POST', '/job', request);
+    return await apiRequestT<Job>('POST', '/job', request);
 }

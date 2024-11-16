@@ -1,7 +1,6 @@
 "use client";
 
 import {useTranslations} from "next-intl";
-import {useRouter} from "@/navigation";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -17,6 +16,7 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import ToastAlert from "@/components/basic/toast-alert";
 import {apiRequest} from "@/services/apiService";
+import {useRouter} from "@/i18n/routing";
 
 export interface JobFormProps {
     AfterSubmit?: () => void;
