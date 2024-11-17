@@ -20,11 +20,10 @@ export default function AddJobDialog({ trigger } : AddJobDialogProps ){
     const [isOpen, setIsOpen] = React.useState(false);
     const t = useTranslations('Jobs')
     const closeDialog = () => {
-        // Close the dialog
         setIsOpen(false);
     }
    return (
-       <Dialog>
+       <Dialog open={isOpen} onOpenChange={setIsOpen}>
            <DialogTrigger asChild>
                {trigger}
            </DialogTrigger>
@@ -37,7 +36,7 @@ export default function AddJobDialog({ trigger } : AddJobDialogProps ){
                </DialogHeader>
                <JobForm OnCancel={closeDialog} AfterSubmit={closeDialog}/>
            </DialogContent>
-           <DialogClose/>
+           <DialogClose />
        </Dialog>
    )
 }

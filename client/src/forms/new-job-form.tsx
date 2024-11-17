@@ -17,6 +17,7 @@ import {Button} from "@/components/ui/button";
 import ToastAlert from "@/components/basic/toast-alert";
 import {apiRequest} from "@/services/apiService";
 import {useRouter} from "@/i18n/routing";
+import {HttpStatusCode} from "axios";
 
 export interface JobFormProps {
     AfterSubmit?: () => void;
@@ -43,13 +44,21 @@ export default function JobForm({AfterSubmit, OnCancel}: JobFormProps ){
         try {
             
             var res = await apiRequest('POST', '/job/', { name: data.name, jobNr: data.jobNr });            
-            if (!res){
-                ToastAlert({Title: t('Error'), Message: t('ErrorCreatingJob')})
-                return;
+            if(res.status == HttpStatusCode.Created){
+                if (AfterSubmit){
+                    AfterSubmit()
+                }
             }
+            // if (!res){
+            //     ToastAlert({Title: 'Error', Message: 'Error creating job'})
+            //     return;
+            // }else{
+            //     ToastAlert({Title: 'Success', Message: 'Successfully created job'})
+            // }
+            
         } catch (error) {
             console.error(error)
-            ToastAlert({ Title: t('Error'), Message: 'Error'});
+            ToastAlert({ Title: 'Error', Message: 'Error'});
         }
     }
 
