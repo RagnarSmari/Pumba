@@ -9,13 +9,11 @@ export async function apiRequestT<T>(
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
     url: string,
     body?: any,
-    cookie?: string
 ): Promise<ApiResponse<T>> {
     let options: RequestInit = {
         method,
         headers: {
             'Content-Type': 'application/json',
-            Cookie : `pumbaSession=${cookie}`
         },
         credentials: 'include',
         body: body ? JSON.stringify(body) : undefined,
@@ -35,13 +33,11 @@ export async function apiRequest(
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
     url: string,
     body?: any,
-    cookie?: string
 ): Promise<ApiResponse<null>> {
     let options: RequestInit = {
         method,
         headers: {
-            'Content-Type': 'application/json',
-            Cookie : `pumbaSession=${cookie}`
+            'Content-Type': 'application/json'
         },
         credentials: 'include',
         body: body ? JSON.stringify(body) : undefined,

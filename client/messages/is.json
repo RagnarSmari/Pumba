@@ -44,6 +44,7 @@
   "Columns": {
     "Id" : "Id",
     "Name": "Nafn",
+    "JobNr": "Verknúmer",
     "OpenMenu": "Opna valmynd",
     "Actions": "Aðgerðir",
     "Edit": "Breyta",

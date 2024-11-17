@@ -44,6 +44,7 @@
   "Columns": {
     "Id" : "Id",
     "Name": "Name",
+    "JobNr": "Job number",
     "OpenMenu": "Open Menu",
     "Actions": "Actions",
     "Edit": "Edit",

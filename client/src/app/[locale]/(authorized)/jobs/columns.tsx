@@ -7,16 +7,25 @@ import DataTableActionColumn from "@/components/data-table/data-table-action-col
 
 export const columns: ColumnDef<Job>[] = [
     {
-        accessorKey: "id",
+        accessorKey: "Id",
         header: "Id",
     },
     {
-        accessorKey: "name",
+        accessorKey: "Name",
         header: ({ column }) => {
             return (
                 <DataTableColumnHeader column={column} title='Name' />
             )
         }
+    },
+    {
+        accessorKey: "JobNr",
+        header: ({ column }) => {
+            return (
+                <DataTableColumnHeader column={column} title='JobNr' />
+            )
+        }
+
     },
     {
         id: "actions",
