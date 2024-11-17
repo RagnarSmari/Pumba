@@ -27,8 +27,8 @@ export default function JobForm({AfterSubmit, OnCancel}: JobFormProps ){
     const t = useTranslations('Jobs');
     const router = useRouter();
     const formSchema = z.object({
-        name: z.string().min(5, {message: t('NameErrorLength')}),
-        jobNr: z.coerce.number().min(1, {message: t('JobNumberErrorLength')})
+        name: z.string().min(5, {message: 'Name error'}),
+        jobNr: z.coerce.number().min(1, {message: 'Number error'})
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -41,11 +41,12 @@ export default function JobForm({AfterSubmit, OnCancel}: JobFormProps ){
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
         try {
-            await apiRequest('POST', '/job', { name: data.name, jobNr: data.jobNr });            
-            // if (!res){
-            //     ToastAlert({Title: t('Error'), Message: t('ErrorCreatingJob')})
-            //     return;
-            // }
+            
+            var res = await apiRequest('POST', '/job/', { name: data.name, jobNr: data.jobNr });            
+            if (!res){
+                ToastAlert({Title: t('Error'), Message: t('ErrorCreatingJob')})
+                return;
+            }
         } catch (error) {
             console.error(error)
             ToastAlert({ Title: t('Error'), Message: 'Error'});
