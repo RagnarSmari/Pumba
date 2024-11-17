@@ -64,6 +64,12 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
+	router.GET("/api/test", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "Hello world!",
+		})
+	})
+
 	// Disabling this check
 	// [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 	// Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
