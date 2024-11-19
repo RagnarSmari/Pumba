@@ -9,15 +9,19 @@ import (
 	"server/pkg/dtos"
 )
 
-func GetAllJobsHandler(ctx context.Context, pagination *pkg.Pagination) (error, []dtos.JobDto) {
+func GetAllJobsHandler(ctx context.Context, pagination *pkg.Pagination) (error, pkg.PaginationResponse[dtos.JobDto]) {
 
 	var jobs []tables.Job
 	db := database.Db.WithContext(ctx)
 
+	// Get the total count of jobs
+	var totalCount int64
+	db.Model(&tables.Job{}).Count(&totalCount)
+
 	result := db.Scopes(extension.Paginate(pagination)).Find(&jobs)
 
 	if result.Error != nil {
-		return result.Error, nil
+		return result.Error, pkg.PaginationResponse[dtos.JobDto]{}
 	}
 
 	var jobDtos []dtos.JobDto
@@ -30,5 +34,11 @@ func GetAllJobsHandler(ctx context.Context, pagination *pkg.Pagination) (error, 
 		}
 		jobDtos = append(jobDtos, jobDto)
 	}
-	return nil, jobDtos
+	return nil, pkg.PaginationResponse[dtos.JobDto]{
+		Page:       pagination.Page,
+		PageSize:   pagination.PageSize,
+		TotalCount: totalCount,
+		Data:       jobDtos,
+		Error:      "",
+	}
 }

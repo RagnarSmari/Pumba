@@ -13,6 +13,14 @@ type Pagination struct {
 	Filter   string
 }
 
+type PaginationResponse[T any] struct {
+	Page       int
+	PageSize   int
+	TotalCount int64
+	Data       []T
+	Error      string
+}
+
 func AddPaginationToQuery(url string, pagination Pagination) string {
 	return url +
 		fmt.Sprintf("?page=%d&pageSize=%d&orderBy=%s&filter=%s",

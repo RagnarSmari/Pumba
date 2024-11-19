@@ -8,7 +8,6 @@ import {
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
-    getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table"
@@ -23,27 +22,39 @@ import {
 } from "@/components/ui/table"
 import {DataTablePagination} from "@/components/data-table/data-table-paginatiion";
 import {useTranslations} from "next-intl";
+import {Dispatch, SetStateAction } from "react";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    rowCount: number;
+    pagination: { pageIndex: number,  pageSize: number}
+    setPaginationAction: Dispatch<SetStateAction<{
+        pageIndex: number, 
+        pageSize: number
+    }>>;
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    rowCount,
+    setPaginationAction,
+    pagination,
 }: DataTableProps<TData, TValue>){
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
     )
+    
     const t = useTranslations("DataTable")
-
+    
     const table = useReactTable({
         data,
         columns,
+        rowCount,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
+        // getPaginationRowModel: getPaginationRowModel(),
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
         onColumnFiltersChange: setColumnFilters,
@@ -51,9 +62,12 @@ export function DataTable<TData, TValue>({
         state: {
             sorting,
             columnFilters,
+            pagination
         },
+        manualPagination: true,
+        onPaginationChange: setPaginationAction 
     });
-
+    
     // Enable when we want to use the filter input
     return (
         <div>
