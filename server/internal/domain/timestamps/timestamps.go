@@ -7,4 +7,5 @@ import (
 
 func AddTimestampRoutes(router *gin.RouterGroup) {
 	router.POST("/", routes.CreateNewTimestampRoute)
+	router.GET("/", routes.GetAllTimeStampsRoute)
 }

@@ -46,6 +46,8 @@
     "Name": "Name",
     "JobNr": "Job number",
     "OpenMenu": "Open Menu",
+    "Hours": "Hours",
+    "Job": "Job",
     "Actions": "Actions",
     "Edit": "Edit",
     "Delete": "Delete"

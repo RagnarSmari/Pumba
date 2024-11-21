@@ -5,4 +5,5 @@ type Timestamp struct {
 	TotalHours      int
 	JobId           *uint
 	UserFirebaseUid string
+	Job             Job `gorm:"foreignKey:JobId"`
 }

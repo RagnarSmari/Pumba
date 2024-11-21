@@ -48,7 +48,9 @@
     "OpenMenu": "Opna valmynd",
     "Actions": "Aðgerðir",
     "Edit": "Breyta",
-    "Delete": "Eyða"
+    "Delete": "Eyða",
+    "Hours": "Hours",
+    "Job": "Job"
   },
   "Pagination": {
     "RowsPerPage": "Raðir á síðu",
