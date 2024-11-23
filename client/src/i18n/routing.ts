@@ -18,6 +18,10 @@ export const routing = defineRouting({
         '/jobs':{
             en: '/jobs',
             is: '/verk'
+        },
+        '/registrations':{
+            en: '/registrations',
+            is: '/skráningar'
         }
     }
 });

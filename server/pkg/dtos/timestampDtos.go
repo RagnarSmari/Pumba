@@ -4,6 +4,7 @@ type TimestampDto struct {
 	Id         uint
 	TotalHours int
 	JobName    string
+	UserName   string
 }
 
 type TimestampRequest struct {

@@ -1,17 +1,21 @@
 import {
-    Package2,
+    Package2, Plus,
 } from "lucide-react"
 
 import {useTranslations} from "next-intl";
 import { Link } from "@/i18n/routing"
+import {Button} from "@/components/ui/button";
+import AddJobDialog from "@/components/dialogs/addJob-dialog";
+import AddRegistrationDialog from "@/components/dialogs/addRegistration-dialog";
 
 
 export default function MainNavbar(){
     const t = useTranslations('NavBar');
     return (
-        <header className="flex w-full flex-col">
-            <div className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-                <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+        <header className="flex w-full flex-col ">
+            <div className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between">
+                <nav
+                    className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
                     <Link href="/" className="flex items-center gap-2 text-lg font-semibold md:text-base">
                         <Package2 className="h-6 w-6"/>
                         <span className="sr-only">Acme Inc</span>
@@ -22,7 +26,7 @@ export default function MainNavbar(){
                     <Link href="/jobs" className="text-muted-foreground transition-colors hover:text-foreground">
                         {t('Jobs')}
                     </Link>
-                    <Link href="/" className="text-muted-foreground transition-colors hover:text-foreground">
+                    <Link href="/registrations" className="text-muted-foreground transition-colors hover:text-foreground">
                         {t('TimeRegistrations')}
                     </Link>
                     <Link href="/" className="text-muted-foreground transition-colors hover:text-foreground">
@@ -49,6 +53,13 @@ export default function MainNavbar(){
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>*/}
+                <div>
+                    <AddRegistrationDialog trigger={(
+                        <Button variant="default">
+                            <Plus/>
+                        </Button>
+                    )}/>
+                </div>
             </div>
         </header>
     );

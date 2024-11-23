@@ -50,11 +50,16 @@
     "Job": "Job",
     "Actions": "Actions",
     "Edit": "Edit",
-    "Delete": "Delete"
+    "Delete": "Delete",
+    "User": "User"
   },
   "Pagination": {
     "RowsPerPage": "Rows per page",
     "Page": "Page",
     "Of": "of"
+  },
+  "Registrations": {
+    "Hours": "Hours",
+    "JobId": "Job id"
   }
 }

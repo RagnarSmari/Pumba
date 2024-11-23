@@ -50,11 +50,16 @@
     "Edit": "Breyta",
     "Delete": "Eyða",
     "Hours": "Hours",
-    "Job": "Job"
+    "Job": "Job",
+    "User": "User"
   },
   "Pagination": {
     "RowsPerPage": "Raðir á síðu",
     "Page": "Síða",
     "Of": "af"
+  },
+  "Registrations": {
+    "Hours": "Klst",
+    "JobId": "Job id"
   }
 }

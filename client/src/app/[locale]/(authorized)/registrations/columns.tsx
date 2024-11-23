@@ -27,6 +27,14 @@ export const columns: ColumnDef<Timestamp>[] = [
         }
     },
     {
+        accessorKey: "UserName",
+        header: ({ column }) => {
+            return (
+                <DataTableColumnHeader column={column} title="User" />
+            )
+        }
+    },
+    {
         id: "actions",
         cell: ({ row }) => {
             return (
