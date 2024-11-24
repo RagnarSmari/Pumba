@@ -23,9 +23,9 @@ export default function AddRegistrationDialog({ trigger } : AddRegistrationProps
            </DialogTrigger>
            <DialogContent>
                <DialogHeader>
-                   <DialogTitle>{t('NewJob')}</DialogTitle>
+                   <DialogTitle>{t('NewRegistration')}</DialogTitle>
                    <DialogDescription>
-                       {t('CreateNewJob')}
+                       {t('CreateNewRegistration')}
                    </DialogDescription>
                </DialogHeader>
                <NewRegistrationForm OnCancel={closeDialog} AfterSubmit={closeDialog}/>

@@ -1,7 +1,7 @@
 "use client";
 import {useTranslations} from "next-intl";
 import {z} from "zod";
-import {useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {apiRequest} from "@/services/apiService";
 import {HttpStatusCode} from "axios";
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import JobSelect from "@/components/basic/selects/job-select";
 
 
 export interface NewRegistrationFormProps {
@@ -73,9 +74,16 @@ export default function JobForm({ AfterSubmit, OnCancel} : NewRegistrationFormPr
                     name="jobId"
                        render={({ field }) => (
                         <FormItem className="grid gap-0">
-                            <FormLabel htmlFor="jobId">{t('JobId')}</FormLabel>
+                            <FormLabel htmlFor="jobId">{t('Job')}</FormLabel>
                             <FormControl>
-                                <Input placeholder={t('JobId')} {...field}/>
+                                <Controller
+                                control={form.control}
+                                name="jobId"
+                                render={({ field: { onChange, value } }) =>(
+                                    <JobSelect
+                                     jobId={value}
+                                     onChange={onChange}/>
+                                )}/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>

@@ -60,6 +60,10 @@
   },
   "Registrations": {
     "Hours": "Klst",
-    "JobId": "Job id"
+    "JobId": "Verk id",
+    "Job": "Verk",
+    "NewRegistration": "Ný stimplun",
+    "CreateNewRegistration": "Búa til nýja stimplun",
+    "Submit": "Vista"
   }
 }

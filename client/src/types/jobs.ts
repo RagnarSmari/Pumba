@@ -1,7 +1,7 @@
 export interface Job {
-    id: number;
-    name: string;
-    jobNr: number
+    Id: number;
+    Name: string;
+    JobNr: number
 }
 
 export interface JobRequest {

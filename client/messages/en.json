@@ -60,6 +60,10 @@
   },
   "Registrations": {
     "Hours": "Hours",
-    "JobId": "Job id"
+    "JobId": "Job id",
+    "Job": "Job",
+    "NewRegistration": "New registration",
+    "CreateNewRegistration": "Create new registration",
+    "Submit": "Submit"
   }
 }
