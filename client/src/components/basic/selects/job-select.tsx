@@ -37,7 +37,6 @@ export default function JobSelect({ jobId , onChange} : JobSelectProps){
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
-                    <SelectLabel>Jobs</SelectLabel>
                     {jobs.map((job) => {
                         return (
                             <SelectItem key={job.Id} value={job.Id.toString()}>

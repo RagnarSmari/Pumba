@@ -14,7 +14,7 @@ type NewUserRequest struct {
 }
 
 type UserDto struct {
-	Id          int
+	Id          uint
 	Name        string
 	Role        auth.UserRole
 	Email       string

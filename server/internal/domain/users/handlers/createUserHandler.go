@@ -47,19 +47,20 @@ func CreateUserHandler(ctx context.Context, newUserRequest dtos.NewUserRequest) 
 		FirebaseUid: firebaseUser.UID,
 		Kennitala:   newUserRequest.Kennitala,
 		Name:        newUserRequest.Name,
-		PhoneNumber: &newUserRequest.PhoneNumber,
+		PhoneNumber: newUserRequest.PhoneNumber,
+		Role:        newUserRequest.Role,
 	}
 	result := db.Create(&user)
 	if result.Error != nil {
 		return result.Error, dtos.UserDto{}
 	}
 	userResponse = dtos.UserDto{
-		Id:          int(user.ID),
+		Id:          user.ID,
 		Name:        user.Name,
-		Role:        newUserRequest.Role,
-		Email:       newUserRequest.Email,
-		Kennitala:   newUserRequest.Kennitala,
-		PhoneNumber: newUserRequest.PhoneNumber,
+		Role:        user.Role,
+		Email:       user.Email,
+		Kennitala:   user.Kennitala,
+		PhoneNumber: user.PhoneNumber,
 	}
 	return nil, userResponse
 }

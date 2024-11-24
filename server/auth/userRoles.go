@@ -15,7 +15,6 @@ func (r UserRole) String() string {
 	return [...]string{"Admin", "Owner", "Worker"}[r]
 }
 
-// Convert string to role
 func ConvertToRole(role string) (UserRole, error) {
 	switch role {
 	case "Admin":

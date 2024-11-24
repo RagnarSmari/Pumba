@@ -22,6 +22,10 @@ export const routing = defineRouting({
         '/registrations':{
             en: '/registrations',
             is: '/skráningar'
+        },
+        '/users':{
+            en: '/users',
+            is: '/notendur'
         }
     }
 });

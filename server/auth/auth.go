@@ -2,6 +2,8 @@ package auth
 
 import (
 	"context"
+	"google.golang.org/api/iterator"
+	"log"
 	"os"
 	"server/logger"
 	"time"
@@ -67,4 +69,20 @@ func GetUserByEmail(ctx context.Context, email string) (*auth.UserRecord, error)
 
 func GetUserByUid(ctx context.Context, uid string) (*auth.UserRecord, error) {
 	return firebaseClient.GetUser(ctx, uid)
+}
+
+func GetAllUsers(ctx context.Context) (*auth.UserIterator, error) {
+	iter := firebaseClient.Users(ctx, "")
+	for {
+		user, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			log.Fatalf("error listing users: %s\n", err)
+			return iter, err
+		}
+		log.Printf("read user user: %v\n", user)
+	}
+	return iter, nil
 }
