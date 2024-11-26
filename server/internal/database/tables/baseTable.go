@@ -31,3 +31,11 @@ func (b *BaseTable) BeforeFind(tx *gorm.DB) (err error) {
 	tx.Where("deleted_at IS NULL")
 	return nil
 }
+
+func (b *BaseTable) BeforeCreate(tx *gorm.DB) (err error) {
+	currentUserID := tx.Statement.Context.Value("user_uid").(string)
+	tx.Model(b).Updates(map[string]interface{}{
+		"CreatedBy": currentUserID,
+	})
+	return errors.New("Could not mark which user created the entity")
+}
