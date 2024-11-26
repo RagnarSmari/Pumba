@@ -65,5 +65,16 @@
     "NewRegistration": "Ný stimplun",
     "CreateNewRegistration": "Búa til nýja stimplun",
     "Submit": "Vista"
+  },
+  "Users": {
+    "Email": "Netfang",
+    "Password": "Lykilorð",
+    "Name": "Nafn",
+    "Role": "Hlutverk",
+    "NewUser": "Nýr notandi",
+    "CreateNewUser": "Búa til nýjan notanda",
+    "Submit": "Vista",
+    "PhoneNumber": "Símanúmer",
+    "Kennitala": "Kennitala"
   }
 }

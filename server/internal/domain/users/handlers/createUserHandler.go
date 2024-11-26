@@ -6,11 +6,12 @@ import (
 	"server/auth"
 	"server/internal/database"
 	"server/internal/database/tables"
+	"server/logger"
 	"server/pkg/dtos"
 )
 
 func CreateUserHandler(ctx context.Context, newUserRequest dtos.NewUserRequest) (error, dtos.UserDto) {
-	var user tables.User
+	var user tables.Profile
 	var userResponse dtos.UserDto
 	var db = database.Db.WithContext(ctx)
 
@@ -20,9 +21,9 @@ func CreateUserHandler(ctx context.Context, newUserRequest dtos.NewUserRequest) 
 		return errors.New("user with that email already exists"), dtos.UserDto{}
 	}
 
-	// Check if user with same kennitala exists in out database
+	// Check if user with same kennitala exists in our database
 	var count int64
-	db.Model(&tables.User{}).Where("kennitala = ?", newUserRequest.Kennitala).Count(&count)
+	db.Model(&tables.Profile{}).Where("kennitala = ?", newUserRequest.Kennitala).Count(&count)
 	if count > 0 {
 		return errors.New("user with kennitala already exists"), dtos.UserDto{}
 	}
@@ -43,7 +44,7 @@ func CreateUserHandler(ctx context.Context, newUserRequest dtos.NewUserRequest) 
 		return err, dtos.UserDto{}
 	}
 
-	user = tables.User{
+	user = tables.Profile{
 		FirebaseUid: firebaseUser.UID,
 		Kennitala:   newUserRequest.Kennitala,
 		Name:        newUserRequest.Name,
@@ -54,6 +55,8 @@ func CreateUserHandler(ctx context.Context, newUserRequest dtos.NewUserRequest) 
 	if result.Error != nil {
 		return result.Error, dtos.UserDto{}
 	}
+
+	logger.S().Infof("Created user")
 	userResponse = dtos.UserDto{
 		Id:          user.ID,
 		Name:        user.Name,

@@ -21,3 +21,9 @@ type UserDto struct {
 	Kennitala   int
 	PhoneNumber int
 }
+
+type FireBaseUser struct {
+	UId   string
+	Email string
+	Role  auth.UserRole
+}

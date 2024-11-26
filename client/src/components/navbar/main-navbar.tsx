@@ -29,7 +29,7 @@ export default function MainNavbar(){
                     <Link href="/registrations" className="text-muted-foreground transition-colors hover:text-foreground">
                         {t('TimeRegistrations')}
                     </Link>
-                    <Link href="/" className="text-muted-foreground transition-colors hover:text-foreground">
+                    <Link href="/users" className="text-muted-foreground transition-colors hover:text-foreground">
                         {t('Users')}
                     </Link>
                 </nav>

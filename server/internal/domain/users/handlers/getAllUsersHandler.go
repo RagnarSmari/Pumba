@@ -11,11 +11,11 @@ import (
 )
 
 func GetAllUsersHandler(ctx context.Context, pagination *pkg.Pagination) (pkg.PaginationResponse[dtos.UserDto], error) {
-	var users []tables.User
+	var users []tables.Profile
 
 	db := database.Db.WithContext(ctx)
 	var totalCount int64
-	db.Model(&tables.User{}).Count(&totalCount)
+	db.Model(&tables.Profile{}).Count(&totalCount)
 
 	result := db.Scopes(extension.Paginate(pagination)).Find(&users)
 

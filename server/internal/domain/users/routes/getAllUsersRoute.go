@@ -2,22 +2,56 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"server/internal/domain/users/handlers"
-	"server/logger"
+	"google.golang.org/api/iterator"
+	"server/auth"
 	"server/pkg"
+	"server/pkg/dtos"
 )
 
 func GetAllUsersRoute(ctx *gin.Context) {
 	pagination := pkg.GetPaginationFromUrl(ctx, ctx.Request.URL.String())
 
-	response, err := handlers.GetAllUsersHandler(ctx, pagination)
+	iter, err := auth.GetAllUsers(ctx)
 
 	if err != nil {
-		logger.S().Errorf(err.Error())
-		pkg.SendErrorResponse(ctx, 404, err.Error())
+		pkg.SendErrorResponse(ctx, 500, err.Error())
 		return
 	}
 
-	pkg.SendPaginatedResponse(ctx, response)
+	var users []dtos.FireBaseUser
+	for {
+		userRecord, err := iter.Next()
+		if err == iterator.Done {
+			break
+		} else if err != nil {
+			pkg.SendErrorResponse(ctx, 500, err.Error())
+			return
+		}
+		customClaims := userRecord.CustomClaims
 
+		var role auth.UserRole
+		if val, ok := customClaims["role"]; ok {
+			roleStr := val.(string)
+			role, err = auth.ConvertToRole(roleStr)
+			if err != nil {
+				pkg.SendErrorResponse(ctx, 500, err.Error())
+				return
+			}
+		}
+		fbUser := dtos.FireBaseUser{
+			UId:   userRecord.UID,
+			Email: userRecord.Email,
+			Role:  role,
+		}
+		users = append(users, fbUser)
+	}
+
+	response := pkg.PaginationResponse[dtos.FireBaseUser]{
+		Page:       pagination.Page,
+		PageSize:   pagination.PageSize,
+		TotalCount: int64(len(users)),
+		Data:       users,
+		Error:      "",
+	}
+	pkg.SendPaginatedResponse(ctx, response)
 }

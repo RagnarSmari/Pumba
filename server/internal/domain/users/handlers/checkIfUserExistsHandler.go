@@ -7,7 +7,7 @@ import (
 )
 
 func CheckIfUserExistsHandler(ctx context.Context, userUid string) (error, bool) {
-	var user tables.User
+	var user tables.Profile
 	var db = database.Db.WithContext(ctx)
 	err := db.Where("firebase_uid = ?", userUid).First(&user).Error
 	if err != nil {

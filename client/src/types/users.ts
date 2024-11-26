@@ -1,10 +1,16 @@
 export interface User{
-    Id: number, 
-    Name: string, 
+    UID: string, 
     Role: UserRole, 
     Email: string, 
-    Kennitala: number,
-    PhoneNumber: number
+}
+
+export interface UserRequest {
+    Name: string, 
+    Role: UserRole,
+    Email: string, 
+    PhoneNumber?: number,
+    Kennitala?: number,
+    Password: string
 }
 
 
@@ -12,10 +18,14 @@ export enum UserRole {
    Admin = 0,
    Owner = 1,
    Worker = 2, 
+   Undefined = 3,
 }
 
-const roleNames = {
+export const RoleNames = {
     [UserRole.Admin]: "Admin",
     [UserRole.Owner]: "User",
-    [UserRole.Worker]: "Guest",
+    [UserRole.Worker]: "Worker",
+    [UserRole.Undefined]: "Undefined",
 };
+
+export const RoleNameArray = Object.values(RoleNames)

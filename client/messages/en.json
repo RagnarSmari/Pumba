@@ -65,5 +65,16 @@
     "NewRegistration": "New registration",
     "CreateNewRegistration": "Create new registration",
     "Submit": "Submit"
+  },
+  "Users": {
+    "Email": "Email",
+    "Password": "Password",
+    "Name": "Name",
+    "Role": "Role",
+    "NewUser": "New user",
+    "CreateNewUser": "Create new user",
+    "Submit": "Submit",
+    "PhoneNumber": "Phone number",
+    "Kennitala": "Kennitala"
   }
 }

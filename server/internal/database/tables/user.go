@@ -4,7 +4,7 @@ import (
 	"server/auth"
 )
 
-type User struct {
+type Profile struct {
 	BaseTable
 	FirebaseUid string
 	Kennitala   int `gorm:"uniqueIndex"`

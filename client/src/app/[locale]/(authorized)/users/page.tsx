@@ -1,5 +1,7 @@
 import PumbaDataTable from "@/components/data-table/pumba-data-table";
 import {columns} from "@/app/[locale]/(authorized)/users/columns";
+import AddUserDialog from "@/components/dialogs/addUser-dialog";
+import {Button} from "@/components/ui/button";
 
 
 
@@ -13,9 +15,9 @@ export default function Jobs() {
             </div>
             <div className="container mx-auto py-10 flex flex-col items-stretch justify-center">
                 <div className="flex justify-end py-3">
-                    {/*<AddJobDialog trigger={(*/}
-                    {/*    <Button variant="default">Add</Button>*/}
-                    {/*)}/>*/}
+                    <AddUserDialog trigger={(
+                        <Button variant="default">Add</Button>
+                    )}/>
                 </div>
                 <PumbaDataTable
                     url={"/user/"}
