@@ -7,15 +7,24 @@ import useSWR from "swr";
 import {PaginatedResponse} from "@/types/common";
 import {fetcher} from "@/swr/fetcher";
 
+
+interface QueryParameter{
+    key: string;
+    value: string;
+}
+
+
 interface PumbaDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
-    url: string
+    url: string,
+    additionalQueryParameters?: QueryParameter[]
 }
 
 
 export default function PumbaDataTable<TData, TValue>({
     columns,
-    url
+    url,
+    additionalQueryParameters = []
 } : PumbaDataTableProps<TData, TValue>){
     const [totalCount, setTotalCount] = useState(0)
     const [pagination, setPagination] = useState({
@@ -28,15 +37,27 @@ export default function PumbaDataTable<TData, TValue>({
         headers: {
             'Content-Type': 'application/json'
         },
-        credentials: 'include',
-    }
+        credentials: 'include'
+    } 
+    
+    const params = new URLSearchParams();
+    params.append('page', (pagination.pageIndex + 1).toString());
+    params.append('pageSize', pagination.pageSize.toString());
+
+    additionalQueryParameters.forEach(param => {
+        params.append(param.key, param.value);
+    });
+
+    const fullUrl = `${apiURL}${url}?${params.toString()}`;
+
     const { data, error, isLoading } = useSWR<PaginatedResponse<TData>>(
-        apiURL + url + `?page=${pagination.pageIndex + 1}&pageSize=${pagination.pageSize}`,
-        (url: Request | string) => fetcher<PaginatedResponse<TData>>(url, options),{
-            onSuccess(data){
-                setTotalCount(data.TotalCount)
+        fullUrl,
+        (url: Request | string) => fetcher<PaginatedResponse<TData>>(url, options), {
+            onSuccess(data) {
+                setTotalCount(data.TotalCount);
             }
         });
+    
     let pumbaData: TData[] = [];
     if (data && data.Data){
        pumbaData = data.Data; 

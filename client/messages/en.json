@@ -75,6 +75,7 @@
     "CreateNewUser": "Create new user",
     "Submit": "Submit",
     "PhoneNumber": "Phone number",
-    "Kennitala": "Kennitala"
+    "Kennitala": "Kennitala",
+    "CreatedAt": "Created at"
   }
 }

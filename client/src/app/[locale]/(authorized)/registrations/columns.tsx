@@ -7,8 +7,9 @@ import DataTableActionColumn from "@/components/data-table/data-table-action-col
 
 export const columns: ColumnDef<Timestamp>[] = [
     {
-        accessorKey: "Id",
-        header: "Id"
+        accessorKey: "CreatedAt",
+        header: "CreatedAt",
+        cell: ({ row }) => row.original.CreatedAt.toLocaleString()
     },
     {
         accessorKey: "TotalHours",
