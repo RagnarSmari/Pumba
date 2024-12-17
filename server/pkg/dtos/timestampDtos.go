@@ -1,10 +1,13 @@
 package dtos
 
+import "time"
+
 type TimestampDto struct {
 	Id         uint
 	TotalHours int
 	JobName    string
 	UserName   string
+	CreatedAt  time.Time
 }
 
 type TimestampRequest struct {

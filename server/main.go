@@ -8,8 +8,7 @@ import (
 	"server/internal/database"
 	"server/internal/domain"
 	"server/logger"
-	pkg "server/pkg"
-	"server/pumbaCache"
+	"server/pkg"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -46,7 +45,6 @@ func main() {
 	logger.S().Info("Initializing server")
 	pkg.InitializeValidator()
 
-	pumbaCache.InitCache(10*time.Minute, 15*time.Minute)
 	err = godotenv.Load() // This will look for a .env file in the current directory
 	if err != nil {
 		logger.S().Fatalf("Error loading .env file: %v", err)

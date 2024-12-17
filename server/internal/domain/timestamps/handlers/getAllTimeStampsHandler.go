@@ -9,16 +9,25 @@ import (
 	logger2 "server/logger"
 	"server/pkg"
 	"server/pkg/dtos"
+	"time"
 )
 
-func GetAllTimeStampsHandler(ctx context.Context, pagination *pkg.Pagination) (error, pkg.PaginationResponse[dtos.TimestampDto]) {
+func GetAllTimeStampsHandler(ctx context.Context, pagination *pkg.Pagination, from time.Time, to time.Time) (error, pkg.PaginationResponse[dtos.TimestampDto]) {
 	var timeStamps []tables.Timestamp
 	db := database.Db.WithContext(ctx)
 
 	var totalCount int64
-	db.Model(&tables.Timestamp{}).Count(&totalCount)
+	query := db.Model(&tables.Timestamp{})
+	query.Count(&totalCount)
 
-	result := db.Preload("Job").Scopes(extension.Paginate(pagination)).Find(&timeStamps)
+	if !from.IsZero() {
+		query = query.Where("created_at >= ?", from)
+	}
+	if !to.IsZero() {
+		query = query.Where("created_at <= ?", to)
+	}
+
+	result := query.Preload("Job").Scopes(extension.Paginate(pagination)).Find(&timeStamps)
 
 	if result.Error != nil {
 		logger2.S().Errorf(result.Error.Error())
@@ -38,6 +47,7 @@ func GetAllTimeStampsHandler(ctx context.Context, pagination *pkg.Pagination) (e
 			TotalHours: t.TotalHours,
 			JobName:    t.Job.Name,
 			UserName:   displayName,
+			CreatedAt:  t.CreatedAt.Local(),
 		})
 	}
 

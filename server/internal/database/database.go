@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"server/internal/database/seeders"
 	"server/internal/database/tables"
 	"server/logger"
 
@@ -20,7 +19,6 @@ var (
 func Configuration(ctx context.Context) {
 	configureDatabase(ctx)
 	migrate(ctx)
-	seedData(ctx)
 }
 
 func configureDatabase(ctx context.Context) {
@@ -58,6 +56,6 @@ func getDatabaseConnectionString() string {
 		host, port, user, user_passw, db_name)
 }
 
-func seedData(ctx context.Context) {
-	seeders.SeedAdminUser(ctx, Db)
-}
+//func seedData(ctx context.Context) {
+//	seeders.SeedAdminUser(ctx, Db)
+//}

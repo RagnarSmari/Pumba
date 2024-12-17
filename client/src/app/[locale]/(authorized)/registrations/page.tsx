@@ -4,8 +4,8 @@ import {columns} from "@/app/[locale]/(authorized)/registrations/columns";
 import {Button} from "@/components/ui/button";
 import AddRegistrationDialog from "@/components/dialogs/addRegistration-dialog";
 import {DateRangePicker} from "@/components/date-range/date-range";
-import {DateRange} from "react-day-picker";
 import {useState} from "react";
+import {DateRange} from "react-day-picker";
 
 
 
