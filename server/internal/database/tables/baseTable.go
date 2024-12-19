@@ -33,9 +33,10 @@ func (b *BaseTable) BeforeFind(tx *gorm.DB) (err error) {
 }
 
 func (b *BaseTable) BeforeCreate(tx *gorm.DB) (err error) {
-	currentUserID := tx.Statement.Context.Value("user_uid").(string)
-	tx.Model(b).Updates(map[string]interface{}{
-		"CreatedBy": currentUserID,
-	})
-	return errors.New("Could not mark which user created the entity")
+	value, ok := tx.Statement.Context.Value("user_uid").(string)
+	if !ok || value == "" {
+		return errors.New("Could not mark which user created the entity")
+	}
+	b.CreatedBy = &value
+	return nil
 }

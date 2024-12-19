@@ -19,6 +19,7 @@ import {apiRequest} from "@/services/apiService";
 
 export default function LoginForm(){
     const t = useTranslations('LoginForm');
+    
     const router = useRouter();
     const formSchema = z.object({
         email: z.string().email(),
@@ -62,8 +63,16 @@ export default function LoginForm(){
                     control={form.control}
                     name="password"
                     render={({ field }) => (
-                        <FormItem className="grid gap-0">
-                            <FormLabel htmlFor="password">{t('Password')}</FormLabel>
+                        <FormItem className="grid gap-2">
+                            <div className="flex items-center">
+                                <FormLabel htmlFor="password">{t('Password')}</FormLabel>
+                                <a
+                                    href="#"
+                                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                                >
+                                    Forgot your password?
+                                </a>
+                            </div>
                             <FormControl>
                                 <Input type="password" placeholder={t('Password')} {...field}/>
                             </FormControl>
