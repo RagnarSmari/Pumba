@@ -42,12 +42,15 @@ func GetAllTimeStampsHandler(ctx context.Context, pagination *pkg.Pagination, fr
 		if err == nil {
 			displayName = user.Email
 		}
+		hours := t.DurationMinutes / 60
+		minutes := t.DurationMinutes % 60
 		timeStampDtos = append(timeStampDtos, dtos.TimestampDto{
-			Id:         t.ID,
-			TotalHours: t.TotalHours,
-			JobName:    t.Job.Name,
-			UserName:   displayName,
-			CreatedAt:  t.CreatedAt.Local(),
+			Id:           t.ID,
+			TotalHours:   hours,
+			TotalMinutes: minutes,
+			JobName:      t.Job.Name,
+			UserName:     displayName,
+			CreatedAt:    t.CreatedAt.Local(),
 		})
 	}
 

@@ -51,7 +51,8 @@
     "Delete": "Eyða",
     "Hours": "Hours",
     "Job": "Job",
-    "User": "User"
+    "User": "User",
+    "Minutes": "Mínutur"
   },
   "Pagination": {
     "RowsPerPage": "Raðir á síðu",
@@ -60,6 +61,7 @@
   },
   "Registrations": {
     "Hours": "Klst",
+    "Minutes": "Mínutur",
     "JobId": "Verk id",
     "Job": "Verk",
     "NewRegistration": "Ný stimplun",

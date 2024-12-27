@@ -20,6 +20,15 @@ export const columns: ColumnDef<Timestamp>[] = [
         }
     },
     {
+
+        accessorKey: "TotalMinutes",
+        header: ({ column }) => {
+            return (
+                <DataTableColumnHeader  column={column} title="Minutes" />
+            )
+        }
+    },
+    {
         accessorKey: "JobName",
         header: ({ column }) => {
             return (

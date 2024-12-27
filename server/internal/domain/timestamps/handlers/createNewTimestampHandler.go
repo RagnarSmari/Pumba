@@ -9,28 +9,27 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreateNewTimestampHandler(c *gin.Context, request dtos.TimestampRequest) error {
+func CreateNewTimestampHandler(c *gin.Context, request dtos.TimestampRequest) (uint, error) {
 	var timestamp tables.Timestamp
-	var response dtos.TimestampDto
 
 	var userUid, exists = c.Get("user_uid")
 	if !exists {
-		return errors.New("no user uid")
+		return 0, errors.New("no user uid")
 	}
 
 	db := database.Db.WithContext(c)
 
-	// Apply the info
-	timestamp.TotalHours = request.TotalHours
+	// Calculate total duration
+	duration := (request.TotalHours * 60) + request.TotalMinutes
+
+	timestamp.DurationMinutes = duration
 	timestamp.JobId = &request.JobId
 	timestamp.UserFirebaseUid = userUid.(string)
 
-	if err := db.Create(&timestamp); err != nil {
-		return err.Error
+	err := db.Create(&timestamp)
+	if err != nil {
+		return 0, err.Error
 	}
 
-	response.TotalHours = timestamp.TotalHours
-	response.Id = timestamp.ID
-
-	return nil
+	return timestamp.ID, nil
 }

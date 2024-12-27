@@ -51,7 +51,8 @@
     "Actions": "Actions",
     "Edit": "Edit",
     "Delete": "Delete",
-    "User": "User"
+    "User": "User",
+    "Minutes": "Minutes"
   },
   "Pagination": {
     "RowsPerPage": "Rows per page",
@@ -60,6 +61,7 @@
   },
   "Registrations": {
     "Hours": "Hours",
+    "Minutes": "Minutes",
     "JobId": "Job id",
     "Job": "Job",
     "NewRegistration": "New registration",

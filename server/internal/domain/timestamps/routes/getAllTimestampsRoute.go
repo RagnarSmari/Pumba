@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func GetAllTimeStampsRoute(ctx *gin.Context) {
+func GetAllTimeStampsRoute(ctx *gin.Context) (pkg.Response, error) {
 	// support pagination
 	pagination := pkg.GetPaginationFromUrl(ctx, ctx.Request.URL.String())
 	from := ctx.Query("from")
@@ -22,8 +22,8 @@ func GetAllTimeStampsRoute(ctx *gin.Context) {
 		fromTime, err = time.Parse(time.RFC3339, from)
 		if err != nil {
 			logger2.S().Errorf("Invalid 'from' time format: %v", err)
-			pkg.SendErrorResponse(ctx, 400, "Invalid 'from' time format")
-			return
+			return pkg.BadRequestResponse(err), err
+
 		}
 	}
 
@@ -32,25 +32,23 @@ func GetAllTimeStampsRoute(ctx *gin.Context) {
 		toTime, err = time.Parse(time.RFC3339, to)
 		if err != nil {
 			logger2.S().Errorf("Invalid 'to' time format: %v", err)
-			pkg.SendErrorResponse(ctx, 400, "Invalid 'to' time format")
-			return
+			return pkg.BadRequestResponse(err), err
 		}
 	}
 
 	// Ensure 'to' time is not before 'from' time
 	if !fromTime.IsZero() && !toTime.IsZero() && toTime.Before(fromTime) {
 		logger2.S().Errorf("'to' time cannot be before 'from' time")
-		pkg.SendErrorResponse(ctx, 400, "'to' time cannot be before 'from' time")
-		return
+		return pkg.BadRequestResponse(err), err
 	}
 
 	err, response := handlers.GetAllTimeStampsHandler(ctx, pagination, fromTime, toTime)
 
 	if err != nil {
 		logger2.S().Errorf(err.Error())
-		pkg.SendErrorResponse(ctx, 404, err.Error())
+		return pkg.BadRequestResponse(err), err
 	}
 
-	pkg.SendPaginatedResponse(ctx, response)
+	return pkg.SendPaginatedResponse(response), nil
 
 }

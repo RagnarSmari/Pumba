@@ -26,9 +26,10 @@ export interface NewRegistrationFormProps {
 
 
 export default function JobForm({ AfterSubmit, OnCancel} : NewRegistrationFormProps ){
-    const t = useTranslations('Registrations')
+    const t = useTranslations("Registrations")
     const formSchema = z.object({
         hours: z.coerce.number(),
+        minutes: z.coerce.number(),
         jobId: z.coerce.number(),
     })
     
@@ -36,6 +37,7 @@ export default function JobForm({ AfterSubmit, OnCancel} : NewRegistrationFormPr
         resolver: zodResolver(formSchema),
         defaultValues: {
             hours: 0,
+            minutes: 0,
             jobId: 0
         },
     })
@@ -62,13 +64,26 @@ export default function JobForm({ AfterSubmit, OnCancel} : NewRegistrationFormPr
                     name="hours"
                     render={({ field }) => (
                         <FormItem className="grid gap-0">
-                            <FormLabel htmlFor="name">{t('Hours')}</FormLabel>
+                            <FormLabel htmlFor="hours">{t('Hours')}</FormLabel>
                             <FormControl>
                                 <Input placeholder={t('Hours')} {...field}/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>
-                    )}/>               
+                    )}/>     
+                <FormField 
+                    control={form.control} 
+                    name="minutes" 
+                    render={({ field}) => (
+                        <FormItem className="grid gap-0">
+                            <FormLabel htmlFor="minutes">{t('Minutes')}</FormLabel>
+                            <FormControl>
+                                <Input placeholder={t('Minutes')} {...field}/>
+                            </FormControl>
+                            <FormMessage/>
+                        </FormItem>
+                    )}
+                />
                 <FormField
                     control={form.control}
                     name="jobId"
