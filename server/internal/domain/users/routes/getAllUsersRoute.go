@@ -8,14 +8,13 @@ import (
 	"server/pkg/dtos"
 )
 
-func GetAllUsersRoute(ctx *gin.Context) {
+func GetAllUsersRoute(ctx *gin.Context) (pkg.Response, error) {
 	pagination := pkg.GetPaginationFromUrl(ctx, ctx.Request.URL.String())
 
 	iter, err := auth.GetAllUsers(ctx)
 
 	if err != nil {
-		pkg.SendErrorResponse(ctx, 500, err.Error())
-		return
+		return pkg.BadRequestResponse(err), err
 	}
 
 	var users []dtos.FireBaseUser
@@ -24,8 +23,7 @@ func GetAllUsersRoute(ctx *gin.Context) {
 		if err == iterator.Done {
 			break
 		} else if err != nil {
-			pkg.SendErrorResponse(ctx, 500, err.Error())
-			return
+			return pkg.BadRequestResponse(err), err
 		}
 		customClaims := userRecord.CustomClaims
 
@@ -34,8 +32,7 @@ func GetAllUsersRoute(ctx *gin.Context) {
 			roleStr := val.(string)
 			role, err = auth.ConvertToRole(roleStr)
 			if err != nil {
-				pkg.SendErrorResponse(ctx, 500, err.Error())
-				return
+				return pkg.BadRequestResponse(err), err
 			}
 		}
 		fbUser := dtos.FireBaseUser{
@@ -53,5 +50,5 @@ func GetAllUsersRoute(ctx *gin.Context) {
 		Data:       users,
 		Error:      "",
 	}
-	pkg.SendPaginatedResponse(ctx, response)
+	return pkg.SendPaginatedResponse(response), nil
 }

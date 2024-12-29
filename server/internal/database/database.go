@@ -48,14 +48,10 @@ func getDatabaseConnectionString() string {
 	host := os.Getenv("DATABASE_HOST")
 	port := os.Getenv("DATABASE_PORT")
 	user := os.Getenv("DATABASE_USER")
-	user_passw := os.Getenv("DATABASE_USER_PASSW")
-	db_name := os.Getenv("DATABASE_NAME")
+	userPassword := os.Getenv("DATABASE_USER_PASSW")
+	dbName := os.Getenv("DATABASE_NAME")
 
 	return fmt.Sprintf("host=%s port=%s user=%s "+
 		"password=%s dbname=%s sslmode=disable",
-		host, port, user, user_passw, db_name)
+		host, port, user, userPassword, dbName)
 }
-
-//func seedData(ctx context.Context) {
-//	seeders.SeedAdminUser(ctx, Db)
-//}
