@@ -16,3 +16,8 @@ type TimestampRequest struct {
 	TotalMinutes int  `validate:"required,gt=0"`
 	JobId        uint `validate:"required,gt=0"`
 }
+
+type TimeStampDetail struct {
+	TimestampDto
+	Comments []CommentDto
+}
