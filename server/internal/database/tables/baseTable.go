@@ -8,10 +8,10 @@ import (
 
 type BaseTable struct {
 	gorm.Model
-	CreatedBy     *string
-	DeletedBy     *string
+	CreatedBy     *string // Firebase user uid
+	DeletedBy     *string // Firebase user uid
 	LastUpdated   *time.Time
-	LastUpdatedBy *string
+	LastUpdatedBy *string // Firebase user uid
 }
 
 func (b *BaseTable) BeforeDelete(tx *gorm.DB) (err error) {

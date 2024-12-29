@@ -56,6 +56,15 @@ func BadRequestResponse(err error) Response {
 	}
 }
 
+func InternalServerResponse(err error) Response {
+	return Response{
+		Status:  http.StatusInternalServerError,
+		Message: "",
+		Error:   err,
+		Data:    nil,
+	}
+}
+
 func EntityNotFoundResponse(err error, id int) Response {
 	return Response{
 		Status:  http.StatusNotFound,

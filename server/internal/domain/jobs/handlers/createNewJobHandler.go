@@ -28,6 +28,7 @@ func CreateNewJobHandler(ctx context.Context, jobRequest dtos.PostJobRequest) (u
 	err := db.Create(&job)
 	if err != nil {
 		logger.S().Errorf("Could not create Job with name: %s, Error:\n%s", job.Name, err.Error)
+		return 0, err.Error
 	}
 
 	return job.ID, nil
