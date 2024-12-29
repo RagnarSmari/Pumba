@@ -11,5 +11,6 @@ type Timestamp struct {
 	To              *time.Time
 	JobId           *uint
 	UserFirebaseUid string
-	Job             Job `gorm:"foreignKey:JobId"`
+	Job             Job        `gorm:"foreignKey:JobId"`
+	Comments        []*Comment `gorm:"foreignkey:TimestampId"`
 }

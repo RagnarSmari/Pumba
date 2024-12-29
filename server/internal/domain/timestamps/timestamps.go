@@ -9,4 +9,5 @@ import (
 func AddTimestampRoutes(router *gin.RouterGroup) {
 	router.POST("/", pkg.WrapRouteHandler(routes.CreateNewTimestampRoute))
 	router.GET("/", pkg.WrapRouteHandler(routes.GetAllTimeStampsRoute))
+	router.GET("/:id/comments", pkg.WrapRouteHandler(routes.GetTimestampCommentsRoute))
 }
