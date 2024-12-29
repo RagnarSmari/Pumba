@@ -1,7 +1,7 @@
 "use client"
 
 import useSWR from "swr";
-import {PaginatedResponse} from "@/types/common";
+import {ApiResponse, PaginatedResponse} from "@/types/common";
 import {Job} from "@/types/jobs";
 import {fetcher} from "@/swr/fetcher";
 import {Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue} from "@/components/ui/select";
@@ -21,12 +21,14 @@ export default function JobSelect({ jobId , onChange} : JobSelectProps){
         credentials: 'include',
     }
     
-    const { data, isLoading, error } = useSWR<PaginatedResponse<Job>>(
-        process.env.NEXT_PUBLIC_PUMBA_API_URL + "/job/" + `?page=1&pageSize=${Number.MAX_VALUE}` ,
-        (url: Request | string) => fetcher<PaginatedResponse<Job>>(url, options));
+    // TODO - set the loader
+    const { data, isLoading, error } = useSWR<ApiResponse<PaginatedResponse<Job>>>(
+        process.env.NEXT_PUBLIC_PUMBA_API_URL + "/job/",
+        (url: Request | string) => fetcher<ApiResponse<PaginatedResponse<Job>>>(url, options));
+    
     let jobs: Job[] = [];
-    if (data && data.Data){
-        jobs = data.Data;
+    if (data && data.data.Data){
+        jobs = data.data.Data;
     }
     
     

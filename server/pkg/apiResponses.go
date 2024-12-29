@@ -8,7 +8,7 @@ import (
 type Response struct {
 	Status  int
 	Message string
-	Error   error
+	Error   string
 	Data    interface{}
 }
 
@@ -16,7 +16,7 @@ func SendDataResponse(data interface{}) Response {
 	return Response{
 		Status:  http.StatusOK,
 		Message: "",
-		Error:   nil,
+		Error:   "",
 		Data:    data,
 	}
 }
@@ -25,7 +25,7 @@ func SendRequestSuccessfulResponse(message string) Response {
 	return Response{
 		Status:  http.StatusOK,
 		Message: message,
-		Error:   nil,
+		Error:   "",
 		Data:    nil,
 	}
 }
@@ -33,7 +33,7 @@ func SendPaginatedResponse[T any](response PaginationResponse[T]) Response {
 	return Response{
 		Status:  http.StatusOK,
 		Message: "",
-		Error:   nil,
+		Error:   "",
 		Data:    response,
 	}
 }
@@ -42,7 +42,7 @@ func EntityCreatedResponse(id uint) Response {
 	return Response{
 		Status:  http.StatusCreated,
 		Message: "Entity with Id {id} successfully created",
-		Error:   nil,
+		Error:   "",
 		Data:    nil,
 	}
 }
@@ -51,7 +51,7 @@ func BadRequestResponse(err error) Response {
 	return Response{
 		Status:  http.StatusBadRequest,
 		Message: "",
-		Error:   err,
+		Error:   err.Error(),
 		Data:    nil,
 	}
 }
@@ -60,7 +60,7 @@ func InternalServerResponse(err error) Response {
 	return Response{
 		Status:  http.StatusInternalServerError,
 		Message: "",
-		Error:   err,
+		Error:   err.Error(),
 		Data:    nil,
 	}
 }
@@ -69,7 +69,7 @@ func EntityNotFoundResponse(err error, id int) Response {
 	return Response{
 		Status:  http.StatusNotFound,
 		Message: "Entity with Id: {id} not found",
-		Error:   err,
+		Error:   err.Error(),
 		Data:    nil,
 	}
 }

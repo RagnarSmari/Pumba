@@ -44,7 +44,7 @@ export default function JobForm({ AfterSubmit, OnCancel} : NewRegistrationFormPr
     
     async function onSubmit(data: z.infer<typeof formSchema>) {
         try {
-            var res = await apiRequest('POST', '/timestamp/', { totalHours: data.hours, jobId: data.jobId });
+            var res = await apiRequest('POST', '/timestamp/', { totalHours: data.hours, jobId: data.jobId, totalMinutes: data.minutes});
             if(res.status == HttpStatusCode.Created){
                 if (AfterSubmit){
                     AfterSubmit()
