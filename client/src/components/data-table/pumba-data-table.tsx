@@ -56,7 +56,9 @@ export default function PumbaDataTable<TData, TValue>({
         (url: Request | string) => fetcher<ApiResponse<PaginatedResponse<TData>>>(url, options), {
             onSuccess(data, key, config) {
                 setTotalCount(data.data.TotalCount);
-                setTableData(data.data.Data);
+                if (data.data.Data){
+                    setTableData(data.data.Data);
+                }
             }
         });
     
