@@ -5,7 +5,8 @@ import {Timestamp} from "@/types/timestamp";
 import {DataTableColumnHeader} from "@/components/data-table/data-table-column-header";
 import DataTableActionColumn from "@/components/data-table/data-table-action-column";
 
-export const columns: ColumnDef<Timestamp>[] = [
+
+export const getColumns = (onOpenOverview: (id: number) => void) : ColumnDef<Timestamp>[] => [
     {
         accessorKey: "CreatedAt",
         header: "CreatedAt",
@@ -47,8 +48,12 @@ export const columns: ColumnDef<Timestamp>[] = [
     {
         id: "actions",
         cell: ({ row }) => {
+            const openOverview = () => {
+                onOpenOverview(row.original.Id)
+            }
+            
             return (
-                <DataTableActionColumn />
+                <DataTableActionColumn OnOverviewCallback={openOverview}  />
             );
         }
     },

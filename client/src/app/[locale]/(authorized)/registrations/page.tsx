@@ -1,11 +1,12 @@
 "use client";
 import PumbaDataTable from "@/components/data-table/pumba-data-table";
-import {columns} from "@/app/[locale]/(authorized)/registrations/columns";
+import {getColumns} from "@/app/[locale]/(authorized)/registrations/columns";
 import {Button} from "@/components/ui/button";
 import AddRegistrationDialog from "@/components/dialogs/addRegistration-dialog";
 import {DateRangePicker} from "@/components/date-range/date-range";
-import {useState} from "react";
+import React, {useState} from "react";
 import {DateRange} from "react-day-picker";
+import TimestampDetailDialog from "@/components/dialogs/timestamp-detail-dialog";
 
 
 
@@ -13,13 +14,21 @@ import {DateRange} from "react-day-picker";
 
 export default function Registrations(){
     const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+    const [isOpen, setIsOpen] = React.useState(false);
+    const [currentTimestampId, setCurrentTimestampId] = useState<number | null>(null);
 
 
     
     function onDateChanged(dateRange : DateRange | undefined){
         setDateRange(dateRange)
     }
-
+    
+    const openOverview = (id: number) => {
+        console.log("Opening overview")
+        setIsOpen(true)
+        setCurrentTimestampId(id);
+    }
+    const columns = getColumns(openOverview)
 
     const additionalQueryParameters = dateRange ? [
         { key: 'from', value: dateRange.from?.toISOString() || '' },
@@ -47,6 +56,9 @@ export default function Registrations(){
                     url={`/timestamp/`}
                     columns={columns}
                     additionalQueryParameters={additionalQueryParameters}/>
+                {currentTimestampId !== null && (
+                    <TimestampDetailDialog id={currentTimestampId} isOpen={isOpen} onOpenChange={setIsOpen} />
+                )}
             </div>
         </div>
     );

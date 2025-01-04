@@ -10,7 +10,14 @@ import {MoreHorizontal} from "lucide-react";
 import {useTranslations} from "next-intl";
 
 
-export default function DataTableActionColumn() {
+type DataTableActionColumnFunctionCallback = () => void;
+interface DataTableActionColumnProps {
+    OnEditCallback?: DataTableActionColumnFunctionCallback,
+    OnDeleteCallback?: DataTableActionColumnFunctionCallback,
+    OnOverviewCallback?: DataTableActionColumnFunctionCallback
+}
+
+export default function DataTableActionColumn({ OnEditCallback, OnDeleteCallback, OnOverviewCallback} : DataTableActionColumnProps) {
     const t = useTranslations('Columns')
     return (
       <DropdownMenu>
@@ -23,8 +30,14 @@ export default function DataTableActionColumn() {
           <DropdownMenuContent align="end">
               <DropdownMenuLabel>{t('Actions')}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>{t('Edit')}</DropdownMenuItem>
-              <DropdownMenuItem>{t('Delete')}</DropdownMenuItem>
+              {OnEditCallback !== undefined &&
+                  <DropdownMenuItem>{t('Edit')}</DropdownMenuItem>}
+              {OnDeleteCallback !== undefined &&
+                  <DropdownMenuItem>{t('Delete')}</DropdownMenuItem>}
+              {OnOverviewCallback !== undefined && 
+                  <DropdownMenuItem
+                      onClick={() => OnOverviewCallback()}
+                  >{t('Overview')}</DropdownMenuItem>}
           </DropdownMenuContent>
       </DropdownMenu>
 
