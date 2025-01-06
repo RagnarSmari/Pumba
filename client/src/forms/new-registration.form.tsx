@@ -28,9 +28,9 @@ export interface NewRegistrationFormProps {
 export default function JobForm({ AfterSubmit, OnCancel} : NewRegistrationFormProps ){
     const t = useTranslations("Registrations")
     const formSchema = z.object({
-        hours: z.coerce.number(),
-        minutes: z.coerce.number(),
-        jobId: z.coerce.number(),
+        hours: z.coerce.number().min(0, { message: "Must be least 0 "}),
+        minutes: z.coerce.number().min(0, { message: "Must be least 0 "}).max(59, { message: "Cannot exceed 59"}),
+        jobId: z.coerce.number().min(1, { message: "Must be least 1 "}),
     })
     
     const form = useForm<z.infer<typeof formSchema>>({
@@ -44,7 +44,7 @@ export default function JobForm({ AfterSubmit, OnCancel} : NewRegistrationFormPr
     
     async function onSubmit(data: z.infer<typeof formSchema>) {
         try {
-            var res = await apiRequest('POST', '/timestamp/', { totalHours: data.hours, jobId: data.jobId, totalMinutes: data.minutes});
+            var res = await apiRequest('POST', '/timestamp/', { Hours: data.hours, JobId: data.jobId, Minutes: data.minutes});
             if(res.status == HttpStatusCode.Created){
                 if (AfterSubmit){
                     AfterSubmit()

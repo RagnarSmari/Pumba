@@ -1,8 +1,11 @@
+import {Comment} from "./comment";
+
 export interface Timestamp{
     Id: number, 
     TotalHours: number,
     TotalMinutes: number, 
     JobName: string,
     UserName: string,
-    CreatedAt: Date
+    CreatedAt: Date,
+    Comments: Comment[]
 }
