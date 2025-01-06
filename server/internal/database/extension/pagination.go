@@ -19,6 +19,10 @@ func Paginate(pagination *pkg.Pagination) func(db *gorm.DB) *gorm.DB {
 			pagination.PageSize = 10
 		}
 		offset := (pagination.Page - 1) * pagination.PageSize
+
+		if pagination.OrderByColumn != "" && pagination.OrderByDirection != "" {
+			db.Order(pagination.OrderByColumn + " " + pagination.OrderByDirection)
+		}
 		return db.Offset(offset).Limit(pagination.PageSize)
 	}
 }

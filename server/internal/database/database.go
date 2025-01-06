@@ -37,7 +37,7 @@ func configureDatabase(ctx context.Context) {
 func migrate(ctx context.Context) {
 
 	logger.S().Info("Running migrations...")
-	err := Db.WithContext(ctx).AutoMigrate(&tables.Job{}, &tables.Profile{}, &tables.Timestamp{})
+	err := Db.WithContext(ctx).AutoMigrate(&tables.Job{}, &tables.Profile{}, &tables.Timestamp{}, &tables.Comment{})
 	if err != nil {
 		logger.S().Fatalf("Failed to run migrations")
 	}

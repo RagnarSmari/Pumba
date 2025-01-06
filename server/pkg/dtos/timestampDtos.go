@@ -12,9 +12,9 @@ type TimestampDto struct {
 }
 
 type TimestampRequest struct {
-	TotalHours   int  `validate:"required,gte=0"`
-	TotalMinutes int  `validate:"required,gte=0,lte=59"`
-	JobId        uint `validate:"required,gte=0"`
+	Hours   int  `validate:"required,gte=0"`
+	Minutes int  `validate:"required,gte=0,lte=59"`
+	JobId   uint `validate:"required,gt=0"`
 }
 
 type TimeStampDetail struct {

@@ -7,10 +7,11 @@ import (
 )
 
 type Pagination struct {
-	Page     int
-	PageSize int
-	OrderBy  string
-	Filter   string
+	Page             int
+	PageSize         int
+	OrderByColumn    string
+	OrderByDirection string
+	Filter           string
 }
 
 type PaginationResponse[T any] struct {
@@ -24,7 +25,7 @@ type PaginationResponse[T any] struct {
 func AddPaginationToQuery(url string, pagination Pagination) string {
 	return url +
 		fmt.Sprintf("?page=%d&pageSize=%d&orderBy=%s&filter=%s",
-			pagination.Page, pagination.PageSize, pagination.OrderBy, pagination.Filter)
+			pagination.Page, pagination.PageSize, pagination.OrderByColumn, pagination.Filter)
 
 }
 
@@ -35,9 +36,9 @@ func GetPaginationFromUrl(ctx *gin.Context, url string) *Pagination {
 	filter := ctx.Query("filter")
 
 	return &Pagination{
-		Page:     page,
-		PageSize: pageSize,
-		OrderBy:  orderBy,
-		Filter:   filter,
+		Page:          page,
+		PageSize:      pageSize,
+		OrderByColumn: orderBy,
+		Filter:        filter,
 	}
 }

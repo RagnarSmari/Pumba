@@ -20,7 +20,7 @@ func CreateNewTimestampHandler(c *gin.Context, request dtos.TimestampRequest) (u
 	db := database.Db.WithContext(c)
 
 	// Calculate total duration
-	duration := (request.TotalHours * 60) + request.TotalMinutes
+	duration := (request.Hours * 60) + request.Minutes
 
 	timestamp.DurationMinutes = duration
 	timestamp.JobId = &request.JobId
