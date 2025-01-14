@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"errors"
 	"server/internal/database"
 	"server/internal/database/tables"
 	"server/pkg/dtos"
@@ -12,10 +11,10 @@ import (
 func CreateNewTimestampHandler(c *gin.Context, request dtos.TimestampRequest) (uint, error) {
 	var timestamp tables.Timestamp
 
-	var userUid, exists = c.Get("user_uid")
-	if !exists {
-		return 0, errors.New("no user uid")
-	}
+	//var userUid, exists = c.Get("user_uid")
+	//if !exists {
+	//	return 0, errors.New("no user uid")
+	//}
 
 	db := database.Db.WithContext(c)
 
@@ -24,7 +23,6 @@ func CreateNewTimestampHandler(c *gin.Context, request dtos.TimestampRequest) (u
 
 	timestamp.DurationMinutes = duration
 	timestamp.JobId = &request.JobId
-	timestamp.UserFirebaseUid = userUid.(string)
 
 	err := db.Create(&timestamp)
 	if err != nil {

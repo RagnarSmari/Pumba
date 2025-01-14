@@ -4,7 +4,6 @@ import (
 	"context"
 	"server/internal/database"
 	"server/internal/database/tables"
-	"server/internal/domain/auth/handlers"
 	"server/pkg/dtos"
 )
 
@@ -20,18 +19,18 @@ func GetTimestampComments(ctx context.Context, timeStampId int) ([]dtos.CommentD
 
 	for _, comment := range timeStamp.Comments {
 
-		user, err := handlers.GetUserByFirebaseUIDHandler(ctx, *comment.CreatedBy)
+		//user, err := handlers.GetUserByFirebaseUIDHandler(ctx, *comment.CreatedBy)
 
-		if err != nil {
-			return nil, err
-		}
+		//if err != nil {
+		//	return nil, err
+		//}
 
 		response = append(response, dtos.CommentDto{
-			Id:                 comment.ID,
-			Message:            comment.Message,
-			TimestampId:        comment.TimestampId,
-			CreatedByUserName:  user.Name,
-			CreatedByUserEmail: user.Email,
+			Id:          comment.ID,
+			Message:     comment.Message,
+			TimestampId: comment.TimestampId,
+			//CreatedByUserName:  user.Name,
+			//CreatedByUserEmail: user.Email,
 		})
 	}
 

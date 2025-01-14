@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"server/auth"
 	"server/internal/database"
 	"server/internal/database/extension"
 	"server/internal/database/tables"
@@ -36,12 +35,12 @@ func GetAllTimeStampsHandler(ctx context.Context, pagination *pkg.Pagination, fr
 
 	var timeStampDtos []dtos.TimestampDto
 	for _, t := range timeStamps {
-		displayName := ""
+		//displayName := ""
 
-		user, err := auth.GetUserByUid(ctx, t.UserFirebaseUid)
-		if err == nil {
-			displayName = user.Email
-		}
+		//user, err := auth.GetUserByUid(ctx, t.UserFirebaseUid)
+		//if err == nil {
+		//	displayName = user.Email
+		//}
 		hours := t.DurationMinutes / 60
 		minutes := t.DurationMinutes % 60
 		timeStampDtos = append(timeStampDtos, dtos.TimestampDto{
@@ -49,8 +48,8 @@ func GetAllTimeStampsHandler(ctx context.Context, pagination *pkg.Pagination, fr
 			TotalHours:   hours,
 			TotalMinutes: minutes,
 			JobName:      t.Job.Name,
-			UserName:     displayName,
-			CreatedAt:    t.CreatedAt.Local(),
+			//UserName:     displayName,
+			CreatedAt: t.CreatedAt.Local(),
 		})
 	}
 

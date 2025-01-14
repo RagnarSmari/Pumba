@@ -1,11 +1,10 @@
 package dtos
 
 type CommentDto struct {
-	Id                 uint
-	Message            string
-	TimestampId        uint
-	CreatedByUserName  string
-	CreatedByUserEmail string
+	Id          uint
+	Message     string
+	Author      string // Name of user which is the Author of the comment
+	TimestampId uint
 }
 
 type PostCommentRequest struct {

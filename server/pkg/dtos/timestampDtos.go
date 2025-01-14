@@ -7,7 +7,7 @@ type TimestampDto struct {
 	TotalHours   int
 	TotalMinutes int
 	JobName      string
-	UserName     string
+	User         string
 	CreatedAt    time.Time
 }
 
