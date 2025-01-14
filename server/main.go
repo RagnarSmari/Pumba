@@ -57,7 +57,7 @@ func main() {
 		AllowOriginFunc: func(origin string) bool {
 			// Allow requests from your client origin
 			return origin == "http://localhost:3030"
-		}, AllowMethods: []string{"PUT", "PATCH", "GET", "POST", "OPTIONS"},
+		}, AllowMethods:  []string{"PUT", "PATCH", "GET", "POST", "OPTIONS"},
 		AllowHeaders:     []string{"Content-Type", "Content-Length", "Authorization", "Cache-Control"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
@@ -92,6 +92,8 @@ func main() {
 	// Configure all the api routes
 	domain.ConfigureApiRoutes(router)
 
+	// Start background jobs
+	//background.Go(backgroundJobs.SearchForMissingProfiles(ctx))
 	// Start the server
 	err = router.Run(":" + os.Getenv("SERVER_PORT"))
 	if err != nil {
