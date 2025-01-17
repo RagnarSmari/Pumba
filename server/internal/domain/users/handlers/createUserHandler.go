@@ -44,7 +44,7 @@ func CreateUserHandler(ctx context.Context, newUserRequest dtos.NewUserRequest) 
 
 	user = tables.Profile{
 		FirebaseUid: firebaseUser.UID,
-		Kennitala:   newUserRequest.Kennitala,
+		Kennitala:   &newUserRequest.Kennitala,
 		Name:        newUserRequest.Name,
 		PhoneNumber: newUserRequest.PhoneNumber,
 		Role:        newUserRequest.Role,

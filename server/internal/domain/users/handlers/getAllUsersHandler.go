@@ -32,7 +32,7 @@ func GetAllUsersHandler(ctx context.Context, pagination *pkg.Pagination) (pkg.Pa
 			Name:        user.Name,
 			Role:        user.Role,
 			Email:       user.Email,
-			Kennitala:   user.Kennitala,
+			Kennitala:   *user.Kennitala,
 			PhoneNumber: user.PhoneNumber,
 		})
 	}
