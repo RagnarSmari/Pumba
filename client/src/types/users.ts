@@ -2,7 +2,10 @@ export interface User{
     ID: number, 
     Name: string,
     Role: UserRole, 
-    Email: string, 
+    Email: string,
+    Kennitala: number | null, 
+    PhoneNumber: number | null,
+    
 }
 
 export interface UserRequest {

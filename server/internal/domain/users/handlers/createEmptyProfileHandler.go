@@ -21,8 +21,8 @@ func CreateEmptyProfileHandler(ctx context.Context, userUid string, email string
 	profile = tables.Profile{
 		FirebaseUid: userUid,
 		Kennitala:   nil,
-		Name:        "Drengur Drengsson",
-		PhoneNumber: 1111111,
+		Name:        nil,
+		PhoneNumber: nil,
 		Email:       email,
 		Role:        role,
 	}

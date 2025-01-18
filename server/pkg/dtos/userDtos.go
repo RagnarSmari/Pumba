@@ -15,11 +15,11 @@ type NewUserRequest struct {
 
 type UserDto struct {
 	Id          uint
-	Name        string
+	Name        *string
 	Role        auth.UserRole
 	Email       string
-	Kennitala   int
-	PhoneNumber int
+	Kennitala   *int
+	PhoneNumber *int
 }
 
 type FireBaseUser struct {

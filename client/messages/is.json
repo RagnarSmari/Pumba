@@ -53,7 +53,9 @@
     "Job": "Job",
     "User": "User",
     "Minutes": "Mínutur",
-    "Overview": "Yfirlit"
+    "Overview": "Yfirlit",
+    "Kennitala": "Kennitala",
+    "PhoneNumber": "Phone number"
   },
   "Pagination": {
     "RowsPerPage": "Raðir á síðu",

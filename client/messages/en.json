@@ -53,7 +53,9 @@
     "Delete": "Delete",
     "User": "User",
     "Minutes": "Minutes",
-    "Overview": "Overview"
+    "Overview": "Overview",
+    "Kennitala": "Kennitala",
+    "PhoneNumber": "Phone number"
   },
   "Pagination": {
     "RowsPerPage": "Rows per page",
