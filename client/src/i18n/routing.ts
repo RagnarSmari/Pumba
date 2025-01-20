@@ -26,6 +26,10 @@ export const routing = defineRouting({
         '/users':{
             en: '/users',
             is: '/notendur'
+        },
+        '/registration-overview':{
+            en: '/registration-overview',
+            is: '/tíma-yfirlit'
         }
     }
 });
