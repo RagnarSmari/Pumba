@@ -26,7 +26,7 @@ func GetAllTimeStampsHandler(ctx context.Context, pagination *pkg.Pagination, fr
 		query = query.Where("created_at <= ?", to)
 	}
 
-	result := query.Preload("Job").Scopes(extension.Paginate(pagination)).Find(&timeStamps)
+	result := query.Preload("Job").Preload("Comments").Preload("Comments.Profile").Scopes(extension.Paginate(pagination)).Find(&timeStamps)
 
 	if result.Error != nil {
 		logger2.S().Errorf(result.Error.Error())
@@ -43,6 +43,16 @@ func GetAllTimeStampsHandler(ctx context.Context, pagination *pkg.Pagination, fr
 		//}
 		hours := t.DurationMinutes / 60
 		minutes := t.DurationMinutes % 60
+		var comments []dtos.CommentDto
+		for _, comment := range t.Comments {
+			comments = append(comments, dtos.CommentDto{
+				Id:          comment.ID,
+				Message:     comment.Message,
+				TimestampId: comment.TimestampId,
+				Author:      comment.Profile.Name,
+			})
+		}
+
 		timeStampDtos = append(timeStampDtos, dtos.TimestampDto{
 			Id:           t.ID,
 			TotalHours:   hours,
@@ -50,6 +60,7 @@ func GetAllTimeStampsHandler(ctx context.Context, pagination *pkg.Pagination, fr
 			JobName:      t.Job.Name,
 			//UserName:     displayName,
 			CreatedAt: t.CreatedAt.Local(),
+			Comments:  comments,
 		})
 	}
 

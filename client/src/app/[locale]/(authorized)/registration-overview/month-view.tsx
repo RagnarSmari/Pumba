@@ -3,10 +3,15 @@
 import { useState } from "react";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import { DateRange } from "@/types/common";
-import fakeData from "@/app/[locale]/(authorized)/registration-overview/registrationFakeData";
 import {Comment} from "@/types/comment";
+import {Timestamp} from "@/types/timestamp";
 
-export default function MonthView() {
+type MonthViewProps = {
+    Registrations : Timestamp[]
+}
+
+
+export default function MonthView( props : MonthViewProps) {
     const date = new Date();
     const [dateRange, setDateRange] = useState<DateRange>({
         startDate: new Date(date.getFullYear(), date.getMonth(), 1),
@@ -48,7 +53,7 @@ export default function MonthView() {
     })();
 
     // Count registrations and group them by date
-    const registrationsByDate = fakeData.reduce((acc: Record<string, any[]>, entry) => {
+    const registrationsByDate = props.Registrations.reduce((acc: Record<string, Timestamp[]>, entry) => {
         const dateKey = new Date(entry.CreatedAt).toDateString(); // Use only the date part as the key
         if (!acc[dateKey]) acc[dateKey] = [];
         acc[dateKey].push(entry);
@@ -139,7 +144,7 @@ export default function MonthView() {
                             {/*registrations in a day */}
                             {selectedDay === dayKey && dayRegistrations.length > 0 && (
                                 <div className="bg-white border border-gray-300 rounded-lg shadow-sm p-4 mt-2">
-                                    {dayRegistrations.map((reg) => (
+                                    {dayRegistrations.map((reg : Timestamp) => (
                                         <div key={reg.Id} className="mb-4">
                                             <div
                                                 className="flex justify-between items-center"
@@ -172,7 +177,6 @@ export default function MonthView() {
                                                 </button>
                                             </div>
 
-                                            {/* Render Comments if expanded */}
                                             {expandedRegistrations[reg.Id] &&
                                                 reg.Comments.length > 0 && (
                                                     <div className="mt-2 pl-4">
