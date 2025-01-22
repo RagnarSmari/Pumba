@@ -36,7 +36,7 @@ export default async function LocaleLayout({
     return (
         <html lang={locale}>
             <body className={inter.className}>
-                <NextIntlClientProvider messages={messages}>
+                <NextIntlClientProvider locale={locale} messages={messages}>
                     {children}
                 </NextIntlClientProvider>
                 <Toaster />

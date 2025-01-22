@@ -12,3 +12,8 @@ export interface PaginatedResponse<T> {
     TotalCount: number;
     Data: T[];
 }
+
+export type DateRange = {
+    startDate: Date;
+    endDate: Date;
+};
