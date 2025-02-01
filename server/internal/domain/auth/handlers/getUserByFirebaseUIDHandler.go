@@ -12,13 +12,14 @@ func GetUserByFirebaseUIDHandler(ctx context.Context, firebaseUID string) (dtos.
 	var profile tables.Profile
 	var db = database.Db.WithContext(ctx)
 
-	if err := db.First(&profile, firebaseUID).Error; err != nil {
+	if err := db.Where("firebase_uid = ?", firebaseUID).First(&profile).Error; err != nil {
 		return claims, err
 	}
+
 	claims = dtos.UserClaims{
 		Id:          profile.ID,
 		FirebaseUID: profile.FirebaseUid,
-		Name:        profile.Name,
+		Name:        *profile.Name,
 		Email:       profile.Email,
 	}
 	return claims, nil

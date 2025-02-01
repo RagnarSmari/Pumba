@@ -3,7 +3,7 @@ export interface ApiResponse<T> {
     status: number, 
     message: string, 
     error: string,
-    data: T | undefined
+    data: T 
 }
 
 export interface PaginatedResponse<T> {

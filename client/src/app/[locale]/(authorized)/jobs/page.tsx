@@ -5,7 +5,8 @@ import {columns} from "@/app/[locale]/(authorized)/jobs/columns";
 
 
 
-export default function Jobs() {
+export default async function Jobs() {
+    
     return (
         <div>
             <div>
@@ -19,9 +20,10 @@ export default function Jobs() {
                         <Button variant="default">Add</Button>
                     )}/>
                 </div>
-                <PumbaDataTable
-                 url={"/job/"} 
-                 columns={columns}/>
+                <PumbaDataTable 
+                    columns={columns}
+                    url={"/job/"}
+                />
             </div>
         </div>
     );

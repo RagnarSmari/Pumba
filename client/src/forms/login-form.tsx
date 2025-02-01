@@ -16,10 +16,18 @@ import {
 import {useRouter} from "next/navigation";
 import {LoginWithEmailAction} from "@/actions/auth-actions";
 import {apiRequest} from "@/services/apiService";
+import {toast} from "@/components/ui/use-toast";
+import {ApiResponse} from "@/types/common";
+
+
+type LoginResponse = {
+    IdToken: string;
+    CsrfToken: string;
+}
 
 export default function LoginForm(){
     const t = useTranslations('LoginForm');
-    
+    const apiURL = process.env.NEXT_PUBLIC_PUMBA_API_URL;
     const router = useRouter();
     const formSchema = z.object({
         email: z.string().email(),
@@ -35,14 +43,35 @@ export default function LoginForm(){
     })
 
     async function onSubmit(data: z.infer<typeof formSchema>){
-        var res = await LoginWithEmailAction(data.email, data.password);
-        if (!res) return;
-        var sessionRes = await apiRequest("POST", "/session/new", {
+        const res = await LoginWithEmailAction(data.email, data.password);
+        if (!res) {
+            toast({
+                title: 'Uh oh! Something went wrong',
+                description: res,
+                variant: 'destructive'
+            })
+            return;
+        }
+        
+        const loginBody : LoginResponse = {
             IdToken: res,
             CsrfToken: res
-        });
-        if (sessionRes.status != 200) return;
-        router.push("/dashboard");
+        }
+        const sessionRes = await fetch(apiURL + '/session/new',{
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(loginBody) 
+        })
+        const sessionResJson = await sessionRes.json() as ApiResponse<string>
+        if (sessionResJson.error){
+            toast({
+                title: 'Uh oh! Something went wrong',
+                description: sessionResJson.error,
+                variant: 'destructive'
+            })
+            return
+        }
+        router.push('/dashboard');
     }
 
     return (

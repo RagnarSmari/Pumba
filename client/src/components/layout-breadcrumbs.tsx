@@ -23,7 +23,7 @@ export default function LayoutBreadCrumbs() {
                        return (
                            <>
                                <BreadcrumbItem className="hidden md:block">
-                                   <BreadcrumbLink>
+                                   <BreadcrumbLink key={idx}>
                                        {val.charAt(0).toUpperCase() + String(val).slice(1)}
                                    </BreadcrumbLink>
                                </BreadcrumbItem>

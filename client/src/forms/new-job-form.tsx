@@ -15,7 +15,7 @@ import {
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import ToastAlert from "@/components/basic/toast-alert";
-import {apiRequest} from "@/services/apiService";
+import {apiRequest, postApiRequest} from "@/services/apiService";
 import {useRouter} from "@/i18n/routing";
 import {HttpStatusCode} from "axios";
 
@@ -42,8 +42,9 @@ export default function JobForm({AfterSubmit, OnCancel}: JobFormProps ){
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
         try {
-            
-            var res = await apiRequest('POST', '/job/', { name: data.name, jobNr: data.jobNr });            
+            console.log("submitting form")
+            var res = await postApiRequest('/job/', { name: data.name, jobNr: data.jobNr });            
+            console.log(res)
             if(res.status == HttpStatusCode.Created){
                 if (AfterSubmit){
                     AfterSubmit()

@@ -22,30 +22,28 @@ import {
 } from "@/components/ui/table"
 import {DataTablePagination} from "@/components/data-table/data-table-paginatiion";
 import {useTranslations} from "next-intl";
-import {Dispatch, SetStateAction } from "react";
+import {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {getPaginationRowModel} from "@tanstack/table-core";
+import {Pagination} from "@/types/pagination";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
     rowCount: number;
-    pagination: { pageIndex: number,  pageSize: number}
-    setPaginationAction: Dispatch<SetStateAction<{
-        pageIndex: number, 
-        pageSize: number
-    }>>;
+    pagination: Pagination; 
+    setPagination: Dispatch<SetStateAction<Pagination>>
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
     rowCount,
-    setPaginationAction,
-    pagination,
+    setPagination,
+    pagination
 }: DataTableProps<TData, TValue>){
     const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-    )
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+    
     
     const t = useTranslations("DataTable")
     
@@ -54,7 +52,7 @@ export function DataTable<TData, TValue>({
         columns,
         rowCount,
         getCoreRowModel: getCoreRowModel(),
-        // getPaginationRowModel: getPaginationRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
         onColumnFiltersChange: setColumnFilters,
@@ -65,9 +63,8 @@ export function DataTable<TData, TValue>({
             pagination
         },
         manualPagination: true,
-        onPaginationChange: setPaginationAction 
+        onPaginationChange: setPagination
     });
-    
     // Enable when we want to use the filter input
     return (
         <div>
