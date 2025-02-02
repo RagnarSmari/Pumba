@@ -4,7 +4,7 @@ import {z} from "zod";
 
 import {useTranslations} from "next-intl";
 import {RoleNameArray, RoleNames, UserRequest, UserRole} from "@/types/users";
-import {apiRequest} from "@/services/apiService";
+import {pumbaApiRequest} from "@/services/apiService";
 import {HttpStatusCode} from "axios";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
@@ -56,7 +56,7 @@ export default function UserForm({ AfterSubmit, OnCancel} : JobFormProps){
         };
         
         try {
-            var res = await apiRequest('POST', '/user/', newUser);
+            var res = await pumbaApiRequest('POST', '/user/', newUser);
             if (res.status === HttpStatusCode.Created){
                 alert("User created successfully");
                 if (AfterSubmit){

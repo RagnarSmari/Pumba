@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -41,7 +42,7 @@ func SendPaginatedResponse[T any](response PaginationResponse[T]) Response {
 func EntityCreatedResponse(id uint) Response {
 	return Response{
 		Status:  http.StatusCreated,
-		Message: "Entity with Id {id} successfully created",
+		Message: fmt.Sprintf("Entity created with id: %d", id),
 		Error:   "",
 		Data:    nil,
 	}
@@ -80,6 +81,7 @@ func SendResponse(c *gin.Context, response Response) {
 	responseMap["message"] = response.Message
 	responseMap["error"] = response.Error
 	responseMap["data"] = response.Data
+	responseMap["status"] = response.Status
 
 	c.JSON(response.Status, responseMap)
 

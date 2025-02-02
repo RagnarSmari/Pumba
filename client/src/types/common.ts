@@ -13,6 +13,7 @@ export interface PaginatedResponse<T> {
     Data: T[];
 }
 
+
 export type DateRange = {
     startDate: Date;
     endDate: Date;

@@ -27,7 +27,10 @@
     "Cancel": "Hætta við",
     "NameErrorLength": "Nafnið verður að vera a.m.k 5 stafir",
     "JobNumberLength": "Verknúmerið verður að vera stærra en 1",
-    "JobNr": "Verk númer"
+    "JobNr": "Verk númer",
+    "EditJob": "Breyta verki",
+    "EditJobDescription": "Breyta valið verk",
+    "Edit": "Breyta"
   },
   "NavBar": {
     "Dashboard": "Yfirlit",

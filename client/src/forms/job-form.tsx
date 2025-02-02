@@ -15,18 +15,26 @@ import {
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import ToastAlert from "@/components/basic/toast-alert";
-import {apiRequest, postApiRequest} from "@/services/apiService";
-import {useRouter} from "@/i18n/routing";
+import {pumbaApiRequest} from "@/services/apiService";
 import {HttpStatusCode} from "axios";
+import {ApiResponse} from "@/types/common";
+import {useEffect, useState} from "react";
+import {Job} from "@/types/jobs";
 
 export interface JobFormProps {
     AfterSubmit?: () => void;
     OnCancel?: () => void;
+    EditMode: boolean;
+    JobId: number
 }
 
-export default function JobForm({AfterSubmit, OnCancel}: JobFormProps ){
+export default function JobForm({AfterSubmit, OnCancel, EditMode, JobId}: JobFormProps ){
+    const [job, setJob] = useState<Job>({
+        Id: 0,
+        Name: "",
+        JobNr: 0,
+    });
     const t = useTranslations('Jobs');
-    const router = useRouter();
     const formSchema = z.object({
         name: z.string().min(5, {message: 'Name error'}),
         jobNr: z.coerce.number().min(1, {message: 'Number error'})
@@ -39,13 +47,35 @@ export default function JobForm({AfterSubmit, OnCancel}: JobFormProps ){
             jobNr: 0
         },
     })
+    
+    useEffect(() => {
+        if(EditMode && JobId){
+            pumbaApiRequest('GET', '/job/' + JobId)
+                .then((res : ApiResponse<Job>)=> {
+                    setJob(res.data)
+                    form.reset({
+                        name: res.data.Name,
+                        jobNr: res.data.JobNr,
+                    })
+                })
+                .catch(err => {
+                    console.error(err)
+                    // ToastAlert({ Title: 'Error', Message: err});
+                })
+        }
+
+    },[EditMode, JobId])
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
         try {
-            console.log("submitting form")
-            var res = await postApiRequest('/job/', { name: data.name, jobNr: data.jobNr });            
-            console.log(res)
-            if(res.status == HttpStatusCode.Created){
+            let method : 'POST' | 'PUT' = "POST";
+            let url = '/job/';
+            if(EditMode && JobId){
+                method = "PUT";
+                url = '/job/' + JobId;
+            }
+            const res : ApiResponse<undefined> = await pumbaApiRequest(method, url, { name: data.name, jobNr: data.jobNr });
+            if(res.status === HttpStatusCode.Created || res.status === HttpStatusCode.Ok){
                 if (AfterSubmit){
                     AfterSubmit()
                 }
@@ -54,12 +84,6 @@ export default function JobForm({AfterSubmit, OnCancel}: JobFormProps ){
         } catch (error) {
             console.error(error)
             ToastAlert({ Title: 'Error', Message: 'Error'});
-        }
-    }
-
-    async function onCancel(){
-        if(OnCancel != undefined) {
-            OnCancel();
         }
     }
 
