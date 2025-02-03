@@ -14,9 +14,9 @@ func CreateNewJobHandler(ctx context.Context, jobRequest dtos.PostJobRequest) (u
 	var job tables.Job
 	var db = database.Db.WithContext(ctx)
 
-	// Check if a job with the same name exists
+	// Check if a job with the same number exists
 	var jobCount int64
-	db.Where(&job, "name = ?", jobRequest.Name).Count(&jobCount)
+	db.Where(&job, "job_nr = ?", jobRequest.JobNr).Count(&jobCount)
 
 	if jobCount > 0 {
 		return 0, errors.New("job already exists")
@@ -25,10 +25,10 @@ func CreateNewJobHandler(ctx context.Context, jobRequest dtos.PostJobRequest) (u
 	job.Name = jobRequest.Name
 	job.JobNr = jobRequest.JobNr
 
-	err := db.Create(&job)
-	if err != nil {
-		logger.S().Errorf("Could not create Job with name: %s, Error:\n%s", job.Name, err.Error)
-		return 0, err.Error
+	result := db.Create(&job)
+	if result.Error != nil {
+		logger.S().Errorf("Could not create Job with name: %s, Error:%v", job.Name, result.Error)
+		return 0, result.Error
 	}
 
 	return job.ID, nil

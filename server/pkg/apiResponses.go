@@ -48,6 +48,7 @@ func EntityCreatedResponse(id uint) Response {
 }
 
 func BadRequestResponse(err error) Response {
+
 	return Response{
 		Status:  http.StatusBadRequest,
 		Message: "",
@@ -76,10 +77,10 @@ func EntityNotFoundResponse(err error, id int) Response {
 
 func SendResponse(c *gin.Context, response Response) {
 	responseMap := make(map[string]interface{})
-
 	responseMap["message"] = response.Message
 	responseMap["error"] = response.Error
 	responseMap["data"] = response.Data
+	responseMap["status"] = response.Status
 
 	c.JSON(response.Status, responseMap)
 
