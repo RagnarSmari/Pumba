@@ -8,6 +8,10 @@ import (
 func Paginate(pagination *pkg.Pagination) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 
+		if pagination.PageSize == -1 && pagination.Page == -1 {
+			return db
+		}
+
 		if pagination.Page <= 0 {
 			pagination.Page = 1
 		}

@@ -27,7 +27,10 @@
     "Cancel": "Cancel",
     "NameErrorLength": "Name must be at least 5 characters long",
     "JobNumberLength": "Job number must be more than 1",
-    "JobNr": "Job number"
+    "JobNr": "Job number",
+    "EditJob": "Edit job",
+    "EditJobDescription": "Edit selected job",
+    "Edit": "Edit"
   },
   "NavBar": {
     "Dashboard": "Dashboard",

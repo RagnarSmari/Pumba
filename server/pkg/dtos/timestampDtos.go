@@ -8,6 +8,7 @@ type TimestampDto struct {
 	TotalMinutes int
 	JobName      string
 	User         string
+	Comments     []CommentDto
 	CreatedAt    time.Time
 }
 

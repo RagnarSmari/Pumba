@@ -8,16 +8,19 @@ import {
 import {Button} from "@/components/ui/button";
 import {MoreHorizontal} from "lucide-react";
 import {useTranslations} from "next-intl";
+import React from "react";
+import {DialogTrigger} from "@/components/ui/dialog";
 
 
 type DataTableActionColumnFunctionCallback = () => void;
 interface DataTableActionColumnProps {
     OnEditCallback?: DataTableActionColumnFunctionCallback,
     OnDeleteCallback?: DataTableActionColumnFunctionCallback,
-    OnOverviewCallback?: DataTableActionColumnFunctionCallback
+    OnOverviewCallback?: DataTableActionColumnFunctionCallback,
+    children?: React.ReactNode,
 }
 
-export default function DataTableActionColumn({ OnEditCallback, OnDeleteCallback, OnOverviewCallback} : DataTableActionColumnProps) {
+export default function DataTableActionColumn({ OnEditCallback, OnDeleteCallback, OnOverviewCallback, children} : DataTableActionColumnProps) {
     const t = useTranslations('Columns')
     return (
       <DropdownMenu>
@@ -31,13 +34,18 @@ export default function DataTableActionColumn({ OnEditCallback, OnDeleteCallback
               <DropdownMenuLabel>{t('Actions')}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {OnEditCallback !== undefined &&
-                  <DropdownMenuItem>{t('Edit')}</DropdownMenuItem>}
+                  <DialogTrigger>
+                      <DropdownMenuItem>{t('Edit')}</DropdownMenuItem>
+                  </DialogTrigger>}
               {OnDeleteCallback !== undefined &&
-                  <DropdownMenuItem>{t('Delete')}</DropdownMenuItem>}
+                  <DialogTrigger>
+                      <DropdownMenuItem>{t('Delete')}</DropdownMenuItem>
+                  </DialogTrigger>}
               {OnOverviewCallback !== undefined && 
                   <DropdownMenuItem
                       onClick={() => OnOverviewCallback()}
                   >{t('Overview')}</DropdownMenuItem>}
+              {children}
           </DropdownMenuContent>
       </DropdownMenu>
 

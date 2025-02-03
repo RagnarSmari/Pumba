@@ -30,8 +30,16 @@ func AddPaginationToQuery(url string, pagination Pagination) string {
 }
 
 func GetPaginationFromUrl(ctx *gin.Context, url string) *Pagination {
-	page, _ := strconv.Atoi(ctx.Query("page"))
-	pageSize, _ := strconv.Atoi(ctx.Query("pageSize"))
+	page, err := strconv.Atoi(ctx.Query("page"))
+	if err != nil {
+		fmt.Println(err)
+		page = -1
+	}
+	pageSize, err := strconv.Atoi(ctx.Query("pageSize"))
+	if err != nil {
+		fmt.Println(err)
+		pageSize = -1
+	}
 	orderBy := ctx.Query("orderBy")
 	filter := ctx.Query("filter")
 

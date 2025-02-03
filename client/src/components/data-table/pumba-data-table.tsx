@@ -1,83 +1,75 @@
 "use client";
 
-import {useState} from "react";
 import {ColumnDef} from "@tanstack/table-core";
 import {DataTable} from "@/components/data-table/data-table";
+import {useEffect, useState} from "react";
+import {usePagination} from "@/swr/swr-uses";
 import useSWR from "swr";
-import {ApiResponse, PaginatedResponse} from "@/types/common";
-import {fetcher} from "@/swr/fetcher";
-
+import {ApiResponse} from "@/types/common";
+import {fetcher, pumbaFetcher} from "@/swr/fetcher";
+import {AwaiterMulti} from "next/dist/server/after/awaiter";
 
 interface QueryParameter{
     key: string;
     value: string;
 }
 
+export type Pagination = {
+    pageIndex: number;
+    pageSize: number;
+}
+
+export interface PagedResponse<TData>{
+    Data: TData[];
+    TotalCount: number;
+    PageIndex: number;
+    PageSize: number;
+}
+
 
 interface PumbaDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
-    url: string,
-    additionalQueryParameters?: QueryParameter[]
+    url: string;
+    additionalQueryParameters?: QueryParameter[]; // New prop for additional query parameters
 }
 
 
 export default function PumbaDataTable<TData, TValue>({
     columns,
-    url,
-    additionalQueryParameters = []
+    url, 
+    additionalQueryParameters = [], 
 } : PumbaDataTableProps<TData, TValue>){
-    const [totalCount, setTotalCount] = useState(0)
-    const [pagination, setPagination] = useState({
+
+    const [pagination, setPagination] = useState<Pagination>({
         pageIndex: 0, // initial page index
-        pageSize: 10 // default page size
+        pageSize: 10// default page size
     });
-    const [tableData, setTableData] = useState<TData[]>([])
-    const apiURL = process.env.NEXT_PUBLIC_PUMBA_API_URL;
-    let options : RequestInit = {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-    } 
     
-    const params = new URLSearchParams();
-    params.append('page', (pagination.pageIndex + 1).toString());
-    params.append('pageSize', pagination.pageSize.toString());
+    const apiUrl = process.env.NEXT_PUBLIC_PUMBA_API_URL;
+    const constructQueryString = () => {
+        const queryParams = [
+            `page=${pagination.pageIndex + 1}`,
+            `pageSize=${pagination.pageSize}`,
+            ...additionalQueryParameters.map((param) => `${param.key}=${encodeURIComponent(param.value)}`),
+        ];
 
-    additionalQueryParameters.forEach(param => {
-        params.append(param.key, param.value);
-    });
+        return queryParams.length > 0 ? `?${queryParams.join("&")}` : "";
+    };
 
-    const fullUrl = `${apiURL}${url}?${params.toString()}`;
+    const fullUrl = `${apiUrl}${url}${constructQueryString()}`;
+    const {data, error, isLoading } = useSWR<ApiResponse<PagedResponse<TData>>>(fullUrl, fetcher)
 
-    const { data, error, isLoading } = useSWR<ApiResponse<PaginatedResponse<TData>>>(
-        fullUrl,
-        (url: Request | string) => fetcher<ApiResponse<PaginatedResponse<TData>>>(url, options), {
-            onSuccess(data, key, config) {
-                setTotalCount(data.data.TotalCount);
-                if (data.data.Data){
-                    setTableData(data.data.Data);
-                }
-            }
-        });
+    if (error) return <div>failed to load</div>
+    if (isLoading) return <div>loading...</div>
     
-    // TODO: set as loader and some skeleton into the data table
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
 
-    if (error) {
-        return <div>Error: {error.message}</div>;
-    }
-    
     return (
         <DataTable 
             columns={columns}
-            data={tableData}
-            rowCount={totalCount}
-            setPaginationAction={setPagination}
-            pagination={pagination}/>
+            data={data?.data.Data || []}
+            rowCount={data?.data.TotalCount || 0}
+            pagination={pagination}
+            setPagination={setPagination}/>
     )
     
 }

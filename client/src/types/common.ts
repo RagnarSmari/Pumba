@@ -3,7 +3,7 @@ export interface ApiResponse<T> {
     status: number, 
     message: string, 
     error: string,
-    data: T | undefined
+    data: T 
 }
 
 export interface PaginatedResponse<T> {
@@ -12,3 +12,9 @@ export interface PaginatedResponse<T> {
     TotalCount: number;
     Data: T[];
 }
+
+
+export type DateRange = {
+    startDate: Date;
+    endDate: Date;
+};

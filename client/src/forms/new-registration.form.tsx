@@ -3,7 +3,7 @@ import {useTranslations} from "next-intl";
 import {z} from "zod";
 import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {apiRequest} from "@/services/apiService";
+import {pumbaApiRequest} from "@/services/apiService";
 import {HttpStatusCode} from "axios";
 import ToastAlert from "@/components/basic/toast-alert";
 import {
@@ -44,7 +44,7 @@ export default function JobForm({ AfterSubmit, OnCancel} : NewRegistrationFormPr
     
     async function onSubmit(data: z.infer<typeof formSchema>) {
         try {
-            var res = await apiRequest('POST', '/timestamp/', { Hours: data.hours, JobId: data.jobId, Minutes: data.minutes});
+            var res = await pumbaApiRequest('POST', '/timestamp/', { Hours: data.hours, JobId: data.jobId, Minutes: data.minutes});
             if(res.status == HttpStatusCode.Created){
                 if (AfterSubmit){
                     AfterSubmit()
