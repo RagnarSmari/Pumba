@@ -30,5 +30,5 @@ func CreateNewSessionRoute(c *gin.Context) (pkg.Response, error) {
 		return pkg.BadRequestResponse(err), err
 	}
 	c.SetCookie("pumbaSession", cookie, int(expiresIn.Seconds()), "/", "", true, true)
-	return pkg.SendRequestSuccessfulResponse("Successfully created session and set cookie"), nil
+	return pkg.SuccessfulResponse("Successfully created session and set cookie"), nil
 }

@@ -13,7 +13,7 @@ type Response struct {
 	Data    interface{}
 }
 
-func SendDataResponse(data interface{}) Response {
+func DataResponse(data interface{}) Response {
 	return Response{
 		Status:  http.StatusOK,
 		Message: "",
@@ -22,7 +22,16 @@ func SendDataResponse(data interface{}) Response {
 	}
 }
 
-func SendRequestSuccessfulResponse(message string) Response {
+func EntityUpdatedResponse(id uint) Response {
+	return Response{
+		Status:  http.StatusOK,
+		Message: fmt.Sprintf("Entity with id %d updated successfully", id),
+		Error:   "",
+		Data:    nil,
+	}
+}
+
+func SuccessfulResponse(message string) Response {
 	return Response{
 		Status:  http.StatusOK,
 		Message: message,
@@ -30,7 +39,7 @@ func SendRequestSuccessfulResponse(message string) Response {
 		Data:    nil,
 	}
 }
-func SendPaginatedResponse[T any](response PaginationResponse[T]) Response {
+func PaginatedResponse[T any](response PaginationResponse[T]) Response {
 	return Response{
 		Status:  http.StatusOK,
 		Message: "",

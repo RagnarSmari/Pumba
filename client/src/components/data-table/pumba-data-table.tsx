@@ -61,11 +61,19 @@ export default function PumbaDataTable<TData, TValue>({
 
     if (error) return <div>failed to load</div>
     if (isLoading) return <div>loading...</div>
-    
+
+    const columnsWithMeta = columns.map((col) => ({
+        ...col,
+        meta: {
+            ...col.meta,
+            swrKey: fullUrl, // Add the key here
+        },
+    }));
+
 
     return (
         <DataTable 
-            columns={columns}
+            columns={columnsWithMeta}
             data={data?.data.Data || []}
             rowCount={data?.data.TotalCount || 0}
             pagination={pagination}

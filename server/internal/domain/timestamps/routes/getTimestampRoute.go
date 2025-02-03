@@ -21,6 +21,6 @@ func GetTimestampRoute(ctx *gin.Context) (pkg.Response, error) {
 		return pkg.BadRequestResponse(err), err
 	}
 
-	return pkg.SendDataResponse(timestamp), nil
+	return pkg.DataResponse(timestamp), nil
 
 }

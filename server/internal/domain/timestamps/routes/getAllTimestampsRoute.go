@@ -49,6 +49,6 @@ func GetAllTimeStampsRoute(ctx *gin.Context) (pkg.Response, error) {
 		return pkg.BadRequestResponse(err), err
 	}
 
-	return pkg.SendPaginatedResponse(response), nil
+	return pkg.PaginatedResponse(response), nil
 
 }

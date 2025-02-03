@@ -17,5 +17,5 @@ func GetTimestampCommentsRoute(ctx *gin.Context) (pkg.Response, error) {
 	if err != nil {
 		return pkg.BadRequestResponse(err), err
 	}
-	return pkg.SendDataResponse(response), nil
+	return pkg.DataResponse(response), nil
 }

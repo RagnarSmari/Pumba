@@ -1,4 +1,3 @@
-import JobDialog from "@/components/dialogs/Job-dialog";
 import {Button} from "@/components/ui/button";
 import PumbaDataTable from "@/components/data-table/pumba-data-table";
 import {columns} from "@/app/[locale]/(authorized)/jobs/columns";

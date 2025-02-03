@@ -19,5 +19,5 @@ func GetAllJobsRoute(c *gin.Context) (pkg.Response, error) {
 		return pkg.BadRequestResponse(err), err
 	}
 
-	return pkg.SendPaginatedResponse[dtos.JobDto](response), nil
+	return pkg.PaginatedResponse[dtos.JobDto](response), nil
 }

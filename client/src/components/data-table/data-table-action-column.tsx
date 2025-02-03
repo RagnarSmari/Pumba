@@ -34,17 +34,16 @@ export default function DataTableActionColumn({ OnEditCallback, OnDeleteCallback
               <DropdownMenuLabel>{t('Actions')}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {OnEditCallback !== undefined &&
-                  <DialogTrigger>
-                      <DropdownMenuItem>{t('Edit')}</DropdownMenuItem>
-                  </DialogTrigger>}
+                      <DropdownMenuItem onClick={OnEditCallback}>{t('Edit')}</DropdownMenuItem>
+              }
               {OnDeleteCallback !== undefined &&
-                  <DialogTrigger>
-                      <DropdownMenuItem>{t('Delete')}</DropdownMenuItem>
-                  </DialogTrigger>}
-              {OnOverviewCallback !== undefined && 
-                  <DropdownMenuItem
-                      onClick={() => OnOverviewCallback()}
-                  >{t('Overview')}</DropdownMenuItem>}
+                      <DropdownMenuItem onClick={OnEditCallback}>{t('Delete')}</DropdownMenuItem>
+              }
+              {OnOverviewCallback !== undefined &&
+                      <DropdownMenuItem
+                          onClick={() => OnOverviewCallback()}
+                      >{t('Overview')}</DropdownMenuItem>
+              }
               {children}
           </DropdownMenuContent>
       </DropdownMenu>

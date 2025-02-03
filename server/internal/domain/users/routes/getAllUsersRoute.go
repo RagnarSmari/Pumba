@@ -15,5 +15,5 @@ func GetAllUsersRoute(ctx *gin.Context) (pkg.Response, error) {
 		return pkg.BadRequestResponse(err), err
 	}
 
-	return pkg.SendPaginatedResponse(users), nil
+	return pkg.PaginatedResponse(users), nil
 }

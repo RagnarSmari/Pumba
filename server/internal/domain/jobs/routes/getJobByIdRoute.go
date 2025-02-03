@@ -20,5 +20,5 @@ func GetJobByIdRoute(c *gin.Context) (pkg.Response, error) {
 		return pkg.BadRequestResponse(err), err
 	}
 
-	return pkg.SendDataResponse(job), nil
+	return pkg.DataResponse(job), nil
 }

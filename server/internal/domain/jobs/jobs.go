@@ -11,4 +11,5 @@ func AddJobRoutes(router *gin.RouterGroup) {
 	router.POST("/", pkg.WrapRouteHandler(routes.CreateNewJobRoute))
 	router.GET("/:id", pkg.WrapRouteHandler(routes.GetJobByIdRoute))
 	router.GET("/:id/timestamps", pkg.WrapRouteHandler(routes.GetAllTimestampsForJobRoute))
+	router.PUT("/:id", pkg.WrapRouteHandler(routes.EditJobRoute))
 }

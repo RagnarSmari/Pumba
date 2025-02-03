@@ -12,7 +12,7 @@ import (
 
 func SearchForMissingProfiles(ctx context.Context) background.JobFunc {
 	return func() {
-		t := time.NewTicker(time.Hour * 12) // Run this every 12 hours
+		t := time.NewTicker(time.Minute) // Run this every 12 hours
 		for range t.C {
 			logger.S().Infof("Searching for missing profiles")
 

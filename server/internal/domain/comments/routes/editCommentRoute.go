@@ -34,5 +34,5 @@ func EditCommentRoute(ctx *gin.Context) (pkg.Response, error) {
 	if !isSuccess {
 		return pkg.InternalServerResponse(err), err
 	}
-	return pkg.SendRequestSuccessfulResponse("Comment successfully edited"), nil
+	return pkg.SuccessfulResponse("Comment successfully edited"), nil
 }

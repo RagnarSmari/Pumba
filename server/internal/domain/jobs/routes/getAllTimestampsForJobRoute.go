@@ -20,5 +20,5 @@ func GetAllTimestampsForJobRoute(c *gin.Context) (pkg.Response, error) {
 		return pkg.BadRequestResponse(err), err
 	}
 
-	return pkg.SendDataResponse(timestamps), nil
+	return pkg.DataResponse(timestamps), nil
 }
