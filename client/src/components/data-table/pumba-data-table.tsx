@@ -3,11 +3,9 @@
 import {ColumnDef} from "@tanstack/table-core";
 import {DataTable} from "@/components/data-table/data-table";
 import {useEffect, useState} from "react";
-import {usePagination} from "@/swr/swr-uses";
 import useSWR from "swr";
 import {ApiResponse} from "@/types/common";
-import {fetcher, pumbaFetcher} from "@/swr/fetcher";
-import {AwaiterMulti} from "next/dist/server/after/awaiter";
+import {fetcher} from "@/swr/fetcher";
 
 interface QueryParameter{
     key: string;
@@ -31,6 +29,7 @@ interface PumbaDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     url: string;
     additionalQueryParameters?: QueryParameter[]; // New prop for additional query parameters
+    refreshData?: () => void;
 }
 
 
@@ -38,6 +37,7 @@ export default function PumbaDataTable<TData, TValue>({
     columns,
     url, 
     additionalQueryParameters = [], 
+    refreshData,
 } : PumbaDataTableProps<TData, TValue>){
 
     const [pagination, setPagination] = useState<Pagination>({
@@ -57,23 +57,15 @@ export default function PumbaDataTable<TData, TValue>({
     };
 
     const fullUrl = `${apiUrl}${url}${constructQueryString()}`;
-    const {data, error, isLoading } = useSWR<ApiResponse<PagedResponse<TData>>>(fullUrl, fetcher)
-
+    const {data, error, isLoading} = useSWR<ApiResponse<PagedResponse<TData>>>(fullUrl, fetcher)
+    
+    
     if (error) return <div>failed to load</div>
-    if (isLoading) return <div>loading...</div>
-
-    const columnsWithMeta = columns.map((col) => ({
-        ...col,
-        meta: {
-            ...col.meta,
-            swrKey: fullUrl, // Add the key here
-        },
-    }));
-
+    if (!data) return <div>loading...</div>
 
     return (
         <DataTable 
-            columns={columnsWithMeta}
+            columns={columns}
             data={data?.data.Data || []}
             rowCount={data?.data.TotalCount || 0}
             pagination={pagination}

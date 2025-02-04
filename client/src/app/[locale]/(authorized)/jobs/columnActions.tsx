@@ -1,10 +1,9 @@
 "use client";
 
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
 import JobForm from "@/forms/job-form";
 import {Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle} from "@/components/ui/dialog";
 import DataTableActionColumn from "@/components/data-table/data-table-action-column";
-import useSWR from "swr";
 
 type actionColumnDialogProps = {
     title: string;
@@ -13,18 +12,16 @@ type actionColumnDialogProps = {
     onSuccessCallback?: () => void;
 }
 
-export default function ColumnActions({id, refreshData}: { id : number, refreshData : () => void}) {
+export default function ColumnActions({id}: { id : number}) {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [dialogProps, setDialogProps] = useState<actionColumnDialogProps>()
-    const { mutate } = useSWR('/job')
 
     const closeDialog = () => {
         setIsDialogOpen(false)
     }
     const handleSubmit = () => {
         closeDialog();
-        refreshData();
     }
 
     const onEdit = () => {

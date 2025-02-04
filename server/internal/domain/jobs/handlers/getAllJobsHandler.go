@@ -18,7 +18,7 @@ func GetAllJobsHandler(ctx context.Context, pagination *pkg.Pagination) (error, 
 	var totalCount int64
 	db.Model(&tables.Job{}).Count(&totalCount)
 
-	result := db.Scopes(extension.Paginate(pagination)).Find(&jobs)
+	result := db.Order("id ASC").Scopes(extension.Paginate(pagination)).Find(&jobs)
 
 	if result.Error != nil {
 		return result.Error, pkg.PaginationResponse[dtos.JobDto]{}
