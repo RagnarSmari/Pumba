@@ -61,7 +61,6 @@ export default function PumbaDataTable<TData, TValue>({
     
     
     if (error) return <div>failed to load</div>
-    if (!data) return <div>loading...</div>
 
     return (
         <DataTable 
@@ -69,7 +68,8 @@ export default function PumbaDataTable<TData, TValue>({
             data={data?.data.Data || []}
             rowCount={data?.data.TotalCount || 0}
             pagination={pagination}
-            setPagination={setPagination}/>
+            setPagination={setPagination} 
+            isLoading={isLoading}/>
     )
     
 }

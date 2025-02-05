@@ -25,6 +25,7 @@ import {useTranslations} from "next-intl";
 import {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {getPaginationRowModel} from "@tanstack/table-core";
 import {Pagination} from "@/types/pagination";
+import {LoadingSpinner} from "@/components/loading-spinner";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -32,6 +33,7 @@ interface DataTableProps<TData, TValue> {
     rowCount: number;
     pagination: Pagination; 
     setPagination: Dispatch<SetStateAction<Pagination>>
+    isLoading: boolean
 }
 
 export function DataTable<TData, TValue>({
@@ -39,7 +41,8 @@ export function DataTable<TData, TValue>({
     data,
     rowCount,
     setPagination,
-    pagination
+    pagination,
+    isLoading,
 }: DataTableProps<TData, TValue>){
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -99,26 +102,33 @@ export function DataTable<TData, TValue>({
                         ))}
                     </TableHeader>
                     <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            ))
-                        ) : (
+                        {isLoading ? (
                             <TableRow>
-                                <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    {t('NoData')}
+                                <TableCell colSpan={columns.length} className="h-24 text-center items-center justify-items-center">
+                                    {/*Loading...*/}
+                                    <LoadingSpinner />
                                 </TableCell>
                             </TableRow>
-                        )}
+                        ): table.getRowModel().rows?.length && !isLoading ? (
+                                    table.getRowModel().rows.map((row) => (
+                                        <TableRow
+                                            key={row.id}
+                                            data-state={row.getIsSelected() && "selected"}
+                                        >
+                                            {row.getVisibleCells().map((cell) => (
+                                                <TableCell key={cell.id}>
+                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                </TableCell>
+                                            ))}
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={columns.length} className="h-24 text-center">
+                                            {t('NoData')}
+                                        </TableCell>
+                                    </TableRow>
+                                )}
                     </TableBody>
                 </Table>
             </div>

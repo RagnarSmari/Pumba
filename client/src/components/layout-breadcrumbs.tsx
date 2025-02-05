@@ -9,7 +9,6 @@ import {
     BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
 import {usePathname} from "@/i18n/routing";
-import {Key} from "lucide-react";
 
 export default function LayoutBreadCrumbs() {
     const pathName = usePathname()
@@ -22,11 +21,16 @@ export default function LayoutBreadCrumbs() {
                {names.map(
                    (val,idx) => {
                        return (
+                           <div key={idx} className={"flex items-center space-x-2"}>
+                               {idx > 0 && (
+                                   <BreadcrumbSeparator />
+                               )}
                                <BreadcrumbItem className="hidden md:block" key={idx}>
                                    <BreadcrumbLink >
                                        {val.charAt(0).toUpperCase() + String(val).slice(1)}
                                    </BreadcrumbLink>
                                </BreadcrumbItem>
+                           </div>
                        )
                    }
                )}
