@@ -16,8 +16,8 @@ func EditJobHandler(c *gin.Context, id int, jobRequest dtos.PostJobRequest) (uin
 
 	// Check if a job with the same number exists
 	result := db.First(&job, id)
-	if result.Error != nil {
-		return 0, errors.New("job not found")
+	if result.Error == nil {
+		return 0, errors.New("Job with same ")
 	}
 
 	job.Name = jobRequest.Name

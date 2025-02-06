@@ -4,7 +4,10 @@ import {ColumnDef} from "@tanstack/table-core";
 import {Job} from "@/types/jobs";
 import {DataTableColumnHeader} from "@/components/data-table/data-table-column-header";
 import DataTableActionColumn from "@/components/data-table/data-table-action-column";
-import {useRouter} from "@/i18n/routing";
+
+export const getColumns = () : ColumnDef<Job>[] => {
+    return columns;
+}
 
 export const columns: ColumnDef<Job>[] = [
     {
@@ -31,8 +34,11 @@ export const columns: ColumnDef<Job>[] = [
     {
         id: "actions",
         cell: ({ row}) => {
+            
             return (
-                <DataTableActionColumn OnEditHref={`/jobs/${row.original.Id}/edit`} />
+                <DataTableActionColumn 
+                    OnEditHref={`/jobs/${row.original.Id}/edit`} 
+                />
             );
         }
     },
