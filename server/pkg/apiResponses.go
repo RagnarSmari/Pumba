@@ -76,11 +76,20 @@ func InternalServerResponse(err error) Response {
 	}
 }
 
-func EntityNotFoundResponse(err error, id int) Response {
+func EntityNotFoundResponse(id int) Response {
 	return Response{
 		Status:  http.StatusNotFound,
-		Message: "Entity with Id: {id} not found",
-		Error:   err.Error(),
+		Message: fmt.Sprintf("Entity with id %d not found", id),
+		Error:   "",
+		Data:    nil,
+	}
+}
+
+func InternalServerErrorResponse() Response {
+	return Response{
+		Status:  http.StatusInternalServerError,
+		Message: "Internal server error",
+		Error:   "",
 		Data:    nil,
 	}
 }

@@ -5,7 +5,6 @@ import {
 import {useTranslations} from "next-intl";
 import { Link } from "@/i18n/routing"
 import {Button} from "@/components/ui/button";
-import JobDialog from "@/components/dialogs/Job-dialog";
 import AddRegistrationDialog from "@/components/dialogs/addRegistration-dialog";
 
 

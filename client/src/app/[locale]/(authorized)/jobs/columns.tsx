@@ -3,11 +3,8 @@
 import {ColumnDef} from "@tanstack/table-core";
 import {Job} from "@/types/jobs";
 import {DataTableColumnHeader} from "@/components/data-table/data-table-column-header";
-import DataTableActionColumn from "@/components/data-table/data-table-action-column";
+import ColumnActions from "@/app/[locale]/(authorized)/jobs/columnActions";
 
-export const getColumns = () : ColumnDef<Job>[] => {
-    return columns;
-}
 
 export const columns: ColumnDef<Job>[] = [
     {
@@ -33,12 +30,9 @@ export const columns: ColumnDef<Job>[] = [
     },
     {
         id: "actions",
-        cell: ({ row}) => {
-            
+        cell: ({ row }) => {
             return (
-                <DataTableActionColumn 
-                    OnEditHref={`/jobs/${row.original.Id}/edit`} 
-                />
+                <ColumnActions id={row.original.Id} />
             );
         }
     },

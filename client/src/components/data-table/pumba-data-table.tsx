@@ -2,8 +2,8 @@
 
 import {ColumnDef} from "@tanstack/table-core";
 import {DataTable} from "@/components/data-table/data-table";
-import {useEffect, useState} from "react";
-import useSWR from "swr";
+import {useState} from "react";
+import useSWR, {mutate} from "swr";
 import {ApiResponse} from "@/types/common";
 import {fetcher} from "@/swr/fetcher";
 
@@ -29,7 +29,6 @@ interface PumbaDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     url: string;
     additionalQueryParameters?: QueryParameter[]; // New prop for additional query parameters
-    refreshData?: () => void;
 }
 
 
@@ -37,7 +36,6 @@ export default function PumbaDataTable<TData, TValue>({
     columns,
     url, 
     additionalQueryParameters = [], 
-    refreshData,
 } : PumbaDataTableProps<TData, TValue>){
 
     const [pagination, setPagination] = useState<Pagination>({
@@ -57,8 +55,7 @@ export default function PumbaDataTable<TData, TValue>({
     };
 
     const fullUrl = `${apiUrl}${url}${constructQueryString()}`;
-    const {data, error, isLoading} = useSWR<ApiResponse<PagedResponse<TData>>>(fullUrl, fetcher)
-    
+    const {data, error, isLoading } = useSWR<ApiResponse<PagedResponse<TData>>>(fullUrl, fetcher)
     
     if (error) return <div>failed to load</div>
 

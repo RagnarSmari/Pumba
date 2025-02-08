@@ -21,10 +21,5 @@ func CreateNewJobRoute(c *gin.Context) (pkg.Response, error) {
 		return pkg.BadRequestResponse(err), err
 	}
 	// Call the handler
-	id, err := handlers.CreateNewJobHandler(c, request)
-	if err != nil {
-		return pkg.BadRequestResponse(err), err
-	}
-
-	return pkg.EntityCreatedResponse(id), nil
+	return handlers.CreateNewJobHandler(c, request)
 }

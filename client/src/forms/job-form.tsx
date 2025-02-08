@@ -34,11 +34,13 @@ export default function JobForm({AfterSubmit, OnCancel, EditMode, JobId}: JobFor
         Name: "",
         JobNr: 0,
     });
-    const t = useTranslations('Jobs');
+    const [error, setError] = useState("")
+    // const t = useTranslations('Jobs');
     const formSchema = z.object({
         name: z.string().min(5, {message: 'Name error'}),
         jobNr: z.coerce.number().min(1, {message: 'Number error'})
     })
+    const [loading, setLoading] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -47,9 +49,15 @@ export default function JobForm({AfterSubmit, OnCancel, EditMode, JobId}: JobFor
             jobNr: 0
         },
     })
+    const cancel = () => {
+        if (OnCancel !== undefined){
+            OnCancel()
+        }
+    }
     
     useEffect(() => {
         if(EditMode && JobId){
+            setLoading(true)
             pumbaApiRequest('GET', '/job/' + JobId)
                 .then((res : ApiResponse<Job>)=> {
                     setJob(res.data)
@@ -60,8 +68,8 @@ export default function JobForm({AfterSubmit, OnCancel, EditMode, JobId}: JobFor
                 })
                 .catch(err => {
                     console.error(err)
-                    // ToastAlert({ Title: 'Error', Message: err});
                 })
+            setLoading(false)
         }
 
     },[EditMode, JobId])
@@ -74,11 +82,16 @@ export default function JobForm({AfterSubmit, OnCancel, EditMode, JobId}: JobFor
                 method = "PUT";
                 url = '/job/' + JobId;
             }
+            setLoading(true)
             const res : ApiResponse<undefined> = await pumbaApiRequest(method, url, { name: data.name, jobNr: data.jobNr });
             if(res.status === HttpStatusCode.Created || res.status === HttpStatusCode.Ok){
                 if (AfterSubmit){
                     AfterSubmit()
                 }
+            }
+            setLoading(false)
+            if (res.status === HttpStatusCode.BadRequest || res.error !== ""){
+                setError(res.error)
             }
             
         } catch (error) {
@@ -89,15 +102,18 @@ export default function JobForm({AfterSubmit, OnCancel, EditMode, JobId}: JobFor
 
     return (
         <Form {...form}>
+            {error !== "" && (
+                <p className="text-red-600">Error: {error}</p>
+            )}
             <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
                 <FormField
                     control={form.control}
                     name="name"
                     render={({ field }) => (
                         <FormItem className="grid gap-0">
-                            <FormLabel htmlFor="name">{t('Name')}</FormLabel>
+                            <FormLabel htmlFor="name">Name</FormLabel>
                             <FormControl>
-                                <Input placeholder={t('Name')} {...field}/>
+                                <Input placeholder="Name" {...field}/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>
@@ -107,16 +123,16 @@ export default function JobForm({AfterSubmit, OnCancel, EditMode, JobId}: JobFor
                     name="jobNr"
                        render={({ field }) => (
                         <FormItem className="grid gap-0">
-                            <FormLabel htmlFor="jobNr">{t('JobNr')}</FormLabel>
+                            <FormLabel htmlFor="jobNr">Job number</FormLabel>
                             <FormControl>
-                                <Input placeholder={t('JobNr')} {...field}/>
+                                <Input placeholder="Job number" {...field}/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>
                     )}/>
-                <div className="flex justify-between py-3">
-                    {/*<Button variant="outline" onClick={onCancel}>{t('Cancel')}</Button>*/}
-                    <Button type="submit">{t('Submit')}</Button>
+                <div className="flex space-x-2">
+                    <Button type="submit" disabled={loading} className="btn">Submit</Button>
+                    <Button type="button" variant="outline" onClick={cancel} >Cancel</Button>
                 </div>
             </form>
         </Form>

@@ -2,24 +2,31 @@ package handlers
 
 import (
 	"context"
-	"errors"
+	"net/http"
 	"server/internal/database"
 	"server/internal/database/tables"
 	"server/logger"
+	"server/pkg"
 	"server/pkg/dtos"
 )
 
-func CreateNewJobHandler(ctx context.Context, jobRequest dtos.PostJobRequest) (uint, error) {
+func CreateNewJobHandler(ctx context.Context, jobRequest dtos.PostJobRequest) (pkg.Response, error) {
 
 	var job tables.Job
 	var db = database.Db.WithContext(ctx)
 
 	// Check if a job with the same number exists
-	var jobCount int64
-	db.Where(&job, "job_nr = ?", jobRequest.JobNr).Count(&jobCount)
+	db.First(&job, "job_nr = ?", jobRequest.JobNr)
 
-	if jobCount > 0 {
-		return 0, errors.New("job already exists")
+	if job.JobNr == jobRequest.JobNr {
+		return pkg.Response{Status: http.StatusConflict, Error: "job with same number already exists"}, nil
+	}
+
+	// Check if a job with the same name exists
+	db.First(&job, "name = ?", jobRequest.Name)
+
+	if job.Name == jobRequest.Name {
+		return pkg.Response{Status: http.StatusConflict, Error: "job with same name already exists"}, nil
 	}
 
 	job.Name = jobRequest.Name
@@ -28,8 +35,8 @@ func CreateNewJobHandler(ctx context.Context, jobRequest dtos.PostJobRequest) (u
 	result := db.Create(&job)
 	if result.Error != nil {
 		logger.S().Errorf("Could not create Job with name: %s, Error:%v", job.Name, result.Error)
-		return 0, result.Error
+		return pkg.InternalServerErrorResponse(), result.Error
 	}
 
-	return job.ID, nil
+	return pkg.EntityCreatedResponse(job.ID), nil
 }

@@ -1,8 +1,7 @@
 import {Button} from "@/components/ui/button";
 import PumbaDataTable from "@/components/data-table/pumba-data-table";
 import {columns} from "@/app/[locale]/(authorized)/jobs/columns";
-import FormDialog from "@/components/dialogs/form-dialog";
-import JobForm from "@/forms/job-form";
+import JobDialog from "@/components/dialogs/Job-dialog";
 
 
 
@@ -17,15 +16,9 @@ export default function Jobs() {
             </div>
             <div className="container mx-auto py-10 flex flex-col items-stretch justify-center">
                 <div className="flex justify-end py-3">
-                    <FormDialog 
-                        title="New job"
-                        description="Create a new job"
-                        form={(
-                            <JobForm EditMode={false} JobId={0} />
-                        )}
-                        trigger={(
-                            <Button variant="default">Add</Button>
-                        )}/>
+                    <JobDialog editMode={false} jobId={0} trigger={(
+                        <Button variant={"default"}>Add</Button>
+                    )} />
                 </div>
                 <PumbaDataTable 
                     columns={columns}

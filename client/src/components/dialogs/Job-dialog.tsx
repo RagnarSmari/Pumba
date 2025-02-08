@@ -10,8 +10,6 @@ import {
 
 import JobForm from "@/forms/job-form";
 import React from "react";
-import {useTranslations} from "next-intl";
-import {DialogClose} from "@radix-ui/react-dialog";
 import {useToast} from "@/components/ui/use-toast";
 
 type AddJobDialogProps = {
@@ -22,8 +20,11 @@ type AddJobDialogProps = {
 export default function JobDialog({ trigger, editMode, jobId } : AddJobDialogProps ){
     const [isOpen, setIsOpen] = React.useState(false);
     const toast = useToast();
-    const t = useTranslations('Jobs')
+    // const t = useTranslations('Jobs')
     const closeDialog = () => {
+        setIsOpen(false);
+    }
+    const handleSubmit = () => {
         const toastTitle = "Success!";
         let toastDescription = "Job created successfully";
         if (editMode && jobId !== 0){
@@ -35,9 +36,6 @@ export default function JobDialog({ trigger, editMode, jobId } : AddJobDialogPro
         });
         setIsOpen(false);
     }
-    console.log("isopen", isOpen);
-    console.log("editmode", editMode);
-    console.log("jobid", jobId);
    return (
        <Dialog open={isOpen} onOpenChange={setIsOpen}>
            <DialogTrigger asChild>
@@ -46,15 +44,14 @@ export default function JobDialog({ trigger, editMode, jobId } : AddJobDialogPro
            <DialogContent>
                <DialogHeader>
                    <DialogTitle>
-                       {editMode && jobId !== 0 ? t('EditJob') : t('NewJob')}
+                       {editMode && jobId !== 0 ? "Edit job" : "New job"}
                    </DialogTitle>
                    <DialogDescription>
-                       {editMode && jobId !== 0 ? t('EditJobDescription') : t('CreateNewJob')}
+                       {editMode && jobId !== 0 ? "Edit job description" : "Create new job description"}
                    </DialogDescription>
                </DialogHeader>
-               <JobForm OnCancel={closeDialog} AfterSubmit={closeDialog} EditMode={editMode} JobId={jobId}/>
+               <JobForm OnCancel={closeDialog} AfterSubmit={handleSubmit} EditMode={editMode} JobId={jobId}/>
            </DialogContent>
-           <DialogClose />
        </Dialog>
    )
 }
