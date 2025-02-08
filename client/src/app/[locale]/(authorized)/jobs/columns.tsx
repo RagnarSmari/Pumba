@@ -30,9 +30,10 @@ export const columns: ColumnDef<Job>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => {
+        cell: ({ row, table }) => {
+            const  state  = table.getState();
             return (
-                <ColumnActions id={row.original.Id} />
+                <ColumnActions id={row.original.Id} tableState={state} />
             );
         }
     },

@@ -8,6 +8,7 @@ import {Button} from "@/components/ui/button";
 import {pumbaApiRequest} from "@/services/apiService";
 import {useToast} from "@/components/ui/use-toast";
 import useSWR, { useSWRConfig } from 'swr'
+import {TableState} from "@tanstack/table-core";
 
 type actionColumnDialogProps = {
     title: string;
@@ -16,7 +17,7 @@ type actionColumnDialogProps = {
     onSuccessCallback?: () => void;
 }
 
-export default function ColumnActions({id}: { id : number}) {
+export default function ColumnActions({id, tableState}: { id : number, tableState: TableState}) {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [dialogProps, setDialogProps] = useState<actionColumnDialogProps>()
@@ -38,9 +39,9 @@ export default function ColumnActions({id}: { id : number}) {
                     title: "Successfully deleted!",
                     description: "Job was successfully deleted",
                 })
-                // TODO
-                // Use the current url so that the user goes back to the same place in the table as he was before 
-                mutate('http://localhost:8080/api/job/?page=1&pageSize=10')
+                const fullUrl = `http://localhost:8080/api/job/?page=${tableState.pagination.pageIndex+1}&pageSize=${tableState.pagination.pageSize}`
+                console.log(fullUrl)
+                mutate(fullUrl)
             })
             .catch(() => {
                 console.log("Failed to delete job")
