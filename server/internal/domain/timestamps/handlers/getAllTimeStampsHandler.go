@@ -26,7 +26,7 @@ func GetAllTimeStampsHandler(ctx context.Context, pagination *pkg.Pagination, fr
 		query = query.Where("created_at <= ?", to)
 	}
 
-	result := query.Preload("Job").Preload("Comments").Preload("Comments.Profile").Scopes(extension.Paginate(pagination)).Find(&timeStamps)
+	result := query.Preload("Profile").Preload("Job").Preload("Comments").Preload("Comments.Profile").Scopes(extension.Paginate(pagination)).Find(&timeStamps)
 
 	if result.Error != nil {
 		logger2.S().Errorf(result.Error.Error())
@@ -35,15 +35,12 @@ func GetAllTimeStampsHandler(ctx context.Context, pagination *pkg.Pagination, fr
 
 	var timeStampDtos []dtos.TimestampDto
 	for _, t := range timeStamps {
-		//displayName := ""
 
-		//user, err := auth.GetUserByUid(ctx, t.UserFirebaseUid)
-		//if err == nil {
-		//	displayName = user.Email
-		//}
 		hours := t.DurationMinutes / 60
 		minutes := t.DurationMinutes % 60
+
 		var comments []dtos.CommentDto
+
 		for _, comment := range t.Comments {
 			comments = append(comments, dtos.CommentDto{
 				Id:          comment.ID,
@@ -52,15 +49,16 @@ func GetAllTimeStampsHandler(ctx context.Context, pagination *pkg.Pagination, fr
 				Author:      comment.Profile.Name,
 			})
 		}
+		userName := *t.Profile.Name
 
 		timeStampDtos = append(timeStampDtos, dtos.TimestampDto{
 			Id:           t.ID,
 			TotalHours:   hours,
 			TotalMinutes: minutes,
 			JobName:      t.Job.Name,
-			//UserName:     displayName,
-			CreatedAt: t.CreatedAt.Local(),
-			Comments:  comments,
+			UserName:     userName,
+			CreatedAt:    t.CreatedAt.Local(),
+			Comments:     comments,
 		})
 	}
 

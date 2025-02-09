@@ -40,6 +40,7 @@ func AddAuthMiddleWare() gin.HandlerFunc {
 		c.Set("user_role", decoded.Claims)
 		c.Set("user_uid", decoded.UID)
 		c.Set("user_id", claims.Id)
+		c.Set("user_name", claims.Name)
 		c.Next()
 	}
 }

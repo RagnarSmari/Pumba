@@ -10,7 +10,17 @@ export const getColumns = (onOpenOverview: (id: number) => void) : ColumnDef<Tim
     {
         accessorKey: "CreatedAt",
         header: "CreatedAt",
-        cell: ({ row }) => row.original.CreatedAt.toLocaleString()
+        cell: ({ row }) => {
+            const date = new Date(row.original.CreatedAt);
+            return new Intl.DateTimeFormat("default", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false, // 24-hour format
+            }).format(date);
+        }
     },
     {
         accessorKey: "TotalHours",

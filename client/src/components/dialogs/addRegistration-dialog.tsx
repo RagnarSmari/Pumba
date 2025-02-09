@@ -1,6 +1,5 @@
 "use client"
 import React from "react";
-import {useTranslations} from "next-intl";
 import {Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import NewRegistrationForm from "@/forms/new-registration.form";
 
@@ -11,7 +10,6 @@ type AddRegistrationProps = {
 
 export default function AddRegistrationDialog({ trigger } : AddRegistrationProps){
     const [isOpen, setIsOpen] = React.useState(false);
-    const t = useTranslations('Registrations')
     const closeDialog = () => {
         setIsOpen(false);
     }
@@ -23,9 +21,9 @@ export default function AddRegistrationDialog({ trigger } : AddRegistrationProps
            </DialogTrigger>
            <DialogContent>
                <DialogHeader>
-                   <DialogTitle>{t('NewRegistration')}</DialogTitle>
+                   <DialogTitle>New registration</DialogTitle>
                    <DialogDescription>
-                       {t('CreateNewRegistration')}
+                       Create new registration
                    </DialogDescription>
                </DialogHeader>
                <NewRegistrationForm OnCancel={closeDialog} AfterSubmit={closeDialog}/>

@@ -24,7 +24,6 @@ export default function Registrations(){
     }
     
     const openOverview = (id: number) => {
-        console.log("Opening overview")
         setIsOpen(true)
         setCurrentTimestampId(id);
     }

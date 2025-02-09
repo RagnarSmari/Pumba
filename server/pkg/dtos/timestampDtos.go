@@ -1,13 +1,15 @@
 package dtos
 
-import "time"
+import (
+	"time"
+)
 
 type TimestampDto struct {
 	Id           uint
 	TotalHours   int
 	TotalMinutes int
 	JobName      string
-	User         string
+	UserName     string
 	Comments     []CommentDto
 	CreatedAt    time.Time
 }
