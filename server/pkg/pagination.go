@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
+	"strings"
 )
 
 type Pagination struct {
@@ -42,11 +43,19 @@ func GetPaginationFromUrl(ctx *gin.Context, url string) *Pagination {
 	}
 	orderBy := ctx.Query("orderBy")
 	filter := ctx.Query("filter")
+	orderResult := strings.Split(orderBy, ":")
+	orderByColumn := ""
+	orderByDirection := ""
+	if len(orderResult) == 2 {
+		orderByColumn = orderResult[0]
+		orderByDirection = orderResult[1]
+	}
 
 	return &Pagination{
-		Page:          page,
-		PageSize:      pageSize,
-		OrderByColumn: orderBy,
-		Filter:        filter,
+		Page:             page,
+		PageSize:         pageSize,
+		OrderByColumn:    orderByColumn,
+		OrderByDirection: orderByDirection,
+		Filter:           filter,
 	}
 }

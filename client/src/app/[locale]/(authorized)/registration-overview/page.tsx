@@ -5,16 +5,20 @@ import {pumbaApiRequest} from "@/services/apiService";
 import {useEffect, useState} from "react";
 import {PagedResponse} from "@/components/data-table/pumba-data-table";
 import {ApiResponse} from "@/types/common";
+import {useToast} from "@/components/ui/use-toast";
 
 export default function RegistrationOverview() {
     const [registrations, setRegistrations] = useState<Timestamp[]>([]);
+    const toast = useToast()
     useEffect(() => {
         pumbaApiRequest("GET", "/timestamp").then((data : ApiResponse<PagedResponse<Timestamp>>) => {
             if (data.status !== 200) {
-                throw new Error(`Error fetching data. Status code: ${data.status}`)
+                toast.toast({
+                    title: "Error fetching data",
+                    description: data.error
+                })
             }
             else {
-                console.log(data)
                 setRegistrations(data.data.Data)
             }
         }).catch(Error => {

@@ -6,6 +6,7 @@ import {useState} from "react";
 import useSWR, {mutate} from "swr";
 import {ApiResponse} from "@/types/common";
 import {fetcher} from "@/swr/fetcher";
+import {SortingState} from "@tanstack/react-table";
 
 interface QueryParameter{
     key: string;
@@ -42,12 +43,15 @@ export default function PumbaDataTable<TData, TValue>({
         pageIndex: 0, // initial page index
         pageSize: 10// default page size
     });
+    const [sorting, setSorting] = useState<SortingState>([])
+    console.log(sorting)
     
     const apiUrl = process.env.NEXT_PUBLIC_PUMBA_API_URL;
     const constructQueryString = () => {
         const queryParams = [
             `page=${pagination.pageIndex + 1}`,
             `pageSize=${pagination.pageSize}`,
+            `orderBy=${sorting.map((s) => `${s.id}:${s.desc ? "desc" : "asc"}`)}`,
             ...additionalQueryParameters.map((param) => `${param.key}=${encodeURIComponent(param.value)}`),
         ];
 
@@ -66,7 +70,10 @@ export default function PumbaDataTable<TData, TValue>({
             rowCount={data?.data.TotalCount || 0}
             pagination={pagination}
             setPagination={setPagination} 
-            isLoading={isLoading}/>
+            isLoading={isLoading}
+            sorting={sorting}
+            setSorting={setSorting}/>
+        
     )
     
 }

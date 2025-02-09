@@ -17,7 +17,6 @@ import {
 import {GalleryVerticalEnd} from "lucide-react";
 import {NavUser} from "@/components/nav-user";
 
-// This is sample data.
 const data = {
     navMain: [
         {

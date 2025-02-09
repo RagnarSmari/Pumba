@@ -21,8 +21,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import {DataTablePagination} from "@/components/data-table/data-table-paginatiion";
-import {useTranslations} from "next-intl";
-import {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {Dispatch, SetStateAction} from "react";
 import {getPaginationRowModel} from "@tanstack/table-core";
 import {Pagination} from "@/types/pagination";
 import {LoadingSpinner} from "@/components/loading-spinner";
@@ -33,6 +32,8 @@ interface DataTableProps<TData, TValue> {
     rowCount: number;
     pagination: Pagination; 
     setPagination: Dispatch<SetStateAction<Pagination>>
+    setSorting: Dispatch<SetStateAction<SortingState>>
+    sorting: SortingState
     isLoading: boolean
 }
 
@@ -41,14 +42,12 @@ export function DataTable<TData, TValue>({
     data,
     rowCount,
     setPagination,
+    setSorting,
     pagination,
+    sorting,
     isLoading,
 }: DataTableProps<TData, TValue>){
-    const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-    
-    
-    const t = useTranslations("DataTable")
     
     const table = useReactTable({
         data,
@@ -60,6 +59,7 @@ export function DataTable<TData, TValue>({
         getSortedRowModel: getSortedRowModel(),
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
+        enableMultiSort: true,
         state: {
             sorting,
             columnFilters,
@@ -125,7 +125,7 @@ export function DataTable<TData, TValue>({
                                 ) : (
                                     <TableRow>
                                         <TableCell colSpan={columns.length} className="h-24 text-center">
-                                            {t('NoData')}
+                                            No data found.
                                         </TableCell>
                                     </TableRow>
                                 )}

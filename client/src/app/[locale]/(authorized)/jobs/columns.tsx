@@ -9,7 +9,10 @@ import ColumnActions from "@/app/[locale]/(authorized)/jobs/columnActions";
 export const columns: ColumnDef<Job>[] = [
     {
         accessorKey: "Id",
-        header: "Id",
+        sortDescFirst: true,
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title='Id' />
+        )
     },
     {
         accessorKey: "Name",

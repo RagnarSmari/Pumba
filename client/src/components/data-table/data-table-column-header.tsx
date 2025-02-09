@@ -15,7 +15,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {useTranslations} from "next-intl";
 
 interface DataTableColumnHeaderProps<TData, TValue>
     extends React.HTMLAttributes<HTMLDivElement> {
@@ -28,7 +27,7 @@ export function DataTableColumnHeader<TData, TValue>({
                                                          title,
                                                          className,
                                                      }: DataTableColumnHeaderProps<TData, TValue>) {
-    const t = useTranslations('Columns')
+    // const t = useTranslations('Columns')
     if (!column.getCanSort()) {
         return <div className={cn(className)}>{title}</div>
     }
@@ -41,7 +40,7 @@ export function DataTableColumnHeader<TData, TValue>({
                         size="sm"
                         className="-ml-3 h-8 data-[state=open]:bg-accent"
                     >
-                        <span>{t(title)}</span>
+                        <span>{title}</span>
                         {column.getIsSorted() === "desc" ? (
                             <ArrowDownIcon className="ml-2 h-4 w-4" />
                         ) : column.getIsSorted() === "asc" ? (
