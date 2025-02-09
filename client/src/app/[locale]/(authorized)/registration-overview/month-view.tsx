@@ -1,26 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import {useState} from "react";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
-import { DateRange } from "@/types/common";
+import {ApiResponse, DateRange} from "@/types/common";
 import {Comment} from "@/types/comment";
 import {Timestamp} from "@/types/timestamp";
+import {useToast} from "@/components/ui/use-toast";
+import {PagedResponse} from "@/components/data-table/pumba-data-table";
+import useSWR from "swr";
+import {fetcher} from "@/swr/fetcher";
 
-type MonthViewProps = {
-    Registrations : Timestamp[]
-}
 
-
-export default function MonthView( props : MonthViewProps) {
+export default function MonthView( ) {
     const date = new Date();
+    const toast = useToast()
     const [dateRange, setDateRange] = useState<DateRange>({
         startDate: new Date(date.getFullYear(), date.getMonth(), 1),
         endDate: new Date(date.getFullYear(), date.getMonth() + 1, 0),
     });
-
     const [selectedDay, setSelectedDay] = useState<string | null>(null); // Track which day is expanded
     const [expandedRegistrations, setExpandedRegistrations] = useState<Record<number, boolean>>({}); // Track expanded registrations
 
+    const apiUrl = process.env.NEXT_PUBLIC_PUMBA_API_URL;
+    const url = `${apiUrl}/timestamp/?from=${dateRange.startDate.toISOString()}&to=${dateRange.endDate.toISOString()}`
+    const {data, error, isLoading } = useSWR<ApiResponse<PagedResponse<Timestamp>>>(url, fetcher)
+    
     const toggleRegistration = (registrationId: number) => {
         setExpandedRegistrations((prev) => ({
             ...prev,
@@ -53,7 +57,8 @@ export default function MonthView( props : MonthViewProps) {
     })();
 
     // Count registrations and group them by date
-    const registrationsByDate = props.Registrations.reduce((acc: Record<string, Timestamp[]>, entry) => {
+    const registrationsByDate = data?.data.Data &&
+        data?.data.Data.reduce((acc: Record<string, Timestamp[]>, entry) => {
         const dateKey = new Date(entry.CreatedAt).toDateString(); // Use only the date part as the key
         if (!acc[dateKey]) acc[dateKey] = [];
         acc[dateKey].push(entry);
@@ -108,7 +113,7 @@ export default function MonthView( props : MonthViewProps) {
             <div className="pt-10">
                 {daysInRange.map((day) => {
                     const dayKey = day.toDateString();
-                    const dayRegistrations = registrationsByDate[dayKey] || [];
+                    const dayRegistrations = registrationsByDate?.[dayKey] || [];
                     return (
                         <div key={dayKey} className="mb-4 w-full">
                             <div

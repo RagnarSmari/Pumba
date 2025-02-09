@@ -45,7 +45,6 @@ export default function PumbaDataTable<TData, TValue>({
         pageSize: 10// default page size
     });
     const [sorting, setSorting] = useState<SortingState>([])
-    const [currentError, setCurrentError] = useState<any>(undefined);
     
     const apiUrl = process.env.NEXT_PUBLIC_PUMBA_API_URL;
     const constructQueryString = () => {
