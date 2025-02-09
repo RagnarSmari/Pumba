@@ -9,7 +9,12 @@ import DataTableActionColumn from "@/components/data-table/data-table-action-col
 export const getColumns = (onOpenOverview: (id: number) => void) : ColumnDef<Timestamp>[] => [
     {
         accessorKey: "CreatedAt",
-        header: "CreatedAt",
+        enableSorting: false,
+        header: ({ column }) => {
+            return (
+                <DataTableColumnHeader column={column} title="Date" />
+            )
+        },
         cell: ({ row }) => {
             const date = new Date(row.original.CreatedAt);
             return new Intl.DateTimeFormat("default", {
@@ -24,6 +29,7 @@ export const getColumns = (onOpenOverview: (id: number) => void) : ColumnDef<Tim
     },
     {
         accessorKey: "TotalHours",
+        enableSorting: false,
         header: ({ column }) => {
             return (
                 <DataTableColumnHeader  column={column} title="Hours" />
@@ -33,6 +39,7 @@ export const getColumns = (onOpenOverview: (id: number) => void) : ColumnDef<Tim
     {
 
         accessorKey: "TotalMinutes",
+        enableSorting: false,
         header: ({ column }) => {
             return (
                 <DataTableColumnHeader  column={column} title="Minutes" />
@@ -41,6 +48,9 @@ export const getColumns = (onOpenOverview: (id: number) => void) : ColumnDef<Tim
     },
     {
         accessorKey: "JobName",
+        enableColumnFilter: true,
+        enableGlobalFilter: true,
+        enableSorting: false,
         header: ({ column }) => {
             return (
                 <DataTableColumnHeader column={column} title="Job" />
@@ -49,6 +59,7 @@ export const getColumns = (onOpenOverview: (id: number) => void) : ColumnDef<Tim
     },
     {
         accessorKey: "UserName",
+        enableSorting: false,
         header: ({ column }) => {
             return (
                 <DataTableColumnHeader column={column} title="User" />

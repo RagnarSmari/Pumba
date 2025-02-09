@@ -7,6 +7,7 @@ import useSWR, {mutate} from "swr";
 import {ApiResponse} from "@/types/common";
 import {fetcher} from "@/swr/fetcher";
 import {SortingState} from "@tanstack/react-table";
+import {toast, useToast} from "@/components/ui/use-toast";
 
 interface QueryParameter{
     key: string;
@@ -44,7 +45,7 @@ export default function PumbaDataTable<TData, TValue>({
         pageSize: 10// default page size
     });
     const [sorting, setSorting] = useState<SortingState>([])
-    console.log(sorting)
+    const [currentError, setCurrentError] = useState<any>(undefined);
     
     const apiUrl = process.env.NEXT_PUBLIC_PUMBA_API_URL;
     const constructQueryString = () => {
@@ -61,8 +62,6 @@ export default function PumbaDataTable<TData, TValue>({
     const fullUrl = `${apiUrl}${url}${constructQueryString()}`;
     const {data, error, isLoading } = useSWR<ApiResponse<PagedResponse<TData>>>(fullUrl, fetcher)
     
-    if (error) return <div>failed to load</div>
-
     return (
         <DataTable 
             columns={columns}
@@ -72,7 +71,8 @@ export default function PumbaDataTable<TData, TValue>({
             setPagination={setPagination} 
             isLoading={isLoading}
             sorting={sorting}
-            setSorting={setSorting}/>
+            setSorting={setSorting} 
+            error={error}/>
         
     )
     

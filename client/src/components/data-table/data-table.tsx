@@ -34,7 +34,8 @@ interface DataTableProps<TData, TValue> {
     setPagination: Dispatch<SetStateAction<Pagination>>
     setSorting: Dispatch<SetStateAction<SortingState>>
     sorting: SortingState
-    isLoading: boolean
+    isLoading: boolean,
+    error: any, 
 }
 
 export function DataTable<TData, TValue>({
@@ -46,6 +47,7 @@ export function DataTable<TData, TValue>({
     pagination,
     sorting,
     isLoading,
+    error,
 }: DataTableProps<TData, TValue>){
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     
@@ -125,7 +127,13 @@ export function DataTable<TData, TValue>({
                                 ) : (
                                     <TableRow>
                                         <TableCell colSpan={columns.length} className="h-24 text-center">
-                                            No data found.
+                                            {error ? (
+                                                <p>Internal server error</p>
+                                            ): (
+                                                <p>
+                                                    No data found.
+                                                </p>
+                                            )}
                                         </TableCell>
                                     </TableRow>
                                 )}

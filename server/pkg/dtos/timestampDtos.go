@@ -9,7 +9,7 @@ type TimestampDto struct {
 	TotalHours   int
 	TotalMinutes int
 	JobName      string
-	UserName     string
+	UserName     *string
 	Comments     []CommentDto
 	CreatedAt    time.Time
 }

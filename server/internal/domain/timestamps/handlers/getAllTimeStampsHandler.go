@@ -49,14 +49,13 @@ func GetAllTimeStampsHandler(ctx context.Context, pagination *pkg.Pagination, fr
 				Author:      comment.Profile.Name,
 			})
 		}
-		userName := *t.Profile.Name
 
 		timeStampDtos = append(timeStampDtos, dtos.TimestampDto{
 			Id:           t.ID,
 			TotalHours:   hours,
 			TotalMinutes: minutes,
 			JobName:      t.Job.Name,
-			UserName:     userName,
+			UserName:     t.Profile.Name,
 			CreatedAt:    t.CreatedAt.Local(),
 			Comments:     comments,
 		})
