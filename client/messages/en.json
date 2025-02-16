@@ -27,7 +27,10 @@
     "Cancel": "Cancel",
     "NameErrorLength": "Name must be at least 5 characters long",
     "JobNumberLength": "Job number must be more than 1",
-    "JobNr": "Job number"
+    "JobNr": "Job number",
+    "EditJob": "Edit job",
+    "EditJobDescription": "Edit selected job",
+    "Edit": "Edit"
   },
   "NavBar": {
     "Dashboard": "Dashboard",
@@ -50,11 +53,37 @@
     "Job": "Job",
     "Actions": "Actions",
     "Edit": "Edit",
-    "Delete": "Delete"
+    "Delete": "Delete",
+    "User": "User",
+    "Minutes": "Minutes",
+    "Overview": "Overview",
+    "Kennitala": "Kennitala",
+    "PhoneNumber": "Phone number"
   },
   "Pagination": {
     "RowsPerPage": "Rows per page",
     "Page": "Page",
     "Of": "of"
+  },
+  "Registrations": {
+    "Hours": "Hours",
+    "Minutes": "Minutes",
+    "JobId": "Job id",
+    "Job": "Job",
+    "NewRegistration": "New registration",
+    "CreateNewRegistration": "Create new registration",
+    "Submit": "Submit"
+  },
+  "Users": {
+    "Email": "Email",
+    "Password": "Password",
+    "Name": "Name",
+    "Role": "Role",
+    "NewUser": "New user",
+    "CreateNewUser": "Create new user",
+    "Submit": "Submit",
+    "PhoneNumber": "Phone number",
+    "Kennitala": "Kennitala",
+    "CreatedAt": "Created at"
   }
 }

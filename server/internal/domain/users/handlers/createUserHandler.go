@@ -9,22 +9,21 @@ import (
 	"server/pkg/dtos"
 )
 
-func CreateUserHandler(ctx context.Context, newUserRequest dtos.NewUserRequest) (error, dtos.UserDto) {
-	var user tables.User
-	var userResponse dtos.UserDto
+func CreateUserHandler(ctx context.Context, newUserRequest dtos.NewUserRequest) (uint, error) {
+	var user tables.Profile
 	var db = database.Db.WithContext(ctx)
 
 	// Check if user exists within firebase
 	var _, err = auth.GetUserByEmail(ctx, newUserRequest.Email)
 	if err == nil {
-		return errors.New("user with that email already exists"), dtos.UserDto{}
+		return 0, errors.New("user with that email already exists")
 	}
 
-	// Check if user with same kennitala exists in out database
+	// Check if user with same kennitala exists in our database
 	var count int64
-	db.Model(&tables.User{}).Where("kennitala = ?", newUserRequest.Kennitala).Count(&count)
+	db.Model(&tables.Profile{}).Where("kennitala = ?", newUserRequest.Kennitala).Count(&count)
 	if count > 0 {
-		return errors.New("user with kennitala already exists"), dtos.UserDto{}
+		return 0, errors.New("user with kennitala already exists")
 	}
 
 	// Create user first in firebase and add custom claim, then retrieve the uid and create in out database
@@ -35,31 +34,25 @@ func CreateUserHandler(ctx context.Context, newUserRequest dtos.NewUserRequest) 
 		newUserRequest.Name)
 
 	if err != nil {
-		return err, dtos.UserDto{}
+		return 0, err
 	}
 
 	err = auth.SetCustomUserClaims(ctx, newUserRequest.Role, firebaseUser.UID)
 	if err != nil {
-		return err, dtos.UserDto{}
+		return 0, err
 	}
 
-	user = tables.User{
+	user = tables.Profile{
 		FirebaseUid: firebaseUser.UID,
-		Kennitala:   newUserRequest.Kennitala,
-		Name:        newUserRequest.Name,
+		Kennitala:   &newUserRequest.Kennitala,
+		Name:        &newUserRequest.Name,
 		PhoneNumber: &newUserRequest.PhoneNumber,
+		Role:        newUserRequest.Role,
 	}
 	result := db.Create(&user)
 	if result.Error != nil {
-		return result.Error, dtos.UserDto{}
+		return 0, result.Error
 	}
-	userResponse = dtos.UserDto{
-		Id:          int(user.ID),
-		Name:        user.Name,
-		Role:        newUserRequest.Role,
-		Email:       newUserRequest.Email,
-		Kennitala:   newUserRequest.Kennitala,
-		PhoneNumber: newUserRequest.PhoneNumber,
-	}
-	return nil, userResponse
+
+	return user.ID, nil
 }

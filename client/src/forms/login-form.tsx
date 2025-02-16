@@ -14,11 +14,22 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import {useRouter} from "next/navigation";
-import {LoginWithEmailAction} from "@/actions/auth-actions";
-import {apiRequest} from "@/services/apiService";
+import {useToast} from "@/components/ui/use-toast";
+import {ApiResponse} from "@/types/common";
+import {auth} from "@/lib/firebaseConfig";
+import {pumbaApiRequest} from "@/services/apiService";
+import {LocalStorageUSer} from "@/types/auth";
+
+
+type LoginResponse = {
+    IdToken: string;
+    CsrfToken: string;
+}
 
 export default function LoginForm(){
     const t = useTranslations('LoginForm');
+    const toast = useToast(); 
+    const apiURL = process.env.NEXT_PUBLIC_PUMBA_API_URL;
     const router = useRouter();
     const formSchema = z.object({
         email: z.string().email(),
@@ -34,14 +45,44 @@ export default function LoginForm(){
     })
 
     async function onSubmit(data: z.infer<typeof formSchema>){
-        var res = await LoginWithEmailAction(data.email, data.password);
-        if (!res) return;
-        var sessionRes = await apiRequest("POST", "/session/new", {
-            IdToken: res,
-            CsrfToken: res
-        });
-        if (sessionRes.status != 200) return;
-        router.push("/dashboard");
+        try {
+            const res = await auth.signInWithEmailAndPassword(data.email, data.password);
+            const user = res.user;
+            const token = await user?.getIdToken()
+            if (!token) {
+                toast.toast({
+                    title: 'Uh oh! Something went wrong',
+                    description: 'Could not retrieve the id token',
+                    variant: 'destructive'
+                })
+                return
+            }
+            const loginBody : LoginResponse = {
+                IdToken: token,
+                CsrfToken: token
+            }
+            const sessionRes = await pumbaApiRequest<LocalStorageUser>("POST", '/session/new', loginBody)
+            if (sessionResJson.error){
+                toast.toast({
+                    title: 'Uh oh! Something went wrong',
+                    description: sessionResJson.error,
+                    variant: 'destructive'
+                })
+                return
+            }
+            // Insert email to local storage
+            localStorage.setItem('user', sessionRes)
+            
+            router.push('/dashboard');
+            
+        } catch (e) {
+            toast.toast({
+                title: 'Uh oh! Something went wrong',
+                description: `${e}`,
+                variant: 'destructive'
+            })
+        }
+        
     }
 
     return (
@@ -62,8 +103,16 @@ export default function LoginForm(){
                     control={form.control}
                     name="password"
                     render={({ field }) => (
-                        <FormItem className="grid gap-0">
-                            <FormLabel htmlFor="password">{t('Password')}</FormLabel>
+                        <FormItem className="grid gap-2">
+                            <div className="flex items-center">
+                                <FormLabel htmlFor="password">{t('Password')}</FormLabel>
+                                <a
+                                    href="#"
+                                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                                >
+                                    Forgot your password?
+                                </a>
+                            </div>
                             <FormControl>
                                 <Input type="password" placeholder={t('Password')} {...field}/>
                             </FormControl>

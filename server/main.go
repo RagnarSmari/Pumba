@@ -5,10 +5,12 @@ import (
 	"log"
 	"os"
 	"server/auth"
+	"server/internal/backgroundJobs"
 	"server/internal/database"
 	"server/internal/domain"
 	"server/logger"
-	pkg "server/pkg"
+	"server/pkg"
+	"server/pkg/background"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -57,7 +59,7 @@ func main() {
 		AllowOriginFunc: func(origin string) bool {
 			// Allow requests from your client origin
 			return origin == "http://localhost:3030"
-		}, AllowMethods: []string{"PUT", "PATCH", "GET", "POST", "OPTIONS"},
+		}, AllowMethods: []string{"PUT", "PATCH", "GET", "POST", "OPTIONS", "DELETE"},
 		AllowHeaders:     []string{"Content-Type", "Content-Length", "Authorization", "Cache-Control"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
@@ -92,6 +94,8 @@ func main() {
 	// Configure all the api routes
 	domain.ConfigureApiRoutes(router)
 
+	// Start background jobs
+	background.Go(backgroundJobs.SearchForMissingProfiles(context.Background()))
 	// Start the server
 	err = router.Run(":" + os.Getenv("SERVER_PORT"))
 	if err != nil {

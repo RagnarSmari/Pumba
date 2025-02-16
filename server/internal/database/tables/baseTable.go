@@ -8,10 +8,10 @@ import (
 
 type BaseTable struct {
 	gorm.Model
-	CreatedBy     *string
-	DeletedBy     *string
+	CreatedBy     *string // Firebase user uid
+	DeletedBy     *string // Firebase user uid
 	LastUpdated   *time.Time
-	LastUpdatedBy *string
+	LastUpdatedBy *string // Firebase user uid
 }
 
 func (b *BaseTable) BeforeDelete(tx *gorm.DB) (err error) {
@@ -29,5 +29,14 @@ func (b *BaseTable) BeforeDelete(tx *gorm.DB) (err error) {
 
 func (b *BaseTable) BeforeFind(tx *gorm.DB) (err error) {
 	tx.Where("deleted_at IS NULL")
+	return nil
+}
+
+func (b *BaseTable) BeforeCreate(tx *gorm.DB) (err error) {
+	value, ok := tx.Statement.Context.Value("user_uid").(string)
+	if !ok || value == "" {
+		return errors.New("Could not mark which user created the entity")
+	}
+	b.CreatedBy = &value
 	return nil
 }

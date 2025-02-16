@@ -1,7 +1,9 @@
 package pkg
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type Response struct {
@@ -11,26 +13,95 @@ type Response struct {
 	Data    interface{}
 }
 
-func SendPaginatedResponse[T any](ctx *gin.Context, response PaginationResponse[T]) {
-	ctx.JSON(200, response)
+func DataResponse(data interface{}) Response {
+	return Response{
+		Status:  http.StatusOK,
+		Message: "",
+		Error:   "",
+		Data:    data,
+	}
 }
 
-func SendErrorResponse(ctx *gin.Context, status int, message string) {
-	ctx.JSON(status, message)
+func EntityUpdatedResponse(id uint) Response {
+	return Response{
+		Status:  http.StatusOK,
+		Message: fmt.Sprintf("Entity with id %d updated successfully", id),
+		Error:   "",
+		Data:    nil,
+	}
+}
+
+func SuccessfulResponse(message string) Response {
+	return Response{
+		Status:  http.StatusOK,
+		Message: message,
+		Error:   "",
+		Data:    nil,
+	}
+}
+func PaginatedResponse[T any](response PaginationResponse[T]) Response {
+	return Response{
+		Status:  http.StatusOK,
+		Message: "",
+		Error:   "",
+		Data:    response,
+	}
+}
+
+func EntityCreatedResponse(id uint) Response {
+	return Response{
+		Status:  http.StatusCreated,
+		Message: fmt.Sprintf("Entity created with id: %d", id),
+		Error:   "",
+		Data:    nil,
+	}
+}
+
+func BadRequestResponse(err error) Response {
+
+	return Response{
+		Status:  http.StatusBadRequest,
+		Message: "",
+		Error:   err.Error(),
+		Data:    nil,
+	}
+}
+
+func InternalServerResponse(err error) Response {
+	return Response{
+		Status:  http.StatusInternalServerError,
+		Message: "",
+		Error:   err.Error(),
+		Data:    nil,
+	}
+}
+
+func EntityNotFoundResponse(id int) Response {
+	return Response{
+		Status:  http.StatusNotFound,
+		Message: fmt.Sprintf("Entity with id %d not found", id),
+		Error:   "",
+		Data:    nil,
+	}
+}
+
+func InternalServerErrorResponse() Response {
+	return Response{
+		Status:  http.StatusInternalServerError,
+		Message: "Internal server error",
+		Error:   "",
+		Data:    nil,
+	}
 }
 
 func SendResponse(c *gin.Context, response Response) {
 	responseMap := make(map[string]interface{})
-
-	if len(response.Message) > 0 {
-		responseMap["message"] = response.Message
-	}
-	if len(response.Error) > 0 {
-		responseMap["error"] = response.Error
-	}
-	if response.Data != nil {
-		responseMap["data"] = response.Data
-	}
+	responseMap["message"] = response.Message
+	responseMap["error"] = response.Error
+	responseMap["data"] = response.Data
+	responseMap["status"] = response.Status
 
 	c.JSON(response.Status, responseMap)
+
+	return
 }

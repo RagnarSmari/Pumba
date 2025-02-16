@@ -3,6 +3,7 @@ package domain
 import (
 	"github.com/gin-gonic/gin"
 	"server/configs"
+	"server/internal/domain/comments"
 	"server/internal/domain/jobs"
 	"server/internal/domain/sessions"
 	"server/internal/domain/timestamps"
@@ -33,4 +34,5 @@ func configurePrivateApiRoutes(apiGroup *gin.RouterGroup, apiConfig configs.ApiR
 	timestamps.AddTimestampRoutes(apiGroup.Group(apiConfig.TimestampsPrefix.Base))
 	jobs.AddJobRoutes(apiGroup.Group(apiConfig.JobsPrefix.Base))
 	users.AddUserRoutes(apiGroup.Group(apiConfig.UserRoutes.Base))
+	comments.AddCommentRoutes(apiGroup.Group(apiConfig.CommentRoutes.Base))
 }

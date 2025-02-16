@@ -2,46 +2,28 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"server/internal/domain/users/handlers"
 	"server/pkg"
 	"server/pkg/dtos"
 )
 
-func CreateNewUserRoute(c *gin.Context) {
+func CreateNewUserRoute(c *gin.Context) (pkg.Response, error) {
 	var request dtos.NewUserRequest
 
 	if err := c.ShouldBindJSON(&request); err != nil {
-		pkg.SendResponse(c, pkg.Response{
-			Status: http.StatusBadRequest,
-			Error:  err.Error(),
-		})
-		return
+		return pkg.BadRequestResponse(err), err
 	}
 
 	// Validate
 	err := pkg.Validate.Struct(request)
 	if err != nil {
-		pkg.SendResponse(c, pkg.Response{
-			Status: http.StatusBadRequest,
-			Error:  err.Error(),
-		})
-		return
+		return pkg.BadRequestResponse(err), err
 	}
 
-	err, newUser := handlers.CreateUserHandler(c, request)
+	id, err := handlers.CreateUserHandler(c, request)
 	if err != nil {
-		pkg.SendResponse(c, pkg.Response{
-			Status: http.StatusInternalServerError,
-			Error:  err.Error(),
-		})
-		return
+		return pkg.BadRequestResponse(err), err
 	}
 
-	// Return
-	pkg.SendResponse(c, pkg.Response{
-		Status: http.StatusCreated,
-		Data:   newUser,
-	})
-
+	return pkg.EntityCreatedResponse(id), nil
 }

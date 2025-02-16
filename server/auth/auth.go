@@ -57,7 +57,7 @@ func CreateUser(ctx context.Context, email string, password string, displayName 
 
 func SetCustomUserClaims(ctx context.Context, role UserRole, uid string) error {
 	// Check if the user role exists
-	claims := map[string]interface{}{role.String(): true}
+	claims := map[string]interface{}{"role": role.String()}
 	return firebaseClient.SetCustomUserClaims(ctx, uid, claims)
 }
 
@@ -67,4 +67,9 @@ func GetUserByEmail(ctx context.Context, email string) (*auth.UserRecord, error)
 
 func GetUserByUid(ctx context.Context, uid string) (*auth.UserRecord, error) {
 	return firebaseClient.GetUser(ctx, uid)
+}
+
+func GetAllUsers(ctx context.Context) (*auth.UserIterator, error) {
+	iter := firebaseClient.Users(ctx, "")
+	return iter, nil
 }

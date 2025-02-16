@@ -4,9 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"server/internal/domain/jobs/handlers"
 	"server/pkg"
+	"server/pkg/dtos"
 )
 
-func GetAllJobsRoute(c *gin.Context) {
+func GetAllJobsRoute(c *gin.Context) (pkg.Response, error) {
 
 	// Support pagination
 	pagination := pkg.GetPaginationFromUrl(c, c.Request.URL.String())
@@ -15,8 +16,8 @@ func GetAllJobsRoute(c *gin.Context) {
 	err, response := handlers.GetAllJobsHandler(c, pagination)
 
 	if err != nil {
-		pkg.SendErrorResponse(c, 404, "Error")
+		return pkg.BadRequestResponse(err), err
 	}
 
-	pkg.SendPaginatedResponse(c, response)
+	return pkg.PaginatedResponse[dtos.JobDto](response), nil
 }

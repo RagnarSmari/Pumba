@@ -8,16 +8,25 @@ import (
 	logger2 "server/logger"
 	"server/pkg"
 	"server/pkg/dtos"
+	"time"
 )
 
-func GetAllTimeStampsHandler(ctx context.Context, pagination *pkg.Pagination) (error, pkg.PaginationResponse[dtos.TimestampDto]) {
+func GetAllTimeStampsHandler(ctx context.Context, pagination *pkg.Pagination, from time.Time, to time.Time) (error, pkg.PaginationResponse[dtos.TimestampDto]) {
 	var timeStamps []tables.Timestamp
 	db := database.Db.WithContext(ctx)
 
 	var totalCount int64
-	db.Model(&tables.Timestamp{}).Count(&totalCount)
+	query := db.Model(&tables.Timestamp{})
+	query.Count(&totalCount)
 
-	result := db.Preload("Job").Scopes(extension.Paginate(pagination)).Find(&timeStamps)
+	if !from.IsZero() {
+		query = query.Where("created_at >= ?", from)
+	}
+	if !to.IsZero() {
+		query = query.Where("created_at <= ?", to)
+	}
+
+	result := query.Preload("Profile").Preload("Job").Preload("Comments").Preload("Comments.Profile").Scopes(extension.Paginate(pagination)).Find(&timeStamps)
 
 	if result.Error != nil {
 		logger2.S().Errorf(result.Error.Error())
@@ -26,10 +35,29 @@ func GetAllTimeStampsHandler(ctx context.Context, pagination *pkg.Pagination) (e
 
 	var timeStampDtos []dtos.TimestampDto
 	for _, t := range timeStamps {
+
+		hours := t.DurationMinutes / 60
+		minutes := t.DurationMinutes % 60
+
+		var comments []dtos.CommentDto
+
+		for _, comment := range t.Comments {
+			comments = append(comments, dtos.CommentDto{
+				Id:          comment.ID,
+				Message:     comment.Message,
+				TimestampId: comment.TimestampId,
+				Author:      comment.Profile.Name,
+			})
+		}
+
 		timeStampDtos = append(timeStampDtos, dtos.TimestampDto{
-			Id:         t.ID,
-			TotalHours: t.TotalHours,
-			JobName:    t.Job.Name,
+			Id:           t.ID,
+			TotalHours:   hours,
+			TotalMinutes: minutes,
+			JobName:      t.Job.Name,
+			UserName:     t.Profile.Name,
+			CreatedAt:    t.CreatedAt.Local(),
+			Comments:     comments,
 		})
 	}
 

@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"server/auth"
+	"server/internal/domain/auth/handlers"
 	"server/logger"
 )
 
@@ -28,8 +29,19 @@ func AddAuthMiddleWare() gin.HandlerFunc {
 			return
 		}
 
+		// Get the profile Id and add to context
+		claims, err := handlers.GetUserByFirebaseUIDHandler(c, decoded.UID)
+		if err != nil {
+			logger.S().Errorf("Error getting user by firebase uid: %v", err)
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Error getting user by firebase uid"})
+			return
+		}
+
 		c.Set("user_role", decoded.Claims)
 		c.Set("user_uid", decoded.UID)
+		c.Set("user_id", claims.Id)
+		c.Set("user_name", claims.Name)
+		c.Set("user_email", claims.Email)
 		c.Next()
 	}
 }

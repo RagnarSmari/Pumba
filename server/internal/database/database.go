@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"server/internal/database/seeders"
 	"server/internal/database/tables"
 	"server/logger"
 
@@ -20,7 +19,6 @@ var (
 func Configuration(ctx context.Context) {
 	configureDatabase(ctx)
 	migrate(ctx)
-	seedData(ctx)
 }
 
 func configureDatabase(ctx context.Context) {
@@ -39,7 +37,7 @@ func configureDatabase(ctx context.Context) {
 func migrate(ctx context.Context) {
 
 	logger.S().Info("Running migrations...")
-	err := Db.WithContext(ctx).AutoMigrate(&tables.Job{}, &tables.User{}, &tables.Timestamp{})
+	err := Db.WithContext(ctx).AutoMigrate(&tables.Job{}, &tables.Profile{}, &tables.Timestamp{}, &tables.Comment{})
 	if err != nil {
 		logger.S().Fatalf("Failed to run migrations")
 	}
@@ -50,14 +48,10 @@ func getDatabaseConnectionString() string {
 	host := os.Getenv("DATABASE_HOST")
 	port := os.Getenv("DATABASE_PORT")
 	user := os.Getenv("DATABASE_USER")
-	user_passw := os.Getenv("DATABASE_USER_PASSW")
-	db_name := os.Getenv("DATABASE_NAME")
+	userPassword := os.Getenv("DATABASE_USER_PASSW")
+	dbName := os.Getenv("DATABASE_NAME")
 
 	return fmt.Sprintf("host=%s port=%s user=%s "+
 		"password=%s dbname=%s sslmode=disable",
-		host, port, user, user_passw, db_name)
-}
-
-func seedData(ctx context.Context) {
-	seeders.SeedAdminUser(ctx, Db)
+		host, port, user, userPassword, dbName)
 }

@@ -8,8 +8,12 @@ type ApiRoutes struct {
 	TimestampsPrefix TimestampRoutes
 	SessionRoutes    SessionRoutes
 	UserRoutes       UserRoutes
+	CommentRoutes    CommentRoutes
 }
 
+type CommentRoutes struct {
+	Base string
+}
 type UserRoutes struct {
 	Base string
 }
@@ -29,6 +33,9 @@ type SessionRoutes struct {
 
 // Value of the routes
 
+var CommentApiRoutes = CommentRoutes{
+	Base: "/comment",
+}
 var JobApiRoutes = JobRoutes{
 	Base: "/job",
 }
@@ -52,4 +59,5 @@ var ApiRoutesConfig = ApiRoutes{
 	TimestampsPrefix: TimestampApiRoutes,
 	UserRoutes:       UserApiRoutes,
 	SessionRoutes:    SessionApiRoutes,
+	CommentRoutes:    CommentApiRoutes,
 }

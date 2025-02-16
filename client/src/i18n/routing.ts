@@ -8,18 +8,6 @@ export const routing = defineRouting({
 
     // Used when no locale matches
     defaultLocale: 'en',
-    
-    pathnames: {
-        "/":"/",
-        "/dashboard":{
-            en: "/dashboard",
-            is: '/yfirlit'
-        },
-        '/jobs':{
-            en: '/jobs',
-            is: '/verk'
-        }
-    }
 });
 
 // Lightweight wrappers around Next.js' navigation APIs
