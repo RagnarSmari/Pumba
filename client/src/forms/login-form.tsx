@@ -14,9 +14,11 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import {useRouter} from "next/navigation";
-import {LoginWithEmailAction} from "@/actions/auth-actions";
-import {toast} from "@/components/ui/use-toast";
+import {useToast} from "@/components/ui/use-toast";
 import {ApiResponse} from "@/types/common";
+import {auth} from "@/lib/firebaseConfig";
+import {pumbaApiRequest} from "@/services/apiService";
+import {LocalStorageUSer} from "@/types/auth";
 
 
 type LoginResponse = {
@@ -26,6 +28,7 @@ type LoginResponse = {
 
 export default function LoginForm(){
     const t = useTranslations('LoginForm');
+    const toast = useToast(); 
     const apiURL = process.env.NEXT_PUBLIC_PUMBA_API_URL;
     const router = useRouter();
     const formSchema = z.object({
@@ -42,35 +45,44 @@ export default function LoginForm(){
     })
 
     async function onSubmit(data: z.infer<typeof formSchema>){
-        const res = await LoginWithEmailAction(data.email, data.password);
-        if (!res) {
-            toast({
+        try {
+            const res = await auth.signInWithEmailAndPassword(data.email, data.password);
+            const user = res.user;
+            const token = await user?.getIdToken()
+            if (!token) {
+                toast.toast({
+                    title: 'Uh oh! Something went wrong',
+                    description: 'Could not retrieve the id token',
+                    variant: 'destructive'
+                })
+                return
+            }
+            const loginBody : LoginResponse = {
+                IdToken: token,
+                CsrfToken: token
+            }
+            const sessionRes = await pumbaApiRequest<LocalStorageUser>("POST", '/session/new', loginBody)
+            if (sessionResJson.error){
+                toast.toast({
+                    title: 'Uh oh! Something went wrong',
+                    description: sessionResJson.error,
+                    variant: 'destructive'
+                })
+                return
+            }
+            // Insert email to local storage
+            localStorage.setItem('user', sessionRes)
+            
+            router.push('/dashboard');
+            
+        } catch (e) {
+            toast.toast({
                 title: 'Uh oh! Something went wrong',
-                description: res,
+                description: `${e}`,
                 variant: 'destructive'
             })
-            return;
         }
         
-        const loginBody : LoginResponse = {
-            IdToken: res,
-            CsrfToken: res
-        }
-        const sessionRes = await fetch(apiURL + '/session/new',{
-            method: 'POST',
-            credentials: 'include',
-            body: JSON.stringify(loginBody) 
-        })
-        const sessionResJson = await sessionRes.json() as ApiResponse<string>
-        if (sessionResJson.error){
-            toast({
-                title: 'Uh oh! Something went wrong',
-                description: sessionResJson.error,
-                variant: 'destructive'
-            })
-            return
-        }
-        router.push('/dashboard');
     }
 
     return (
