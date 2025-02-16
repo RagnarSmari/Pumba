@@ -18,7 +18,7 @@ export default function MainLayout({ children }: LayoutProps) {
                     <Separator orientation="vertical" className="mr-2 h-4"/>
                     <LayoutBreadCrumbs/>
                 </header>
-                <main className="w-full max-w-screen-2xl mx-auto px-4 pt-4">
+                <main className="w-full max-w-(--breakpoint-2xl) mx-auto px-4 pt-4">
                     {/*<SidebarTrigger />*/}
                     {children}
                 </main>

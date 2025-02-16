@@ -94,7 +94,7 @@ export default function MonthView( ) {
             <div className="flex justify-between pt-3">
                 <button
                     onClick={lastMonth}
-                    className="px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-200"
+                    className="px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg shadow-xs hover:bg-gray-200"
                 >
                     Previous
                 </button>
@@ -103,7 +103,7 @@ export default function MonthView( ) {
                 </p>
                 <button
                     onClick={nextMonth}
-                    className="px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-200"
+                    className="px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg shadow-xs hover:bg-gray-200"
                 >
                     Next
                 </button>
@@ -117,7 +117,7 @@ export default function MonthView( ) {
                     return (
                         <div key={dayKey} className="mb-4 w-full">
                             <div
-                                className="flex justify-between items-center bg-gray-100 border border-gray-300 rounded-lg shadow-sm px-4 py-3"
+                                className="flex justify-between items-center bg-gray-100 border border-gray-300 rounded-lg shadow-xs px-4 py-3"
                             >
                                 <div>
                                     <p className="text-lg font-medium text-gray-800">
@@ -148,7 +148,7 @@ export default function MonthView( ) {
 
                             {/*registrations in a day */}
                             {selectedDay === dayKey && dayRegistrations.length > 0 && (
-                                <div className="bg-white border border-gray-300 rounded-lg shadow-sm p-4 mt-2">
+                                <div className="bg-white border border-gray-300 rounded-lg shadow-xs p-4 mt-2">
                                     {dayRegistrations.map((reg : Timestamp) => (
                                         <div key={reg.Id} className="mb-4">
                                             <div
@@ -188,7 +188,7 @@ export default function MonthView( ) {
                                                         {reg.Comments.map((comment : Comment) => (
                                                             <div
                                                                 key={comment.Id}
-                                                                className="p-2 bg-gray-50 border rounded-md shadow-sm"
+                                                                className="p-2 bg-gray-50 border rounded-md shadow-xs"
                                                             >
                                                                 <p className="text-sm text-gray-800">
                                                                     {comment.CreatedByUserName}:
